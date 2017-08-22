@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.fadi.testingrx.f.ble.Insoles;
 import com.polidea.rxandroidble.NotificationSetupMode;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -29,34 +30,62 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    RxBleClient rxBleClient;
-    Subscription scanSubscription;
+    RxBleClient rxBleClient;// one instance in the whole app lifecycle
+    Subscription scanSubscription;// this is for scthere will be several subscriptions, for each functionality
     Subscription connectionSubscription;
     Observer<ScanResult> myScanObserver;
-    Observer<RxBleConnection> myConnectionObserver;
+
+    Observer<RxBleConnection> myLeftConnectionObserver;
+    Observer<RxBleConnection> myRightConnectionObserver;
+
+
     Observer<RxBleDeviceServices> myServicesDiscoveryObserver;
-    Observer<byte[]> myBatteryReadObserver;
-    Observer<Observable<byte[]>> myStepsNotifyObserver;
+
+    Observer<byte[]> myLeftBatteryReadObserver;
+    Observer<byte[]> myRightBatteryReadObserver;
+
+    Observer<Observable<byte[]>> myLeftAccelometerNotifyObserver;
+    Observer<Observable<byte[]>> myRightAccelometerNotifyObserver;
+
     TextView deviceNameTextView;
     TextView deviceMacTextView;
+
+    TextView laX;
+    TextView laY;
+    TextView laZ;
+
+    TextView raX;
+    TextView raY;
+    TextView raZ;
+
+
     String leftInsoleMacAddress;
     String serviceUUID;
     RxBleDevice leftInsoleDevice;
+    RxBleDevice rightInsoleDevice;
     int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        counter=0;
-        String deviceAdress="C1:56:ED:7A:AB:07";
-        leftInsoleMacAddress="C1:56:ED:7A:AB:07";
+
+        //String RPDeviceAdress="C1:56:ED:7A:AB:07";
+        //leftInsoleMacAddress="C1:56:ED:7A:AB:07";
         serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
         deviceMacTextView= (TextView) findViewById(R.id.textView2);
         deviceNameTextView= (TextView) findViewById(R.id.textView);
 
+        laX=(TextView) findViewById(R.id.leftX);
+        laY=(TextView) findViewById(R.id.leftY);
+        laZ=(TextView) findViewById(R.id.leftZ);
+
+        raX=(TextView) findViewById(R.id.rightX);
+        raY=(TextView) findViewById(R.id.rightY);
+        raZ=(TextView) findViewById(R.id.rightZ);
+
         rxBleClient = RxBleClient.create(getApplicationContext());
-        scanAndPairing();
+        //scanAndPairing();
         connect();
         //readBattery();
         //registerForSteps();
@@ -68,21 +97,20 @@ public class MainActivity extends AppCompatActivity {
         myScanObserver=new Observer<ScanResult>() {
             @Override
             public void onCompleted() {
-                Log.d("RXTesting","onCompleted");
-
+                Log.d("RXTesting","scan onCompleted");
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("RXTesting","onError "+e.toString());
+                Log.d("RXTesting","scan onError "+e.toString());
             }
 
             @Override
             public void onNext(ScanResult scanResult) {
-                Log.d("RXTesting","onNext "+scanResult.toString());
+                Log.d("RXTesting","scan onNext "+scanResult.toString());
                 deviceMacTextView.setText(scanResult.getBleDevice().getMacAddress());
                 deviceNameTextView.setText(scanResult.getBleDevice().getName());
-                scanSubscription.unsubscribe();
+                //scanSubscription.unsubscribe();
 
             }
         };
@@ -139,34 +167,57 @@ public class MainActivity extends AppCompatActivity {
 
             };
 
-        myBatteryReadObserver = new Observer<byte[]>() {
+        myLeftBatteryReadObserver = new Observer<byte[]>() {
             @Override
             public void onCompleted() {
-                Log.d("RXTesting","BatteryReadObserver onCompleted");
+                Log.d("RXTesting","LeftBatteryReadObserver onCompleted");
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("RXTesting","BatteryReadObserver onError "+e.toString());
+                Log.d("RXTesting","LeftBatteryReadObserver onError "+e.toString());
 
             }
 
             @Override
             public void onNext(byte[] bytes) {
-                Log.d("RXTesting","BatteryReadObserver onNext "+ bytes.toString());
+                int leftBatteryValue=bytes[0]&0xFF;
+                Log.d("RXTesting","LeftBatteryReadObserver onNext "+ leftBatteryValue);
+                updateLeftBattery(leftBatteryValue);
 
             }
         };
 
-        myStepsNotifyObserver= new Observer<Observable<byte[]>>() {
+        myRightBatteryReadObserver = new Observer<byte[]>() {
             @Override
             public void onCompleted() {
-                Log.d("RXTesting","StepsNotifyObserver onCompleted");
+                Log.d("RXTesting","RightBatteryReadObserver onCompleted");
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("RXTesting","StepsNotifyObserver onError "+e.toString());
+                Log.d("RXTesting","RightBatteryReadObserver onError "+e.toString());
+
+            }
+
+            @Override
+            public void onNext(byte[] bytes) {
+                int rightBatteryValue=bytes[0]&0xFF;
+                Log.d("RXTesting","RightBatteryReadObserver onNext "+ rightBatteryValue);
+                updateRightBattery(rightBatteryValue);
+
+            }
+        };
+
+        myLeftAccelometerNotifyObserver= new Observer<Observable<byte[]>>() {
+            @Override
+            public void onCompleted() {
+                Log.d("RXTesting","LeftAccelometerNotifyObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("RXTesting","LeftAccelometerNotifyObserver onError "+e.toString());
 
             }
 
@@ -175,25 +226,88 @@ public class MainActivity extends AppCompatActivity {
                 observable.subscribe(new Observer<byte[]>() {
                     @Override
                     public void onCompleted() {
-                        Log.d("RXTesting","StepsNotifyObserver reader onCompleted");
+                        Log.d("RXTesting","LeftAccelometerNotifyObserver reader onCompleted");
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("RXTesting","StepsNotifyObserver reader "+e.toString());
+                        Log.d("RXTesting","LeftAccelometerNotifyObserver reader "+e.toString());
 
                     }
 
                     @Override
                     public void onNext(byte[] bytes) {
-                        Log.d("RXTesting","StepsNotifyObserver reader onNext "+ bytes.toString());
+                        Log.d("RXTesting","LeftAccelometerNotifyObserver reader onNext "+ bytes.toString());
                         for (int i=0;i<bytes.length;i++){
                             Log.d("RXTesting","byte nr:"+ i+" is:"+(bytes[i]&0xFF));
                         }
 
-                        int totalSteps= bytes[0]&0xFF+((bytes[1]&0xFF)<<8);
-                        Log.d("RXTesting","totalSteps:"+totalSteps);
+                        //int totalSteps= bytes[0]&0xFF+((bytes[1]&0xFF)<<8);
+                        //Log.d("RXTesting","totalSteps:"+totalSteps);
+
+                        int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
+                        Log.d("RXTesting","Left accX:"+accX);
+
+                        int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
+                        Log.d("RXTesting","Left accY:"+accY);
+
+                        int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
+                        Log.d("RXTesting","Left accZ:"+accZ);
+
+                        updateLeftAccelometer(accX,accY,accZ);
+                    }
+                });
+
+            }
+        };
+
+        myRightAccelometerNotifyObserver= new Observer<Observable<byte[]>>() {
+            @Override
+            public void onCompleted() {
+                Log.d("RXTesting","RightAccelometerNotifyObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("RXTesting","RightAccelometerNotifyObserver onError "+e.toString());
+
+            }
+
+            @Override
+            public void onNext(Observable<byte[]> observable) {
+                observable.subscribe(new Observer<byte[]>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("RXTesting","RightAccelometerNotifyObserver reader onCompleted");
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("RXTesting","RightAccelometerNotifyObserver reader "+e.toString());
+
+                    }
+
+                    @Override
+                    public void onNext(byte[] bytes) {
+                        Log.d("RXTesting","RightAccelometerNotifyObserver reader onNext "+ bytes.toString());
+
+
+                        /*for (int i=0;i<bytes.length;i++){
+                            Log.d("RXTesting","byte nr:"+ i+" is:"+(bytes[i]&0xFF));
+                        }*/
+
+                        int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
+                        Log.d("RXTesting","Right accX:"+accX);
+
+                        int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
+                        Log.d("RXTesting","Right accY:"+accY);
+
+                        int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
+                        Log.d("RXTesting","Right accZ:"+accZ);
+
+                        updateRightAccelometer(accX,accY,accZ);
                     }
                 });
 
@@ -202,42 +316,103 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        myConnectionObserver= new Observer<RxBleConnection>() {
+        myLeftConnectionObserver= new Observer<RxBleConnection>() {
             @Override
             public void onCompleted() {
-                Log.d("RXTesting","connectionObserver onCompleted");
+                Log.d("RXTesting","LeftconnectionObserver onCompleted");
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d("RXTesting","connectionObserver onError "+e.toString());
+                Log.d("RXTesting","LeftconnectionObserver onError "+e.toString());
 
             }
 
             @Override
             public void onNext(RxBleConnection rxBleConnection) {
-                Log.d("RXTesting","connectionObserver onNext "+rxBleConnection.toString());
+                Log.d("RXTesting","LeftconnectionObserver onNext "+rxBleConnection.toString());
 
                 rxBleConnection.discoverServices().subscribe(myServicesDiscoveryObserver);
 
                 rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(myBatteryReadObserver);
+                        .subscribe(myLeftBatteryReadObserver);
 
-                rxBleConnection.setupNotification(UUID.fromString("99dd0106-a80c-4f94-be5d-c66b9fba40cf"))
-                        .subscribe(myStepsNotifyObserver);
+                rxBleConnection.setupNotification(UUID.fromString("99dd0108-a80c-4f94-be5d-c66b9fba40cf"))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(myLeftAccelometerNotifyObserver);
             }
         };
 
-        leftInsoleDevice = rxBleClient.getBleDevice(leftInsoleMacAddress);
-        String s=leftInsoleDevice.getName();
-        Log.d("RXTesting"," device name is:"+s);
+        myRightConnectionObserver= new Observer<RxBleConnection>() {
+            @Override
+            public void onCompleted() {
+                Log.d("RXTesting","RightconnectionObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("RXTesting","RightconnectionObserver onError "+e.toString());
+
+            }
+
+            @Override
+            public void onNext(RxBleConnection rxBleConnection) {
+                Log.d("RXTesting","RightconnectionObserver onNext "+rxBleConnection.toString());
+
+                rxBleConnection.discoverServices().subscribe(myServicesDiscoveryObserver);
+
+                rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(myRightBatteryReadObserver);
+
+                rxBleConnection.setupNotification(UUID.fromString("99dd0108-a80c-4f94-be5d-c66b9fba40cf"))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(myRightAccelometerNotifyObserver);
+            }
+        };
+
+        //leftInsoleDevice = rxBleClient.getBleDevice(leftInsoleMacAddress);
+        leftInsoleDevice = rxBleClient.getBleDevice(Insoles.LeftInsoleMacAddress);
+        Log.d("RXTesting"," device name is:"+leftInsoleDevice.getName());
+
+        rightInsoleDevice = rxBleClient.getBleDevice(Insoles.RightInsoleMacAddress);
+        Log.d("RXTesting"," device name is:"+rightInsoleDevice.getName());
+
+
         leftInsoleDevice.establishConnection(false).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(myConnectionObserver);
-        /*connectionSubscription=rxBleClient.getBleDevice(leftInsoleMacAddress)
-                .establishConnection(false)
-                .*/
+                .subscribe(myLeftConnectionObserver);
+
+        rightInsoleDevice.establishConnection(false).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(myRightConnectionObserver);
+
+    }
+
+    private void updateRightBattery(int i){
+        TextView rbv=(TextView) findViewById(R.id.rightBatteryValueTextView);
+        rbv.setText(String.valueOf(i));
+
+    }
+
+    private void updateLeftBattery(int i){
+        TextView lbv=(TextView) findViewById(R.id.leftBatteryValueTextView);
+        lbv.setText(String.valueOf(i));
+    }
+
+    private void updateLeftAccelometer(int x, int y, int z){
+        laX.setText(String.valueOf(x));
+        laY.setText(String.valueOf(y));
+        laZ.setText(String.valueOf(z));
+
+    }
+
+    private void updateRightAccelometer(int x, int y, int z){
+        raX.setText(String.valueOf(x));
+        raY.setText(String.valueOf(y));
+        raZ.setText(String.valueOf(z));
+
     }
 
 }
