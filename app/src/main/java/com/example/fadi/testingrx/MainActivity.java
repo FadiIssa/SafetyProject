@@ -19,6 +19,8 @@ import com.polidea.rxandroidble.scan.ScanResult;
 import com.polidea.rxandroidble.scan.ScanSettings;
 
 
+import org.w3c.dom.Text;
+
 import java.util.UUID;
 
 import rx.Observable;
@@ -58,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
     TextView raY;
     TextView raZ;
 
+    TextView positionValue;
+
+    int latestLX;
+    int latestLY;
+    int latestLZ;
+    int latestRX;
+    int latestRY;
+    int latestRZ;
+
 
     String leftInsoleMacAddress;
     String serviceUUID;
@@ -83,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         raX=(TextView) findViewById(R.id.rightX);
         raY=(TextView) findViewById(R.id.rightY);
         raZ=(TextView) findViewById(R.id.rightZ);
+
+        positionValue= (TextView) findViewById(R.id.positionTextView);
 
         rxBleClient = RxBleClient.create(getApplicationContext());
         //scanAndPairing();
@@ -125,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         .build()
 
         )
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(myScanObserver);
     }
@@ -246,13 +259,16 @@ public class MainActivity extends AppCompatActivity {
                         //int totalSteps= bytes[0]&0xFF+((bytes[1]&0xFF)<<8);
                         //Log.d("RXTesting","totalSteps:"+totalSteps);
 
-                        int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
+                        //int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
+                        int accX= (bytes[4]&0xFf)|((bytes[5])<<8);
                         Log.d("RXTesting","Left accX:"+accX);
 
-                        int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
+                        //int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
+                        int accY= (bytes[6]&0xFF)|((bytes[7])<<8);
                         Log.d("RXTesting","Left accY:"+accY);
 
-                        int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
+                        //int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
+                        int accZ= (bytes[8]&0xFF)|((bytes[9])<<8);
                         Log.d("RXTesting","Left accZ:"+accZ);
 
                         updateLeftAccelometer(accX,accY,accZ);
@@ -298,13 +314,16 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("RXTesting","byte nr:"+ i+" is:"+(bytes[i]&0xFF));
                         }*/
 
-                        int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
+                        //int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
+                        int accX= (bytes[4]&0xFF)|((bytes[5])<<8);
                         Log.d("RXTesting","Right accX:"+accX);
 
-                        int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
+                        //int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
+                        int accY= (bytes[6]&0xFF)|((bytes[7])<<8);
                         Log.d("RXTesting","Right accY:"+accY);
 
-                        int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
+                        //int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
+                        int accZ= (bytes[8]&0xFF)|((bytes[9])<<8);
                         Log.d("RXTesting","Right accZ:"+accZ);
 
                         updateRightAccelometer(accX,accY,accZ);
@@ -339,6 +358,7 @@ public class MainActivity extends AppCompatActivity {
                         .subscribe(myLeftBatteryReadObserver);
 
                 rxBleConnection.setupNotification(UUID.fromString("99dd0108-a80c-4f94-be5d-c66b9fba40cf"))
+                        .subscribeOn(AndroidSchedulers.mainThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myLeftAccelometerNotifyObserver);
             }
@@ -380,11 +400,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d("RXTesting"," device name is:"+rightInsoleDevice.getName());
 
 
-        leftInsoleDevice.establishConnection(false).subscribeOn(Schedulers.io())
+        leftInsoleDevice.establishConnection(false).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(myLeftConnectionObserver);
 
-        rightInsoleDevice.establishConnection(false).subscribeOn(Schedulers.io())
+        rightInsoleDevice.establishConnection(false).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(myRightConnectionObserver);
 
@@ -401,19 +421,65 @@ public class MainActivity extends AppCompatActivity {
         lbv.setText(String.valueOf(i));
     }
 
-    private void updateLeftAccelometer(int x, int y, int z){
-        laX.setText(String.valueOf(x));
-        laY.setText(String.valueOf(y));
-        laZ.setText(String.valueOf(z));
+    private void updateLeftAccelometer(final int x, final int y, final int z){
+        latestLX=x;
+        latestLY=-1*y;
+        latestLZ=z;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                laX.setText(String.valueOf(x));
+                laY.setText(String.valueOf(-y));
+                laZ.setText(String.valueOf(z));
+                updatePosition();
+            }
+        });
+
 
     }
 
-    private void updateRightAccelometer(int x, int y, int z){
-        raX.setText(String.valueOf(x));
-        raY.setText(String.valueOf(y));
-        raZ.setText(String.valueOf(z));
+    private void updateRightAccelometer(final int x, final int y, final int z){
+        latestRX=x;
+        latestRY=y;
+        latestRZ=z;
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                raX.setText(String.valueOf(x));
+                raY.setText(String.valueOf(y));
+                raZ.setText(String.valueOf(z));
+                updatePosition();
+            }
+        });
     }
+
+    private void updatePosition(){
+        String position="unknown";
+        if (latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300){
+            position="crouching";
+            Log.d("RXTesting","position:"+position);
+        }
+
+        if (latestRZ<300 && latestLZ<300 && latestRY>600 && latestLY>600){
+            position="kneeling";
+            Log.d("RXTesting","position:"+position);
+        }
+        else {
+            if (latestRZ>400 && latestRZ<700 && latestLZ>400 && latestLZ<700 && latestRY>600 && latestLY>600)
+            {
+                position="tip toes";
+                Log.d("RXTesting","position:"+position);
+            }
+        }
+        Log.d("RXTesting","final position:"+position);
+
+        positionValue.setText(position);
+    }
+
+
+
 
 }
 
