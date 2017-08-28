@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@android:style/Theme.Black"
+    android:background="@color/fBlack"
     tools:context="com.example.fadi.testingrx.MainActivity">
 
     <TextView
@@ -32,29 +34,29 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LeftBattery"
-        tools:layout_editor_absoluteX="16dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:text="LeftBattery"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="16dp" />
 
     <TextView
         android:id="@+id/leftBatteryValueTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:text="value"
         app:layout_constraintLeft_toRightOf="@+id/textView3"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/rightBatteryValueTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="value"
         android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="16dp"
+        android:text="value"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
@@ -62,9 +64,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="16dp"
         android:text="RightBattery"
         app:layout_constraintRight_toLeftOf="@+id/rightBatteryValueTextView"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
@@ -80,20 +82,20 @@
         android:id="@+id/leftX"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintLeft_toRightOf="@+id/textView7"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/leftBatteryValueTextView" />
 
     <TextView
         android:id="@+id/leftY"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintLeft_toRightOf="@+id/leftX"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/leftX"
         app:layout_constraintTop_toBottomOf="@+id/leftBatteryValueTextView" />
 
     <TextView
@@ -101,38 +103,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
         app:layout_constraintLeft_toRightOf="@+id/leftY"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/leftBatteryValueTextView" />
 
     <TextView
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RightSensorValues"
-        tools:layout_editor_absoluteX="16dp"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        android:text="RightSensorValues"
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        tools:layout_editor_absoluteX="16dp" />
 
     <TextView
         android:id="@+id/rightX"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintLeft_toRightOf="@+id/textView11"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/leftX" />
 
     <TextView
         android:id="@+id/rightY"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintLeft_toRightOf="@+id/rightX"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toRightOf="@+id/rightX"
         app:layout_constraintTop_toBottomOf="@+id/leftY" />
 
     <TextView
@@ -140,31 +142,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
         android:text="TextView"
         app:layout_constraintLeft_toRightOf="@+id/rightY"
-        android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@+id/leftZ" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="7dp"
         android:layout_marginTop="31dp"
         android:text="position"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <TextView
         android:id="@+id/positionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="unknown"
-        app:layout_constraintLeft_toRightOf="@+id/textView16"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="32dp"
+        android:text="unknown"
+        app:layout_constraintLeft_toRightOf="@+id/textView16"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <ImageView
+        android:id="@+id/currentPostureImageView"
+        android:layout_width="@android:dimen/notification_large_icon_height"
+        android:layout_height="@android:dimen/notification_large_icon_height"
+        android:layout_marginBottom="31dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@android:drawable/alert_dark_frame" />
 
 </android.support.constraint.ConstraintLayout>
