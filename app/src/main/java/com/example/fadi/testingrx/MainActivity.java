@@ -23,6 +23,8 @@ import com.polidea.rxandroidble.scan.ScanResult;
 import com.polidea.rxandroidble.scan.ScanSettings;
 
 
+import org.w3c.dom.Text;
+
 import java.util.UUID;
 
 import rx.Observable;
@@ -51,19 +53,6 @@ public class MainActivity extends AppCompatActivity {
     Observer<Observable<byte[]>> myLeftAccelometerNotifyObserver;
     Observer<Observable<byte[]>> myRightAccelometerNotifyObserver;
 
-    TextView deviceNameTextView;
-    TextView deviceMacTextView;
-
-    TextView laX;//left accelerometer X
-    TextView laY;
-    TextView laZ;
-
-    TextView raX;
-    TextView raY;
-    TextView raZ;
-
-    TextView positionValue;
-
     int latestLX;// latest left accelerometer X
     int latestLY;
     int latestLZ;
@@ -74,10 +63,22 @@ public class MainActivity extends AppCompatActivity {
     PostureTracker mPostureTracker;
 
     ImageView currentPostureImageView;
+    ImageView tiptoesImageView;
+    ImageView kneelingImageView;
+    ImageView crouchingImageView;
 
-    Drawable drawableTipToes;
-    Drawable drawableCrouching;
-    Drawable drawableKneeling;
+    TextView counterCurrentPostureTextView;
+    TextView counterCrouchingTextView;
+    TextView counterKneelingTextView;
+    TextView counterTiptoesTextView;
+
+
+    Drawable drawableTipToesFull;
+    Drawable drawableCrouchingFull;
+    Drawable drawableKneelingFull;
+    Drawable drawableTipToesBorder;
+    Drawable drawableCrouchingBorder;
+    Drawable drawableKneelingBorder;
     Drawable drawableUnknown;
 
     String leftInsoleMacAddress;
@@ -91,34 +92,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //String RPDeviceAdress="C1:56:ED:7A:AB:07";
-        //leftInsoleMacAddress="C1:56:ED:7A:AB:07";
-
         mPostureTracker = new PostureTracker(this);
 
         serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
-        deviceMacTextView= (TextView) findViewById(R.id.textView2);
-        deviceNameTextView= (TextView) findViewById(R.id.textView);
 
-        laX=(TextView) findViewById(R.id.leftX);
-        laY=(TextView) findViewById(R.id.leftY);
-        laZ=(TextView) findViewById(R.id.leftZ);
-
-        raX=(TextView) findViewById(R.id.rightX);
-        raY=(TextView) findViewById(R.id.rightY);
-        raZ=(TextView) findViewById(R.id.rightZ);
-
-        drawableTipToes = getDrawable(R.drawable.tipoesfull);
-        drawableCrouching = getDrawable(R.drawable.crouchingfull);
-        drawableKneeling = getDrawable(R.drawable.kneelingfull);
+        drawableTipToesFull = getDrawable(R.drawable.tipoesfull);
+        drawableTipToesBorder = getDrawable(R.drawable.tiptoesborder);
+        drawableCrouchingFull = getDrawable(R.drawable.crouchingfull);
+        drawableCrouchingBorder = getDrawable(R.drawable.crouchingborder);
+        drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
+        drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
         drawableUnknown = getDrawable(R.drawable.unknownposition);
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
-        currentPostureImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
+        currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
 
+        kneelingImageView = (ImageView) findViewById(R.id.kneelingImageView);
+        kneelingImageView.setImageDrawable(getDrawable(R.drawable.kneelingfull));
 
+        crouchingImageView = (ImageView) findViewById(R.id.crouchingImageView);
+        crouchingImageView.setImageDrawable(getDrawable(R.drawable.crouchingfull));
 
-        positionValue= (TextView) findViewById(R.id.positionTextView);
+        counterCurrentPostureTextView = (TextView) findViewById(R.id.currentPostureCounterTextView);
+        counterCrouchingTextView = (TextView) findViewById(R.id.crouchingCounterTextView);
+        counterKneelingTextView = (TextView) findViewById(R.id.kneelingCounterTextView);
+        counterTiptoesTextView = (TextView) findViewById(R.id.tiptoesCounterTextView);
+
+        tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
+        tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
 
         rxBleClient = RxBleClient.create(getApplicationContext());
         //scanAndPairing();
@@ -144,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(ScanResult scanResult) {
                 Log.d("RXTesting","scan onNext "+scanResult.toString());
-                deviceMacTextView.setText(scanResult.getBleDevice().getMacAddress());
-                deviceNameTextView.setText(scanResult.getBleDevice().getName());
+                //deviceMacTextView.setText(scanResult.getBleDevice().getMacAddress());
+                //deviceNameTextView.setText(scanResult.getBleDevice().getName());
                 //scanSubscription.unsubscribe();
 
             }
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(byte[] bytes) {
                 int leftBatteryValue=bytes[0]&0xFF;
                 Log.d("RXTesting","LeftBatteryReadObserver onNext "+ leftBatteryValue);
-                updateLeftBattery(leftBatteryValue);
+                //updateLeftBattery(leftBatteryValue);
 
             }
         };
@@ -240,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(byte[] bytes) {
                 int rightBatteryValue=bytes[0]&0xFF;
                 Log.d("RXTesting","RightBatteryReadObserver onNext "+ rightBatteryValue);
-                updateRightBattery(rightBatteryValue);
+                //updateRightBattery(rightBatteryValue);
 
             }
         };
@@ -432,93 +433,45 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateRightBattery(int i){
-        TextView rbv=(TextView) findViewById(R.id.rightBatteryValueTextView);
-        rbv.setText(String.valueOf(i));
-
-    }
-
-    private void updateLeftBattery(int i){
-        TextView lbv=(TextView) findViewById(R.id.leftBatteryValueTextView);
-        lbv.setText(String.valueOf(i));
-    }
-
-    private void updateLeftAccelometer(final int x, final int y, final int z){
-        latestLX=x;
-        latestLY=-1*y;
-        latestLZ=z;
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                laX.setText(String.valueOf(x));
-                laY.setText(String.valueOf(-y));
-                laZ.setText(String.valueOf(z));
-                updatePosition();
-            }
-        });
-    }
-
-    private void updateRightAccelometer(final int x, final int y, final int z){
-        latestRX=x;
-        latestRY=y;
-        latestRZ=z;
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                raX.setText(String.valueOf(x));
-                raY.setText(String.valueOf(y));
-                raZ.setText(String.valueOf(z));
-                updatePosition();
-            }
-        });
-    }
-
-    private void updatePosition(){
-        String position="unknown";
-        currentPostureImageView.setImageDrawable(drawableUnknown);
-        if (latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300){
-            position="crouching";
-            Log.d("RXTesting","position:"+position);
-            currentPostureImageView.setImageDrawable(drawableCrouching);
-        }
-
-        if (latestRZ<300 && latestLZ<300 && latestRY>600 && latestLY>600){
-            position="kneeling";
-            Log.d("RXTesting","position:"+position);
-            currentPostureImageView.setImageDrawable(drawableKneeling);
-        }
-        else {
-            if (latestRZ>400 && latestRZ<700 && latestLZ>400 && latestLZ<700 && latestRY>600 && latestLY>600)
-            {
-                position="tip toes";
-                Log.d("RXTesting","position:"+position);
-                currentPostureImageView.setImageDrawable(drawableTipToes);
-            }
-        }
-        Log.d("RXTesting","final position:"+position);
-
-        positionValue.setText(position);
-    }
-
     //this will be called from the posture detection class, to let MainActivity updates the views it has to reflect the real postures.
-    public void updatePositionCallBack(final int i){
+    public void updatePositionCallBack(final int i, final int currentPosCounter, final int crouchingCounter, final int kneelingCounter, final int tiptoesCounter){
 
         Log.d("RXTesting", "received position in MainActivity call back is:"+i);
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                int currentPositionCounter=currentPosCounter/2;
                 if (i== Postures.TIPTOES){
-                    currentPostureImageView.setImageDrawable(drawableTipToes);
+                    currentPostureImageView.setImageDrawable(currentPositionCounter>=4? drawableTipToesFull:drawableTipToesBorder);
                 } else if (i== Postures.CROUCHING){
-                    currentPostureImageView.setImageDrawable(drawableCrouching);
+                    currentPostureImageView.setImageDrawable(currentPositionCounter>=4? drawableCrouchingFull:drawableCrouchingBorder);
                 } else if (i== Postures.KNEELING){
-                    currentPostureImageView.setImageDrawable(drawableKneeling);
+                    currentPostureImageView.setImageDrawable(currentPositionCounter>=4? drawableKneelingFull:drawableKneelingBorder);
                 } else if (i== Postures.UNKNOWN){
                     currentPostureImageView.setImageDrawable(drawableUnknown);
                 }
+
+                //setting the counter of current posture
+                int currentPositionCounterMinutes= currentPositionCounter/60;
+                int currentPositionCounterSeconds= currentPositionCounter%60;
+                counterCurrentPostureTextView.setText(String.valueOf(currentPositionCounterMinutes)+":"+String.valueOf(currentPositionCounterSeconds));
+
+                int crouchingPositionCounter=crouchingCounter/2;
+                int crouchingPostureCounterMinutes=crouchingPositionCounter/60;
+                int crouchingPostureCounterSeconds=crouchingPositionCounter%60;
+                counterCrouchingTextView.setText(String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
+
+                int kneelingPositionCounter=kneelingCounter/2;
+                int kneelingPostureCounterMinutes=kneelingPositionCounter/60;
+                int kneelingPostureCounterSeconds=kneelingPositionCounter%60;
+                counterKneelingTextView.setText(String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
+
+                int tiptoesPositionCounter=tiptoesCounter/2;
+                int tiptoesPostureCounterMinutes=tiptoesPositionCounter/60;
+                int tiptoesPostureCounterSeconds=tiptoesPositionCounter%60;
+                counterTiptoesTextView.setText(String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
+
             }
         });
 
