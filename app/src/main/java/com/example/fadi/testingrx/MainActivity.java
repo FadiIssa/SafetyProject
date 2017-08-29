@@ -453,24 +453,29 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //setting the counter of current posture
-                int currentPositionCounterMinutes= currentPositionCounter/60;
-                int currentPositionCounterSeconds= currentPositionCounter%60;
-                counterCurrentPostureTextView.setText(String.valueOf(currentPositionCounterMinutes)+":"+String.valueOf(currentPositionCounterSeconds));
+                int currentPositionCounterHours= currentPositionCounter/3600;
+                int currentPositionCounterMinutes= (currentPositionCounter%3600)/60;
+                int currentPositionCounterSeconds= (currentPositionCounter%3600)%60;
+
+                counterCurrentPostureTextView.setText(String.valueOf(currentPositionCounterHours)+":"+String.valueOf(currentPositionCounterMinutes)+":"+String.valueOf(currentPositionCounterSeconds));
 
                 int crouchingPositionCounter=crouchingCounter/2;
-                int crouchingPostureCounterMinutes=crouchingPositionCounter/60;
-                int crouchingPostureCounterSeconds=crouchingPositionCounter%60;
-                counterCrouchingTextView.setText(String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
+                int crouchingPostureCounterHours=crouchingPositionCounter/3600;
+                int crouchingPostureCounterMinutes=(crouchingPositionCounter%3600)/60;
+                int crouchingPostureCounterSeconds=(crouchingPositionCounter%3600)%60;
+                counterCrouchingTextView.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
 
                 int kneelingPositionCounter=kneelingCounter/2;
-                int kneelingPostureCounterMinutes=kneelingPositionCounter/60;
-                int kneelingPostureCounterSeconds=kneelingPositionCounter%60;
-                counterKneelingTextView.setText(String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
+                int kneelingPostureCounterHours=kneelingPositionCounter/3600;
+                int kneelingPostureCounterMinutes=(kneelingPositionCounter%3600)/60;
+                int kneelingPostureCounterSeconds=(kneelingPositionCounter%3600)%60;
+                counterKneelingTextView.setText(String.valueOf(kneelingPostureCounterHours)+":"+String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
 
                 int tiptoesPositionCounter=tiptoesCounter/2;
-                int tiptoesPostureCounterMinutes=tiptoesPositionCounter/60;
-                int tiptoesPostureCounterSeconds=tiptoesPositionCounter%60;
-                counterTiptoesTextView.setText(String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
+                int tiptoesPostureCounterHours=tiptoesPositionCounter/3600;
+                int tiptoesPostureCounterMinutes=(tiptoesPositionCounter%3600)/60;
+                int tiptoesPostureCounterSeconds=(tiptoesPositionCounter%3600)%60;
+                counterTiptoesTextView.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
 
             }
         });
