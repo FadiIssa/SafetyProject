@@ -3,10 +3,15 @@ package com.example.fadi.testingrx;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
+import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,10 +27,13 @@ import com.polidea.rxandroidble.scan.ScanFilter;
 import com.polidea.rxandroidble.scan.ScanResult;
 import com.polidea.rxandroidble.scan.ScanSettings;
 
+import com.jakewharton.rxbinding2.view.RxView;
+
 
 import org.w3c.dom.Text;
 
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import rx.Observable;
 import rx.Observer;
@@ -33,17 +41,28 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
-    RxBleClient rxBleClient;// one instance in the whole app lifecycle
+
+    // bluetooth client
+    RxBleClient rxBleClient;// one instance in the whole app lifecycle// maybe this variable should be in a service.
+
+    // subscriptions
     Subscription scanSubscription;// this is for scthere will be several subscriptions, for each functionality
-    Subscription connectionSubscription;
-    Observer<ScanResult> myScanObserver;
+    Subscription connectionSubscription; // one purpose for these subscriptions is to handle their life cycle according to the activity life cycle.
 
-    Observer<RxBleConnection> myLeftConnectionObserver;
-    Observer<RxBleConnection> myRightConnectionObserver;
+    // observers
+    Observer<ScanResult> myScanObserver;//scan observer, no need for 2 objects, one is enough to find all ble devices.
 
+    // connection observers, one for each insole
+    Observer<RxBleConnection> leftInsoleConnectionObserver;
+    Observer<RxBleConnection> rightInsoleConnectionObserver;
+
+    // observables
+    Observable<RxBleConnection> leftInsoleConnectionObservable;//this observable will be used any time we want to interact with a characteristic, no need to establish new connection for every operation.
+    Observable<RxBleConnection> rightInsoleConnectionObservable;
 
     Observer<RxBleDeviceServices> myServicesDiscoveryObserver;
 
@@ -52,13 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
     Observer<Observable<byte[]>> myLeftAccelometerNotifyObserver;
     Observer<Observable<byte[]>> myRightAccelometerNotifyObserver;
-
-    int latestLX;// latest left accelerometer X
-    int latestLY;
-    int latestLZ;
-    int latestRX;
-    int latestRY;
-    int latestRZ;
 
     PostureTracker mPostureTracker;
 
@@ -72,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
     TextView counterKneelingTextView;
     TextView counterTiptoesTextView;
 
+    Button buttonStartActivity;
+
 
     Drawable drawableTipToesFull;
     Drawable drawableCrouchingFull;
@@ -81,21 +95,32 @@ public class MainActivity extends AppCompatActivity {
     Drawable drawableKneelingBorder;
     Drawable drawableUnknown;
 
-    String leftInsoleMacAddress;
     String serviceUUID;
     RxBleDevice leftInsoleDevice;
     RxBleDevice rightInsoleDevice;
-    int counter;
+
+    // to know when to stop scanning
+    boolean isLeftInsoleDetectedNearby;
+    boolean isRightInsoleDetectedNearby;
+
+
+    // this is to ensure font changes happen in this activity.
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // prepare the object that will process posture detection
         mPostureTracker = new PostureTracker(this);
 
         serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
 
+        // prepare the drawables that will represent the different postures.
         drawableTipToesFull = getDrawable(R.drawable.tipoesfull);
         drawableTipToesBorder = getDrawable(R.drawable.tiptoesborder);
         drawableCrouchingFull = getDrawable(R.drawable.crouchingfull);
@@ -103,6 +128,32 @@ public class MainActivity extends AppCompatActivity {
         drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
         drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
         drawableUnknown = getDrawable(R.drawable.unknownposition);
+
+        buttonStartActivity = (Button) findViewById(R.id.buttonStartActivity);
+
+        RxView.clicks(buttonStartActivity)
+                .map(a->buttonStartActivity.getText().toString().equals("start"))
+                .subscribe(a-> {
+                    if (a) {
+                    buttonStartActivity.setText("stop");
+                    startActivity();
+                    } else{
+                        buttonStartActivity.setText("start");
+                    }
+                });
+
+
+        /*TextView tempFontChangeTextView= (TextView) findViewById(R.id.textView9);
+        Typeface mTypeFace= Typeface.createFromAsset(getAssets(),"fonts/fadifont.otf");
+        //tempFontChangeTextView.setTypeface();
+
+        ViewGroup vg= (ViewGroup) findViewById(R.id.myroot);
+
+        for (int i=0;i<vg.getChildCount();i++){
+            if (vg.getChildAt(i) instanceof TextView){
+                ((TextView) vg.getChildAt(i)).setTypeface(mTypeFace);
+            }
+        }*/
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
         currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
@@ -122,11 +173,77 @@ public class MainActivity extends AppCompatActivity {
         tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
 
         rxBleClient = RxBleClient.create(getApplicationContext());
-        //scanAndPairing();
-        connect();
+        isLeftInsoleDetectedNearby=false;
+        isRightInsoleDetectedNearby=false;
+
+        scanAndPairing();
+        //connect();// it is not called from here any more, instead, it is called from whithin the scan observer when he finds both left and right insoles nearby.
         //readBattery();
         //registerForSteps();
+    }
 
+    private void startActivity(){
+
+            //check if the activity is not already started
+
+            byte[] startCommandArray= {0x01};
+            //send command to stop the activity
+            if (leftInsoleDevice.getConnectionState()== RxBleConnection.RxBleConnectionState.CONNECTED){
+                leftInsoleConnectionObservable
+                        .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
+                .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
+
+                Log.d("RxTesting", "activity started, writing to command characteristic of left insole");
+            }
+            else{
+                Log.d("RXtesting","could not start activity, no connection with left insole.");
+            }
+
+    }
+
+    private void stopActivity(){
+
+        //check if the activity is not already started
+
+        byte[] startCommandArray= {0x02};
+        //send command to stop the activity
+        if (leftInsoleDevice.getConnectionState()== RxBleConnection.RxBleConnectionState.CONNECTED){
+            leftInsoleConnectionObservable
+                    .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
+                    .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
+
+            Log.d("RxTesting", "activity stopped, writing to command characteristic of left insole");
+        }
+        else{
+            Log.d("RXtesting","could not stop activity, no connection with left insole.");
+        }
+
+    }
+
+    private boolean isLeftInsoleConnected(){
+        if (leftInsoleDevice!=null){
+            return (leftInsoleDevice.getConnectionState()== RxBleConnection.RxBleConnectionState.CONNECTED);
+        }
+        else {
+            Log.d("RXTesting","you should not see this, try to prevent this operation if the bleDevice is null");
+            return false;
+        }
+    }
+
+    private void onWriteSuccess(){
+        Log.d("WriteCh", "successful write operation");
+    }
+
+    private void onWriteError(Throwable e){
+        Log.d("WriteCh", "error while writing characteristic: "+e.toString());
+    }
+
+    //this method will be called when the observer receives a notification from the insole that it successfully started the activity.
+    private void notifyRInsoleStartedActivity(){
+
+    }
+
+    private void notifyLInsoleStartedActivity(){
 
     }
 
@@ -147,8 +264,19 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("RXTesting","scan onNext "+scanResult.toString());
                 //deviceMacTextView.setText(scanResult.getBleDevice().getMacAddress());
                 //deviceNameTextView.setText(scanResult.getBleDevice().getName());
-                //scanSubscription.unsubscribe();
 
+                if (scanResult.getBleDevice().getName().equals("ZTSafetyR")){
+                    isRightInsoleDetectedNearby=true;
+                }
+
+                if (scanResult.getBleDevice().getName().equals("ZTSafetyL")){
+                    isLeftInsoleDetectedNearby=true;
+                }
+
+                if (isLeftInsoleDetectedNearby&&isRightInsoleDetectedNearby){
+                    scanSubscription.unsubscribe();
+                    connect();
+                }
             }
         };
 
@@ -164,6 +292,12 @@ public class MainActivity extends AppCompatActivity {
         )
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .filter(scanResult -> { String deviceName= scanResult.getBleDevice().getName();
+                    if (deviceName==null)
+                        return false;
+                    else
+                        return (deviceName.equals("ZTSafetyR") || deviceName.equals("ZTSafetyL"));
+                })
                 .subscribe(myScanObserver);
     }
 
@@ -358,7 +492,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        myLeftConnectionObserver= new Observer<RxBleConnection>() {
+        leftInsoleConnectionObserver= new Observer<RxBleConnection>() {
             @Override
             public void onCompleted() {
                 Log.d("RXTesting","LeftconnectionObserver onCompleted");
@@ -387,7 +521,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        myRightConnectionObserver= new Observer<RxBleConnection>() {
+        rightInsoleConnectionObserver= new Observer<RxBleConnection>() {
             @Override
             public void onCompleted() {
                 Log.d("RXTesting","RightconnectionObserver onCompleted");
@@ -423,13 +557,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d("RXTesting"," device name is:"+rightInsoleDevice.getName());
 
 
-        leftInsoleDevice.establishConnection(false).subscribeOn(AndroidSchedulers.mainThread())
+        leftInsoleConnectionObservable=leftInsoleDevice.establishConnection(false);
+        leftInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(myLeftConnectionObserver);
+                .subscribe(leftInsoleConnectionObserver);
 
         rightInsoleDevice.establishConnection(false).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(myRightConnectionObserver);
+                .subscribe(rightInsoleConnectionObserver);
 
     }
 
@@ -476,14 +611,7 @@ public class MainActivity extends AppCompatActivity {
                 int tiptoesPostureCounterMinutes=(tiptoesPositionCounter%3600)/60;
                 int tiptoesPostureCounterSeconds=(tiptoesPositionCounter%3600)%60;
                 counterTiptoesTextView.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
-
             }
         });
-
-
     }
-
 }
-
-
-

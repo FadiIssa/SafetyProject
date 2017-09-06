@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/myroot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@android:style/Theme.Black"
@@ -137,6 +138,26 @@
         android:layout_marginLeft="0dp"
         app:layout_constraintLeft_toLeftOf="@+id/tiptoesImageView"
         android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/tiptoesImageView" />
+
+    <Button
+        android:id="@+id/buttonStartActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="Start"
+        app:layout_constraintBottom_toTopOf="@+id/crouchingImageView"
+        app:layout_constraintLeft_toLeftOf="@+id/crouchingImageView" />
+
+    <TextView
+        android:id="@+id/textViewSteps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/tiptoesImageView"
         app:layout_constraintRight_toRightOf="@+id/tiptoesImageView" />
 
 </android.support.constraint.ConstraintLayout>
