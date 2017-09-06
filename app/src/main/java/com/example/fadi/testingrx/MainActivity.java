@@ -46,9 +46,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
 
 
-    // bluetooth client
-    RxBleClient rxBleClient;// one instance in the whole app lifecycle// maybe this variable should be in a service.
-
     // subscriptions
     Subscription scanSubscription;// this is for scthere will be several subscriptions, for each functionality
     Subscription connectionSubscription; // one purpose for these subscriptions is to handle their life cycle according to the activity life cycle.
@@ -172,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
         tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
 
-        rxBleClient = RxBleClient.create(getApplicationContext());
+
         isLeftInsoleDetectedNearby=false;
         isRightInsoleDetectedNearby=false;
 
@@ -280,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        scanSubscription = rxBleClient.scanBleDevices(
+        scanSubscription = MyApplication.getRxBleClient().scanBleDevices(
                 new ScanSettings.Builder()
                         .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                         .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
@@ -550,10 +547,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
         //leftInsoleDevice = rxBleClient.getBleDevice(leftInsoleMacAddress);
-        leftInsoleDevice = rxBleClient.getBleDevice(Insoles.LeftInsoleMacAddress);
+        leftInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.LeftInsoleMacAddress);
         Log.d("RXTesting"," device name is:"+leftInsoleDevice.getName());
 
-        rightInsoleDevice = rxBleClient.getBleDevice(Insoles.RightInsoleMacAddress);
+        rightInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.RightInsoleMacAddress);
         Log.d("RXTesting"," device name is:"+rightInsoleDevice.getName());
 
 
