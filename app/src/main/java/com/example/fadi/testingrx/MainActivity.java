@@ -81,10 +81,9 @@ public class MainActivity extends AppCompatActivity {
     TextView counterKneelingTextView;
     TextView counterTiptoesTextView;
 
-    Button buttonStartActivity;
+    Button buttonStartActivity;// this is when I have to show that I am doing some advancement.
 
-
-    Drawable drawableTipToesFull;
+    Drawable drawableTipToesFull; // still silly by all measures.
     Drawable drawableCrouchingFull;
     Drawable drawableKneelingFull;
     Drawable drawableTipToesBorder;
@@ -93,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     Drawable drawableUnknown;
 
     String serviceUUID;
+
     RxBleDevice leftInsoleDevice;
     RxBleDevice rightInsoleDevice;
 
@@ -112,74 +112,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initUI();
+
         // prepare the object that will process posture detection
         mPostureTracker = new PostureTracker(this);
 
-        serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
-
-        // prepare the drawables that will represent the different postures.
-        drawableTipToesFull = getDrawable(R.drawable.tipoesfull);
-        drawableTipToesBorder = getDrawable(R.drawable.tiptoesborder);
-        drawableCrouchingFull = getDrawable(R.drawable.crouchingfull);
-        drawableCrouchingBorder = getDrawable(R.drawable.crouchingborder);
-        drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
-        drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
-        drawableUnknown = getDrawable(R.drawable.unknownposition);
-
-        buttonStartActivity = (Button) findViewById(R.id.buttonStartActivity);
-
-        RxView.clicks(buttonStartActivity)
-                .map(a->buttonStartActivity.getText().toString().equals("start"))
-                .subscribe(a-> {
-                    if (a) {
-                    buttonStartActivity.setText("stop");
-                    startActivity();
-                    } else{
-                        buttonStartActivity.setText("start");
-                    }
-                });
-
-
-        /*TextView tempFontChangeTextView= (TextView) findViewById(R.id.textView9);
-        Typeface mTypeFace= Typeface.createFromAsset(getAssets(),"fonts/fadifont.otf");
-        //tempFontChangeTextView.setTypeface();
-
-        ViewGroup vg= (ViewGroup) findViewById(R.id.myroot);
-
-        for (int i=0;i<vg.getChildCount();i++){
-            if (vg.getChildAt(i) instanceof TextView){
-                ((TextView) vg.getChildAt(i)).setTypeface(mTypeFace);
-            }
-        }*/
-
-        currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
-        currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
-
-        kneelingImageView = (ImageView) findViewById(R.id.kneelingImageView);
-        kneelingImageView.setImageDrawable(getDrawable(R.drawable.kneelingfull));
-
-        crouchingImageView = (ImageView) findViewById(R.id.crouchingImageView);
-        crouchingImageView.setImageDrawable(getDrawable(R.drawable.crouchingfull));
-
-        counterCurrentPostureTextView = (TextView) findViewById(R.id.currentPostureCounterTextView);
-        counterCrouchingTextView = (TextView) findViewById(R.id.crouchingCounterTextView);
-        counterKneelingTextView = (TextView) findViewById(R.id.kneelingCounterTextView);
-        counterTiptoesTextView = (TextView) findViewById(R.id.tiptoesCounterTextView);
-
-        tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
-        tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
-
+//        serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
 
         isLeftInsoleDetectedNearby=false;
         isRightInsoleDetectedNearby=false;
 
-        scanAndPairing();
+        //scanAndPairing();
+        MyApplication.getBleManager().scanAndPair(()->{
+            MyApplication.getBleManager().connectRealTime(mPostureTracker);
+        });
+
         //connect();// it is not called from here any more, instead, it is called from whithin the scan observer when he finds both left and right insoles nearby.
         //readBattery();
         //registerForSteps();
     }
 
-    private void startActivity(){
+    private void startSafetyActivity(){
 
             //check if the activity is not already started
 
@@ -195,10 +148,9 @@ public class MainActivity extends AppCompatActivity {
             else{
                 Log.d("RXtesting","could not start activity, no connection with left insole.");
             }
-
     }
 
-    private void stopActivity(){
+    private void stopSafetyActivity(){
 
         //check if the activity is not already started
 
@@ -243,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
     private void notifyLInsoleStartedActivity(){
 
     }
+
+    /*
 
     private void scanAndPairing(){
         myScanObserver=new Observer<ScanResult>() {
@@ -297,6 +251,10 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .subscribe(myScanObserver);
     }
+
+    */
+
+
 
     private void connect(){
 
@@ -610,5 +568,48 @@ public class MainActivity extends AppCompatActivity {
                 counterTiptoesTextView.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
             }
         });
+    }
+
+    private void initUI(){
+
+        // prepare the drawables that will represent the different postures.
+        drawableTipToesFull = getDrawable(R.drawable.tipoesfull);
+        drawableTipToesBorder = getDrawable(R.drawable.tiptoesborder);
+        drawableCrouchingFull = getDrawable(R.drawable.crouchingfull);
+        drawableCrouchingBorder = getDrawable(R.drawable.crouchingborder);
+        drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
+        drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
+        drawableUnknown = getDrawable(R.drawable.unknownposition);
+
+        buttonStartActivity = (Button) findViewById(R.id.buttonStartActivity);
+
+        RxView.clicks(buttonStartActivity)
+                .map(a->buttonStartActivity.getText().toString().equals("start"))
+                .subscribe(a-> {
+                    if (a) {
+                        buttonStartActivity.setText("stop");
+                        startSafetyActivity();
+                    } else{
+                        buttonStartActivity.setText("start");
+                        stopSafetyActivity();
+                    }
+                });
+
+        currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
+        currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
+
+        kneelingImageView = (ImageView) findViewById(R.id.kneelingImageView);
+        kneelingImageView.setImageDrawable(getDrawable(R.drawable.kneelingfull));
+
+        crouchingImageView = (ImageView) findViewById(R.id.crouchingImageView);
+        crouchingImageView.setImageDrawable(getDrawable(R.drawable.crouchingfull));
+
+        counterCurrentPostureTextView = (TextView) findViewById(R.id.currentPostureCounterTextView);
+        counterCrouchingTextView = (TextView) findViewById(R.id.crouchingCounterTextView);
+        counterKneelingTextView = (TextView) findViewById(R.id.kneelingCounterTextView);
+        counterTiptoesTextView = (TextView) findViewById(R.id.tiptoesCounterTextView);
+
+        tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
+        tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
     }
 }

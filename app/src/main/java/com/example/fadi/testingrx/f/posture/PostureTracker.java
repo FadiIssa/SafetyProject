@@ -70,7 +70,6 @@ public class PostureTracker {
         Log.d("RXTesting","final position:"+position);
 
         caller.updatePositionCallBack(position, counterCurrentPosition, counterCrouching, counterKneeling, counterTiptoes);
-
     }
 
     //this method will be called after each detection of a posture, its purpose is to maintain a reliable readings of the counter varialbes at any time, these values will be sent to update the UI whenever there is a change from this side.
@@ -105,7 +104,6 @@ public class PostureTracker {
                 counterTiptoes+=8;
             }
         }
-
     }
 
     public void updateRightAccelometer(int x, int y, int z) {
