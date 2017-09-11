@@ -43,31 +43,17 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+
+
 public class MainActivity extends AppCompatActivity {
-
-
-    // subscriptions
-    Subscription scanSubscription;// this is for scthere will be several subscriptions, for each functionality
-    Subscription connectionSubscription; // one purpose for these subscriptions is to handle their life cycle according to the activity life cycle.
-
-    // observers
-    Observer<ScanResult> myScanObserver;//scan observer, no need for 2 objects, one is enough to find all ble devices.
-
-    // connection observers, one for each insole
-    Observer<RxBleConnection> leftInsoleConnectionObserver;
-    Observer<RxBleConnection> rightInsoleConnectionObserver;
 
     // observables
     Observable<RxBleConnection> leftInsoleConnectionObservable;//this observable will be used any time we want to interact with a characteristic, no need to establish new connection for every operation.
     Observable<RxBleConnection> rightInsoleConnectionObservable;
 
-    Observer<RxBleDeviceServices> myServicesDiscoveryObserver;
-
-    Observer<byte[]> myLeftBatteryReadObserver;
-    Observer<byte[]> myRightBatteryReadObserver;
-
-    Observer<Observable<byte[]>> myLeftAccelometerNotifyObserver;
-    Observer<Observable<byte[]>> myRightAccelometerNotifyObserver;
+    // for reading the indication characteristic
+    Observer<Observable<byte[]>> myLeftInsoleIndicationObserver;
+    Observer<Observable<byte[]>> myRightInsoleIndicationObserver;
 
     PostureTracker mPostureTracker;
 
@@ -91,15 +77,8 @@ public class MainActivity extends AppCompatActivity {
     Drawable drawableKneelingBorder;
     Drawable drawableUnknown;
 
-    String serviceUUID;
 
-    RxBleDevice leftInsoleDevice;
-    RxBleDevice rightInsoleDevice;
-
-    // to know when to stop scanning
-    boolean isLeftInsoleDetectedNearby;
-    boolean isRightInsoleDetectedNearby;
-
+    String TAG="RxTesting";
 
     // this is to ensure font changes happen in this activity.
     @Override
@@ -119,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
 //        serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
 
-        isLeftInsoleDetectedNearby=false;
-        isRightInsoleDetectedNearby=false;
-
         //scanAndPairing();
         MyApplication.getBleManager().scanAndPair(()->{
             MyApplication.getBleManager().connectRealTime(mPostureTracker);
@@ -134,19 +110,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void startSafetyActivity(){
 
+        if (leftInsoleConnectionObservable==null){
+            leftInsoleConnectionObservable=MyApplication.getBleManager().getLeftInsoleConnectionObservable();
+        }
+
+        if (rightInsoleConnectionObservable==null){
+            leftInsoleConnectionObservable=MyApplication.getBleManager().getLeftInsoleConnectionObservable();
+        }
+
             //check if the activity is not already started
 
             byte[] startCommandArray= {0x01};
             //send command to stop the activity
-            if (leftInsoleDevice.getConnectionState()== RxBleConnection.RxBleConnectionState.CONNECTED){
+            if (isLeftInsoleConnected()){
                 leftInsoleConnectionObservable
                         .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
                 .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
 
-                Log.d("RxTesting", "activity started, writing to command characteristic of left insole");
+                Log.d(TAG, "activity started, writing to command characteristic of left insole");
             }
             else{
-                Log.d("RXtesting","could not start activity, no connection with left insole.");
+                Log.d(TAG,"could not start activity, no connection with left insole.");
             }
     }
 
@@ -154,37 +138,49 @@ public class MainActivity extends AppCompatActivity {
 
         //check if the activity is not already started
 
-        byte[] startCommandArray= {0x02};
+        byte[] stopCommandArray= {0x02};
         //send command to stop the activity
-        if (leftInsoleDevice.getConnectionState()== RxBleConnection.RxBleConnectionState.CONNECTED){
+        if (isLeftInsoleConnected()){
             leftInsoleConnectionObservable
-                    .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
+                    .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
                     .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
 
-            Log.d("RxTesting", "activity stopped, writing to command characteristic of left insole");
+            Log.d(TAG, "activity stopped, writing to command characteristic of left insole");
+
+            //here I should start the indication thig.
+
+            leftInsoleConnectionObservable
+                    .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
+                    .subscribe(myLeftInsoleIndicationObserver);
+
         }
         else{
-            Log.d("RXtesting","could not stop activity, no connection with left insole.");
+            Log.d(TAG,"could not stop activity, no connection with left insole.");
         }
-
     }
 
     private boolean isLeftInsoleConnected(){
-        if (leftInsoleDevice!=null){
-            return (leftInsoleDevice.getConnectionState()== RxBleConnection.RxBleConnectionState.CONNECTED);
+        if (MyApplication.getBleManager().getLeftInsoleDevice()!=null){
+            return (MyApplication.getBleManager().getLeftInsoleDevice().getConnectionState()== RxBleConnection.RxBleConnectionState.CONNECTED);
         }
         else {
-            Log.d("RXTesting","you should not see this, try to prevent this operation if the bleDevice is null");
+            Log.d(TAG,"you should not see this, try to prevent this operation if the bleDevice is null");
             return false;
         }
     }
 
     private void onWriteSuccess(){
-        Log.d("WriteCh", "successful write operation");
+        Log.d(TAG, "successful write operation");
+        // from here I should start the indication subscription, to read the whole data after the activity finishes.
+    }
+
+    private void onStopActivityWriteSuccess(){
+        Log.d(TAG, "successful write operation to stop activity");
+        // from here I should start the indication subscription, to read the whole data after the activity finishes.
     }
 
     private void onWriteError(Throwable e){
-        Log.d("WriteCh", "error while writing characteristic: "+e.toString());
+        Log.d(TAG, "error while writing characteristic: "+e.toString());
     }
 
     //this method will be called when the observer receives a notification from the insole that it successfully started the activity.
@@ -196,337 +192,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-
-    private void scanAndPairing(){
-        myScanObserver=new Observer<ScanResult>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","scan onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","scan onError "+e.toString());
-            }
-
-            @Override
-            public void onNext(ScanResult scanResult) {
-                Log.d("RXTesting","scan onNext "+scanResult.toString());
-                //deviceMacTextView.setText(scanResult.getBleDevice().getMacAddress());
-                //deviceNameTextView.setText(scanResult.getBleDevice().getName());
-
-                if (scanResult.getBleDevice().getName().equals("ZTSafetyR")){
-                    isRightInsoleDetectedNearby=true;
-                }
-
-                if (scanResult.getBleDevice().getName().equals("ZTSafetyL")){
-                    isLeftInsoleDetectedNearby=true;
-                }
-
-                if (isLeftInsoleDetectedNearby&&isRightInsoleDetectedNearby){
-                    scanSubscription.unsubscribe();
-                    connect();
-                }
-            }
-        };
-
-        scanSubscription = MyApplication.getRxBleClient().scanBleDevices(
-                new ScanSettings.Builder()
-                        .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-                        .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                        .build(),
-                new ScanFilter.Builder()
-                        // add custom filters if needed
-                        .build()
-
-        )
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter(scanResult -> { String deviceName= scanResult.getBleDevice().getName();
-                    if (deviceName==null)
-                        return false;
-                    else
-                        return (deviceName.equals("ZTSafetyR") || deviceName.equals("ZTSafetyL"));
-                })
-                .subscribe(myScanObserver);
-    }
-
-    */
-
-
-
-    private void connect(){
-
-        myServicesDiscoveryObserver= new Observer<RxBleDeviceServices>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","ServicesDiscoveryObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","ServicesDiscoveryObserver onError "+e.toString());
-            }
-
-
-            @Override
-            public void onNext(RxBleDeviceServices rxBleDeviceServices) {
-                Log.d("RXTesting","ServicesDiscoveryObserver onNext "+rxBleDeviceServices.toString());
-
-                /*
-                for (BluetoothGattService b:rxBleDeviceServices.getBluetoothGattServices()){
-                    Log.d("RXTesting", "service "+b.getUuid());
-
-                }
-
-                for (BluetoothGattCharacteristic c:rxBleDeviceServices.getBluetoothGattServices().get(2).getCharacteristics()){
-                    Log.d("RXTesting", c.getUuid().toString());
-                }*/
-
-
-
-                //.getService(UUID.fromString(serviceUUID));
-
-            }
-
-
-            };
-
-        myLeftBatteryReadObserver = new Observer<byte[]>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","LeftBatteryReadObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","LeftBatteryReadObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(byte[] bytes) {
-                int leftBatteryValue=bytes[0]&0xFF;
-                Log.d("RXTesting","LeftBatteryReadObserver onNext "+ leftBatteryValue);
-                //updateLeftBattery(leftBatteryValue);
-
-            }
-        };
-
-        myRightBatteryReadObserver = new Observer<byte[]>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","RightBatteryReadObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","RightBatteryReadObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(byte[] bytes) {
-                int rightBatteryValue=bytes[0]&0xFF;
-                Log.d("RXTesting","RightBatteryReadObserver onNext "+ rightBatteryValue);
-                //updateRightBattery(rightBatteryValue);
-
-            }
-        };
-
-        myLeftAccelometerNotifyObserver= new Observer<Observable<byte[]>>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","LeftAccelometerNotifyObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","LeftAccelometerNotifyObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(Observable<byte[]> observable) {
-                observable.subscribe(new Observer<byte[]>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d("RXTesting","LeftAccelometerNotifyObserver reader onCompleted");
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("RXTesting","LeftAccelometerNotifyObserver reader "+e.toString());
-
-                    }
-
-                    @Override
-                    public void onNext(byte[] bytes) {
-                        Log.d("RXTesting","LeftAccelometerNotifyObserver reader onNext "+ bytes.toString());
-                        for (int i=0;i<bytes.length;i++){
-                            Log.d("RXTesting","byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }
-
-                        //int totalSteps= bytes[0]&0xFF+((bytes[1]&0xFF)<<8);
-                        //Log.d("RXTesting","totalSteps:"+totalSteps);
-
-                        //int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
-                        int accX= (bytes[4]&0xFf)|((bytes[5])<<8);
-                        Log.d("RXTesting","Left accX:"+accX);
-
-                        //int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
-                        int accY= (bytes[6]&0xFF)|((bytes[7])<<8);
-                        Log.d("RXTesting","Left accY:"+accY);
-
-                        //int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
-                        int accZ= (bytes[8]&0xFF)|((bytes[9])<<8);
-                        Log.d("RXTesting","Left accZ:"+accZ);
-
-                        //updateLeftAccelometer(accX,accY,accZ);
-                        mPostureTracker.updateLeftAccelometer(accX,accY,accZ);
-                    }
-                });
-            }
-        };
-
-        myRightAccelometerNotifyObserver= new Observer<Observable<byte[]>>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","RightAccelometerNotifyObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","RightAccelometerNotifyObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(Observable<byte[]> observable) {
-                observable.subscribe(new Observer<byte[]>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d("RXTesting","RightAccelometerNotifyObserver reader onCompleted");
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("RXTesting","RightAccelometerNotifyObserver reader "+e.toString());
-
-                    }
-
-                    @Override
-                    public void onNext(byte[] bytes) {
-                        Log.d("RXTesting","RightAccelometerNotifyObserver reader onNext "+ bytes.toString());
-
-
-                        /*for (int i=0;i<bytes.length;i++){
-                            Log.d("RXTesting","byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }*/
-
-                        //int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
-                        int accX= (bytes[4]&0xFF)|((bytes[5])<<8);
-                        Log.d("RXTesting","Right accX:"+accX);
-
-                        //int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
-                        int accY= (bytes[6]&0xFF)|((bytes[7])<<8);
-                        Log.d("RXTesting","Right accY:"+accY);
-
-                        //int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
-                        int accZ= (bytes[8]&0xFF)|((bytes[9])<<8);
-                        Log.d("RXTesting","Right accZ:"+accZ);
-
-                        //updateRightAccelometer(accX,accY,accZ);
-                        mPostureTracker.updateRightAccelometer(accX,accY,accZ);
-                    }
-                });
-            }
-        };
-
-
-        leftInsoleConnectionObserver= new Observer<RxBleConnection>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","LeftconnectionObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","LeftconnectionObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(RxBleConnection rxBleConnection) {
-                Log.d("RXTesting","LeftconnectionObserver onNext "+rxBleConnection.toString());
-
-                rxBleConnection.discoverServices().subscribe(myServicesDiscoveryObserver);
-
-                rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(myLeftBatteryReadObserver);
-
-                rxBleConnection.setupNotification(UUID.fromString("99dd0108-a80c-4f94-be5d-c66b9fba40cf"))
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(myLeftAccelometerNotifyObserver);
-            }
-        };
-
-        rightInsoleConnectionObserver= new Observer<RxBleConnection>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","RightconnectionObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("RXTesting","RightconnectionObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(RxBleConnection rxBleConnection) {
-                Log.d("RXTesting","RightconnectionObserver onNext "+rxBleConnection.toString());
-
-                rxBleConnection.discoverServices().subscribe(myServicesDiscoveryObserver);
-
-                rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(myRightBatteryReadObserver);
-
-                rxBleConnection.setupNotification(UUID.fromString("99dd0108-a80c-4f94-be5d-c66b9fba40cf"))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(myRightAccelometerNotifyObserver);
-            }
-        };
-
-        //leftInsoleDevice = rxBleClient.getBleDevice(leftInsoleMacAddress);
-        leftInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.LeftInsoleMacAddress);
-        Log.d("RXTesting"," device name is:"+leftInsoleDevice.getName());
-
-        rightInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.RightInsoleMacAddress);
-        Log.d("RXTesting"," device name is:"+rightInsoleDevice.getName());
-
-
-        leftInsoleConnectionObservable=leftInsoleDevice.establishConnection(false);
-        leftInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(leftInsoleConnectionObserver);
-
-        rightInsoleDevice.establishConnection(false).subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(rightInsoleConnectionObserver);
-
-    }
-
     //this will be called from the posture detection class, to let MainActivity updates the views it has to reflect the real postures.
     public void updatePositionCallBack(final int i, final int currentPosCounter, final int crouchingCounter, final int kneelingCounter, final int tiptoesCounter){
 
-        Log.d("RXTesting", "received position in MainActivity call back is:"+i);
+        Log.d(TAG, "received position in MainActivity call back is:"+i);
 
         runOnUiThread(new Runnable() {
             @Override
@@ -584,13 +253,13 @@ public class MainActivity extends AppCompatActivity {
         buttonStartActivity = (Button) findViewById(R.id.buttonStartActivity);
 
         RxView.clicks(buttonStartActivity)
-                .map(a->buttonStartActivity.getText().toString().equals("start"))
+                .map(a->buttonStartActivity.getText().toString().equals("Start"))
                 .subscribe(a-> {
                     if (a) {
-                        buttonStartActivity.setText("stop");
+                        buttonStartActivity.setText("Stop");
                         startSafetyActivity();
                     } else{
-                        buttonStartActivity.setText("start");
+                        buttonStartActivity.setText("Start");
                         stopSafetyActivity();
                     }
                 });
@@ -611,5 +280,41 @@ public class MainActivity extends AppCompatActivity {
 
         tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
         tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
+
+        //init the indication observer
+        myLeftInsoleIndicationObserver = new Observer<Observable<byte[]>>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG,"LeftInsoleIndicationObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"LeftInsoleIndicationObserver onError "+e.toString());
+            }
+
+            @Override
+            public void onNext(Observable<byte[]> observable) {
+                observable.subscribe(new Observer<byte[]>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG,"LeftInsoleIndicationObserver reader onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+e.toString());
+                    }
+
+                    @Override
+                    public void onNext(byte[] bytes) {
+                        Log.d(TAG,"LeftInsoleIndicationObserver reader onNext "+ bytes.toString());
+                        for (int i=0;i<bytes.length;i++){
+                            Log.d(TAG,"indicastion byte nr:"+ i+" is:"+(bytes[i]&0xFF));
+                        }
+                    }
+                });
+            }
+        };
     }
 }

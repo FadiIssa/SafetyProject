@@ -144,8 +144,8 @@
         android:id="@+id/buttonStartActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="0dp"
         android:text="Start"
         app:layout_constraintBottom_toTopOf="@+id/crouchingImageView"
         app:layout_constraintLeft_toLeftOf="@+id/crouchingImageView" />

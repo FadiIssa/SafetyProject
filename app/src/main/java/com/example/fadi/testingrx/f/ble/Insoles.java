@@ -11,4 +11,6 @@ public class Insoles {
     public static final String RightInsoleMacAddress="C4:A0:47:C0:73:4E";
 
     public static final String CHARACTERISTIC_COMMAND="99dd0014-a80c-4f94-be5d-c66b9fba40cf";
+
+    public static final String CHARACTERISTIC_CHUNK="99dd0004-a80c-4f94-be5d-c66b9fba40cf";
 }
