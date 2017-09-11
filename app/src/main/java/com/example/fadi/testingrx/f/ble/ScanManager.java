@@ -82,7 +82,8 @@ public class ScanManager {
         )
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter(scanResult -> { String deviceName= scanResult.getBleDevice().getName();
+                .filter(scanResult -> {
+                    String deviceName= scanResult.getBleDevice().getName();
                     if (deviceName==null)
                         return false;
                     else
