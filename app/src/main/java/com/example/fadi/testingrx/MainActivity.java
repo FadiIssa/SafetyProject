@@ -141,17 +141,32 @@ public class MainActivity extends AppCompatActivity {
         byte[] stopCommandArray= {0x02};
         //send command to stop the activity
         if (isLeftInsoleConnected()){
+            // from here I should start the indication subscription, to read the whole data after the activity finishes.
+            leftInsoleConnectionObservable
+                    .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
+                    //.doOnNext(indicationObservable -> {Log.d(TAG,"indication observable is set");})
+                    //.subscribe(myLeftInsoleIndicationObserver);
+
+                    .flatMap(notificationObservable -> notificationObservable)
+                    //       .first()
+                    .subscribe(bytes -> {
+                                for (int i=0;i<bytes.length;i++){
+                                    Log.d(TAG,"indication byte nr:"+ i+" is:"+(bytes[i]&0xFF));
+                                }
+                            },
+                            throwable -> {Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+throwable.toString());});
+
             leftInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
-                    .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
+                    .subscribe(bytes -> onStopActivityWriteSuccess(),(e)->onWriteError(e));
 
             Log.d(TAG, "activity stopped, writing to command characteristic of left insole");
 
             //here I should start the indication thig.
 
-            leftInsoleConnectionObservable
-                    .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
-                    .subscribe(myLeftInsoleIndicationObserver);
+//            leftInsoleConnectionObservable
+//                    .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
+//                    .subscribe(myLeftInsoleIndicationObserver);
 
         }
         else{
@@ -171,12 +186,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void onWriteSuccess(){
         Log.d(TAG, "successful write operation");
-        // from here I should start the indication subscription, to read the whole data after the activity finishes.
+
     }
 
     private void onStopActivityWriteSuccess(){
         Log.d(TAG, "successful write operation to stop activity");
+
         // from here I should start the indication subscription, to read the whole data after the activity finishes.
+
+        /*leftInsoleConnectionObservable
+                .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
+                //.doOnNext(indicationObservable -> {Log.d(TAG,"indication observable is set");})
+                //.subscribe(myLeftInsoleIndicationObserver);
+
+                .flatMap(notificationObservable -> notificationObservable)
+                .first()
+                .subscribe(bytes -> {
+                            for (int i=0;i<bytes.length;i++){
+                            Log.d(TAG,"indication byte nr:"+ i+" is:"+(bytes[i]&0xFF));
+                        }
+                        },
+                        throwable -> {Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+throwable.toString());});*/
     }
 
     private void onWriteError(Throwable e){
