@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     //.subscribe(myLeftInsoleIndicationObserver);
 
                     .flatMap(notificationObservable -> notificationObservable)
-                    .distinct()
+                  //  .distinct()
                     //       .first()
                  //   .doOnCompleted(()->{leftInsoleIndicationSubscription.unsubscribe();})
                     .subscribe(bytes -> {
