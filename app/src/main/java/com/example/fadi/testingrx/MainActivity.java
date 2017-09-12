@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     Drawable drawableKneelingBorder;
     Drawable drawableUnknown;
 
+    Subscription leftInsoleIndicationSubscription;
+
 
     String TAG="RxTesting";
 
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 //        serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
 
         //scanAndPairing();
-        MyApplication.getBleManager().scanAndPair(()->{
+        MyApplication.getBleManager().scanAndPair(()->{// exedcute the following when notifyScanFinished is called.
             MyApplication.getBleManager().connectRealTime(mPostureTracker);
         });
 
@@ -141,14 +143,20 @@ public class MainActivity extends AppCompatActivity {
         byte[] stopCommandArray= {0x02};
         //send command to stop the activity
         if (isLeftInsoleConnected()){
+            if (leftInsoleIndicationSubscription!=null){
+                if (!leftInsoleIndicationSubscription.isUnsubscribed())
+                leftInsoleIndicationSubscription.unsubscribe();
+            }
             // from here I should start the indication subscription, to read the whole data after the activity finishes.
-            leftInsoleConnectionObservable
+            leftInsoleIndicationSubscription=leftInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
                     //.doOnNext(indicationObservable -> {Log.d(TAG,"indication observable is set");})
                     //.subscribe(myLeftInsoleIndicationObserver);
 
                     .flatMap(notificationObservable -> notificationObservable)
+                    .distinct()
                     //       .first()
+                 //   .doOnCompleted(()->{leftInsoleIndicationSubscription.unsubscribe();})
                     .subscribe(bytes -> {
                                 for (int i=0;i<bytes.length;i++){
                                     Log.d(TAG,"indication byte nr:"+ i+" is:"+(bytes[i]&0xFF));
@@ -159,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
             leftInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
                     .subscribe(bytes -> onStopActivityWriteSuccess(),(e)->onWriteError(e));
+
+
 
             Log.d(TAG, "activity stopped, writing to command characteristic of left insole");
 
@@ -310,6 +320,8 @@ public class MainActivity extends AppCompatActivity {
 
         tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
         tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
+
+        leftInsoleIndicationSubscription=null;
 
         //init the indication observer
         myLeftInsoleIndicationObserver = new Observer<Observable<byte[]>>() {

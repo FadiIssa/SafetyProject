@@ -3,6 +3,7 @@ package com.example.fadi.testingrx.f.ble;
 import android.util.Log;
 
 import com.example.fadi.testingrx.MainActivity;
+import com.example.fadi.testingrx.MyApplication;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -17,6 +18,8 @@ import rx.Observable;
  * this manager will reference several managers, one for scanning, one for real time readings (for postures), and one for normal reading of characteristics.
  */
 
+// this class will be static referenced from the MyApplication class, to make it available for all the activities.
+
 public class BleManager {
 
     RxBleClient rxBleClient;
@@ -26,10 +29,9 @@ public class BleManager {
     RxBleDevice leftInsoleDevice;
     RxBleDevice rightInsoleDevice;
 
-    public BleManager(RxBleClient c){
-        this.rxBleClient=c;
-        scanManager = new ScanManager(c);
-
+    public BleManager(){
+        this.rxBleClient = MyApplication.getRxBleClient();
+        scanManager = new ScanManager();
     }
 
     // it should check if there are saved insoles in sharedPreferences (saved mac address), if so, it brings them and use them in the scan as filters, if not, it searches for the nearest safety insoles for both left and right.

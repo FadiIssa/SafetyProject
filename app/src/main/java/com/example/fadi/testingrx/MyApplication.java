@@ -20,22 +20,27 @@ public class MyApplication extends Application{
     // one instance in the whole app lifecycle// maybe this variable should be in a service.
     static RxBleClient rxBleClient;// maybe I should experiment with making it static.
 
+    String TAG = "MyApp";
+
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("MyApp", "onCreate() is called");
+        Log.d(TAG, "onCreate() is called");
 
+        Log.d(TAG,"setting the Font for the whole application");
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/pacifico.ttf")
+                .setDefaultFontPath("fonts/HELR45W.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
 
-        // make the unique bleclient
+        // make the unique bleclient on the whole application level.
+        Log.d(TAG,"creating the unique instance of RxBleClient");
         rxBleClient = RxBleClient.create(getApplicationContext());
 
         //initialize ble manager
-        bleManager = new BleManager(rxBleClient);
+        Log.d(TAG,"creating the BleManager instance, to be used throughout the whole application");
+        bleManager = new BleManager();
     }
 
     public static BleManager getBleManager(){
