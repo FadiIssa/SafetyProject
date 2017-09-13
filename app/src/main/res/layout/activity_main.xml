@@ -151,7 +151,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/crouchingImageView" />
 
     <TextView
-        android:id="@+id/textViewSteps"
+        android:id="@+id/textViewStepsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

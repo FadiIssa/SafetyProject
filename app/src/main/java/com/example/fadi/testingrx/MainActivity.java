@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fadi.testingrx.f.ble.Insoles;
+import com.example.fadi.testingrx.f.posture.PostureResultCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.example.fadi.testingrx.f.posture.Postures;
 import com.polidea.rxandroidble.NotificationSetupMode;
@@ -45,7 +46,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PostureResultCallback{
 
     // observables
     Observable<RxBleConnection> leftInsoleConnectionObservable;//this observable will be used any time we want to interact with a characteristic, no need to establish new connection for every operation.
@@ -100,10 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        serviceUUID="99ddcda5-a80c-4f94-be5d-c66b9fba40cf";
 
-        //scanAndPairing();
-        MyApplication.getBleManager().scanAndPair(()->{// exedcute the following when notifyScanFinished is called.
-            MyApplication.getBleManager().connectRealTime(mPostureTracker);
-        });
+        MyApplication.getBleManager().connectRealTime(mPostureTracker);
 
         //connect();// it is not called from here any more, instead, it is called from whithin the scan observer when he finds both left and right insoles nearby.
         //readBattery();
@@ -233,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //this will be called from the posture detection class, to let MainActivity updates the views it has to reflect the real postures.
+    @Override
     public void updatePositionCallBack(final int i, final int currentPosCounter, final int crouchingCounter, final int kneelingCounter, final int tiptoesCounter){
 
         Log.d(TAG, "received position in MainActivity call back is:"+i);

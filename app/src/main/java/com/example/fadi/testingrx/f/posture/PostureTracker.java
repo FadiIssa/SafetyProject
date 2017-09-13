@@ -26,9 +26,9 @@ public class PostureTracker {
     int lastPosture;//this will be used to know when a specific counter should be incremented or reset.
     int currentPosture;//this will also be used to decide what counters to increase.
 
-    MainActivity caller;
+    PostureResultCallback caller;
 
-    public PostureTracker(MainActivity father){
+    public PostureTracker(PostureResultCallback father){
         caller=father;
 
         latestLX=0;

@@ -167,11 +167,8 @@ public class RTConnectionManager {
                             Log.d(TAG,"byte nr:"+ i+" is:"+(bytes[i]&0xFF));
                         }
 
-                        //int totalSteps= bytes[0]&0xFF+((bytes[1]&0xFF)<<8);
-                        //Log.d("RXTesting","totalSteps:"+totalSteps);
-
                         //int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
-                        int accX= (bytes[4]&0xFf)|((bytes[5])<<8);
+                        int accX= (bytes[4]&0xFF)|((bytes[5])<<8);
                         Log.d(TAG,"Left accX:"+accX);
 
                         //int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);

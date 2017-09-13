@@ -27,14 +27,30 @@ public class LauncherActivity extends AppCompatActivity {
         setContentView(R.layout.activity_launcher);
 
         initUI();
+
+        //scanAndPairing();
+        MyApplication.getBleManager().scanAndPair(()->{
+            rtButton.setEnabled(true);
+            normalModeButton.setEnabled(true);
+        });
     }
 
     private void initUI(){
         rtButton = (Button) findViewById(R.id.buttonRT);
+        rtButton.setEnabled(false);
+
+        normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
+        normalModeButton.setEnabled(false);
 
         RxView.clicks(rtButton)
                 .subscribe(a-> {
                     Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                });
+
+        RxView.clicks(normalModeButton)
+                .subscribe(a->{
+                    Intent intent = new Intent(this, NormalModeActivity.class);
                     startActivity(intent);
                 });
 

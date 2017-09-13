@@ -51,5 +51,6 @@ dependencies {
     compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
     compile 'com.android.support:support-v4:26.+'
+    compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
 }
