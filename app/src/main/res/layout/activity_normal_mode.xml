@@ -1,113 +1,260 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.fadi.testingrx.NormalModeActivity">
 
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@android:style/Theme.Black"
+        android:background="@color/fBlack"
+        tools:context="com.example.fadi.testingrx.NormalModeActivity">
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        <Button
+            android:id="@+id/buttonStartActivityNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="Start Activity"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/buttonStopActivityNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Stop Activity"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageViewStatic"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
-        android:text="Start Activity"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:text="Stop Activity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <TextView
-        android:id="@+id/textViewStepsLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
+    <ImageView
+        android:id="@+id/imageViewKneeling"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewCrouching"
+        android:layout_marginLeft="8dp" />
+
+    <ImageView
+        android:id="@+id/imageViewCrouching"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:srcCompat="@mipmap/ic_launcher"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
 
     <TextView
-        android:id="@+id/textViewSteps"
+        android:id="@+id/textViewCrouching"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintLeft_toRightOf="@+id/textViewStepsLabel"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCrouching"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewCrouching"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewCrouching" />
 
     <TextView
-        android:id="@+id/textViewStairsLabel"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStepsLabel"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewKneeling"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewKneeling"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewKneeling" />
 
     <TextView
-        android:id="@+id/textViewStairs"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintLeft_toRightOf="@+id/textViewStairsLabel"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewStatic"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSteps" />
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewStatic"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewStatic" />
 
-    <TextView
-        android:id="@+id/textViewActivityTimeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
+    <ImageView
+        android:id="@+id/imageViewStairs"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        app:layout_constraintTop_toTopOf="@+id/textViewCrouching"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStairsLabel"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewCrouching"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewCrouching" />
 
-    <TextView
-        android:id="@+id/textViewActivityTime"
-        android:layout_width="54dp"
-        android:layout_height="18dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="31dp"
-        android:text="TextView"
-        app:layout_constraintLeft_toRightOf="@+id/textViewActivityTimeLabel"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStairs" />
-
-    <TextView
-        android:id="@+id/textViewPonSubLeftLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+    <ImageView
+        android:id="@+id/imageViewSteps"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginTop="32dp"
-        android:text="TextView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewActivityTimeLabel" />
+        app:srcCompat="@mipmap/ic_launcher"
+        app:layout_constraintTop_toTopOf="@+id/textView2"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewKneeling"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewKneeling" />
+
+    <ImageView
+        android:id="@+id/imageViewTiptoes"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewKneeling"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/imageViewStatic"
+        android:layout_marginRight="8dp"
+        app:layout_constraintHorizontal_bias="0.628" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewStairs"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewStairs"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewStairs" />
+
+    <TextView
+        android:id="@+id/textViewSteps"
+        android:layout_width="57dp"
+        android:layout_height="22dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewSteps"
+        app:layout_constraintRight_toRightOf="@+id/imageViewSteps"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewSteps" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTiptoes"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewTiptoes"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewTiptoes" />
+
+    <ImageView
+        android:id="@+id/imageViewPronSup"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="66dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@mipmap/ic_launcher"
+        app:layout_constraintHorizontal_bias="0.498" />
+
+    <TextView
+        android:id="@+id/textViewAngleRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewPronSup"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewPronSup"
+        app:layout_constraintTop_toTopOf="@+id/imageViewPronSup" />
+
+    <TextView
+        android:id="@+id/textViewAngleLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewPronSup"
+        app:layout_constraintRight_toLeftOf="@+id/imageViewPronSup"
+        app:layout_constraintTop_toTopOf="@+id/imageViewPronSup" />
+
+    <ImageView
+        android:id="@+id/imageViewWalkingTime"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/textViewActivityTime"
-        app:layout_constraintLeft_toRightOf="@+id/textViewPonSubLeftLabel"
-        android:layout_marginLeft="8dp" />
+        app:layout_constraintTop_toTopOf="@+id/textView6"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewTiptoes"
+        android:layout_marginRight="0dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewTiptoes" />
+
+    <ImageView
+        android:id="@+id/imageViewVibrationTime"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewStatic"
+        app:layout_constraintRight_toRightOf="@+id/imageViewStatic"
+        app:layout_constraintTop_toTopOf="@+id/textView3"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewWalkingTime"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewWalkingTime"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewWalkingTime" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewVibrationTime"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewVibrationTime"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/imageViewVibrationTime" />
+
 </android.support.constraint.ConstraintLayout>
+
+

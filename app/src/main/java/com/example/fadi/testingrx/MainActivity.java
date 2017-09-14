@@ -1,16 +1,11 @@
 package com.example.fadi.testingrx;
 
 
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,29 +14,16 @@ import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.PostureResultCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.example.fadi.testingrx.f.posture.Postures;
-import com.polidea.rxandroidble.NotificationSetupMode;
-import com.polidea.rxandroidble.RxBleClient;
 import com.polidea.rxandroidble.RxBleConnection;
-import com.polidea.rxandroidble.RxBleDevice;
-import com.polidea.rxandroidble.RxBleDeviceServices;
-import com.polidea.rxandroidble.scan.ScanFilter;
-import com.polidea.rxandroidble.scan.ScanResult;
-import com.polidea.rxandroidble.scan.ScanSettings;
 
 import com.jakewharton.rxbinding2.view.RxView;
 
 
-import org.w3c.dom.Text;
-
 import java.util.UUID;
-import java.util.function.Predicate;
 
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -289,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
         drawableUnknown = getDrawable(R.drawable.unknownposition);
 
-        buttonStartActivity = (Button) findViewById(R.id.buttonStartActivity);
+        buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
 
         RxView.clicks(buttonStartActivity)
                 .map(a->buttonStartActivity.getText().toString().equals("Start"))
