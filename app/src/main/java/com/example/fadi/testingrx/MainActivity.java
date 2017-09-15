@@ -294,6 +294,15 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         runOnUiThread(() -> {textViewRightConnectionStatus.setText("Connected");});
     }
 
+    @Override
+    public void notifyLeftServiceDiscoveryCompleted() {
+
+    }
+
+    @Override
+    public void notifyRightServiceDiscoveryCompleted() {
+
+    }
 
 
     private void initUI(){

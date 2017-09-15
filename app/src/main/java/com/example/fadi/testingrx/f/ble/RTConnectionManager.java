@@ -26,7 +26,8 @@ public class RTConnectionManager {
 
     RxBleClient rxBleClient;
 
-    Observer<RxBleDeviceServices> myServicesDiscoveryObserver;
+    Observer<RxBleDeviceServices> myLeftServicesDiscoveryObserver;
+    Observer<RxBleDeviceServices> myRightServicesDiscoveryObserver;
 
     Observer<byte[]> myLeftBatteryReadObserver;
     Observer<byte[]> myRightBatteryReadObserver;
@@ -61,39 +62,40 @@ public class RTConnectionManager {
     }
 
     public void connect(){
-        myServicesDiscoveryObserver= new Observer<RxBleDeviceServices>() {
+        myLeftServicesDiscoveryObserver= new Observer<RxBleDeviceServices>() {
             @Override
             public void onCompleted() {
-                Log.d(TAG,"ServicesDiscoveryObserver onCompleted");
+                Log.d(TAG," left ServicesDiscoveryObserver onCompleted");
+                mPostureTracker.getCaller().notifyLeftServiceDiscoveryCompleted();
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d(TAG,"ServicesDiscoveryObserver onError "+e.toString());
+                Log.d(TAG,"left ServicesDiscoveryObserver onError "+e.toString());
             }
-
 
             @Override
             public void onNext(RxBleDeviceServices rxBleDeviceServices) {
-                Log.d(TAG,"ServicesDiscoveryObserver onNext "+rxBleDeviceServices.toString());
+                Log.d(TAG," left ServicesDiscoveryObserver onNext "+rxBleDeviceServices.toString());
+            }
+        };
 
-                /*
-                for (BluetoothGattService b:rxBleDeviceServices.getBluetoothGattServices()){
-                    Log.d("RXTesting", "service "+b.getUuid());
-
-                }
-
-                for (BluetoothGattCharacteristic c:rxBleDeviceServices.getBluetoothGattServices().get(2).getCharacteristics()){
-                    Log.d("RXTesting", c.getUuid().toString());
-                }*/
-
-
-
-                //.getService(UUID.fromString(serviceUUID));
-
+        myRightServicesDiscoveryObserver= new Observer<RxBleDeviceServices>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG," right ServicesDiscoveryObserver onCompleted");
+                mPostureTracker.getCaller().notifyRightServiceDiscoveryCompleted();
             }
 
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"right ServicesDiscoveryObserver onError "+e.toString());
+            }
 
+            @Override
+            public void onNext(RxBleDeviceServices rxBleDeviceServices) {
+                Log.d(TAG,"right ServicesDiscoveryObserver onNext "+rxBleDeviceServices.toString());
+            }
         };
 
         myLeftBatteryReadObserver = new Observer<byte[]>() {
@@ -105,7 +107,6 @@ public class RTConnectionManager {
             @Override
             public void onError(Throwable e) {
                 Log.d(TAG,"LeftBatteryReadObserver onError "+e.toString());
-
             }
 
             @Override
@@ -113,7 +114,6 @@ public class RTConnectionManager {
                 int leftBatteryValue=bytes[0]&0xFF;
                 Log.d(TAG,"LeftBatteryReadObserver onNext "+ leftBatteryValue);
                 //updateLeftBattery(leftBatteryValue);
-
             }
         };
 
@@ -126,7 +126,6 @@ public class RTConnectionManager {
             @Override
             public void onError(Throwable e) {
                 Log.d(TAG,"RightBatteryReadObserver onError "+e.toString());
-
             }
 
             @Override
@@ -134,7 +133,6 @@ public class RTConnectionManager {
                 int rightBatteryValue=bytes[0]&0xFF;
                 Log.d(TAG,"RightBatteryReadObserver onNext "+ rightBatteryValue);
                 //updateRightBattery(rightBatteryValue);
-
             }
         };
 
@@ -264,7 +262,7 @@ public class RTConnectionManager {
             public void onNext(RxBleConnection rxBleConnection) {
                 Log.d(TAG,"LeftconnectionObserver onNext "+rxBleConnection.toString());
 
-                rxBleConnection.discoverServices().subscribe(myServicesDiscoveryObserver);
+                rxBleConnection.discoverServices().subscribe(myLeftServicesDiscoveryObserver);
 
                 rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
                         .observeOn(AndroidSchedulers.mainThread())
@@ -288,14 +286,13 @@ public class RTConnectionManager {
                 Log.d(TAG,"RightconnectionObserver onError "+e.toString());
                 //mPostureTracker.getCaller().notifyRightConnectionLost();
                 //retryRightConnection();
-
             }
 
             @Override
             public void onNext(RxBleConnection rxBleConnection) {
                 Log.d(TAG,"RightconnectionObserver onNext "+rxBleConnection.toString());
 
-                rxBleConnection.discoverServices().subscribe(myServicesDiscoveryObserver);
+                rxBleConnection.discoverServices().subscribe(myRightServicesDiscoveryObserver);
 
                 rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
                         .observeOn(AndroidSchedulers.mainThread())

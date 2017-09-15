@@ -63,37 +63,37 @@
         android:id="@+id/textViewCrouching"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCrouching"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/imageViewCrouching"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageViewCrouching" />
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewCrouching"
+        app:layout_constraintRight_toRightOf="@+id/imageViewCrouching"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCrouching" />
 
     <TextView
         android:id="@+id/textViewKneeling"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewKneeling"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/imageViewKneeling"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageViewKneeling" />
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewKneeling"
+        app:layout_constraintRight_toRightOf="@+id/imageViewKneeling"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewKneeling" />
 
     <TextView
         android:id="@+id/textViewStanding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewStanding"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageViewStanding"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/imageViewStanding" />
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewStanding"
+        app:layout_constraintRight_toRightOf="@+id/imageViewStanding"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewStanding" />
 
     <ImageView
         android:id="@+id/imageViewStairs"
@@ -140,19 +140,20 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="0"
         app:layout_constraintLeft_toLeftOf="@+id/imageViewStairs"
         app:layout_constraintRight_toRightOf="@+id/imageViewStairs"
         app:layout_constraintTop_toBottomOf="@+id/imageViewStairs" />
 
     <TextView
         android:id="@+id/textViewSteps"
-        android:layout_width="57dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:layout_marginTop="0dp"
+        android:text="0"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintLeft_toLeftOf="@+id/imageViewSteps"
         app:layout_constraintRight_toRightOf="@+id/imageViewSteps"
         app:layout_constraintTop_toBottomOf="@+id/imageViewSteps" />
@@ -161,13 +162,13 @@
         android:id="@+id/textViewTiptoes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewTiptoes"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageViewTiptoes"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/imageViewTiptoes" />
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewTiptoes"
+        app:layout_constraintRight_toRightOf="@+id/imageViewTiptoes"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTiptoes" />
 
     <ImageView
         android:id="@+id/imageViewPronSup"
@@ -189,7 +190,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="0dp"
-        android:text="TextView"
+        android:text="0"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewPronSup"
         app:layout_constraintLeft_toRightOf="@+id/imageViewPronSup"
         app:layout_constraintTop_toTopOf="@+id/imageViewPronSup" />
@@ -201,7 +202,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
-        android:text="TextView"
+        android:text="0"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewPronSup"
         app:layout_constraintRight_toLeftOf="@+id/imageViewPronSup"
         app:layout_constraintTop_toTopOf="@+id/imageViewPronSup" />
@@ -237,7 +238,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="0"
         app:layout_constraintLeft_toLeftOf="@+id/imageViewWalkingTime"
         app:layout_constraintRight_toRightOf="@+id/imageViewWalkingTime"
         app:layout_constraintTop_toBottomOf="@+id/imageViewWalkingTime" />
@@ -249,7 +250,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="0"
         app:layout_constraintLeft_toLeftOf="@+id/imageViewVibrationTime"
         app:layout_constraintRight_toRightOf="@+id/imageViewVibrationTime"
         app:layout_constraintTop_toBottomOf="@+id/imageViewVibrationTime" />

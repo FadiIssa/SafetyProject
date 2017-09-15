@@ -20,6 +20,9 @@ public interface PostureResultCallback {
 
     void notifyLeftConnectionConnected();
     void notifyRightConnectionConnected();
+
+    void notifyLeftServiceDiscoveryCompleted();
+    void notifyRightServiceDiscoveryCompleted();
 }
 
 

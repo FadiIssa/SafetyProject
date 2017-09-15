@@ -30,6 +30,9 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     Button buttonStartActivity;
     Button buttonStopActivity;
 
+    boolean isLeftServiceDiscovered;
+    boolean isRightServiceDiscovered;
+
     ImageView imageViewCrouching;
     ImageView imageViewKneeling;
     ImageView imageViewTiptoes;
@@ -77,6 +80,9 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         setContentView(R.layout.activity_normal_mode);
 
         mStatsCalculator = new StatsCalculator(this);
+
+        isLeftServiceDiscovered = false;
+        isRightServiceDiscovered = false;
 
         initUI();
 
@@ -251,10 +257,21 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     }
 
+    @Override
+    public void notifyLeftServiceDiscoveryCompleted() {
+        isLeftServiceDiscovered=true;
+        processEnablingStartSafetyActivityButton();
+    }
+
+    @Override
+    public void notifyRightServiceDiscoveryCompleted() {
+        isRightServiceDiscovered = true;
+        processEnablingStartSafetyActivityButton();
+    }
+
     private void stopSafetyActivity(){
 
         //check if the activity is not already started
-
         byte[] stopCommandArray= {0x02};
         //send command to stop the activity
         if (isLeftInsoleConnected()){
@@ -263,6 +280,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                     leftInsoleIndicationSubscription.unsubscribe();
             }
             // from here I should start the indication subscription, to read the whole data after the activity finishes.
+            Log.d(TAG," subscribing to indication for left insole");
             leftInsoleIndicationSubscription=leftInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
                     //.doOnNext(indicationObservable -> {Log.d(TAG,"indication observable is set");})
@@ -290,8 +308,6 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
                     .subscribe(bytes -> onStopActivityWriteSuccess(),(e)->onWriteError(e));
 
-
-
             Log.d(TAG, "activity stopped, writing to command characteristic of left insole");
 
             //here I should start the indication thig.
@@ -311,6 +327,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                     rightInsoleIndicationSubscription.unsubscribe();
             }
             // from here I should start the indication subscription, to read the whole data after the activity finishes.
+            Log.d(TAG," subscribing to indication for right insole");
             rightInsoleIndicationSubscription=rightInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
                     //.doOnNext(indicationObservable -> {Log.d(TAG,"indication observable is set");})
@@ -395,6 +412,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
 
         buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
+        buttonStartActivity.setEnabled(false);
 
         RxView.clicks(buttonStartActivity)
                // .map(a->buttonStartActivity.getText().toString().equals("Start"))
@@ -427,7 +445,6 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
             int crouchingPostureCounterSeconds=(totalCrouchingTime%3600)%60;
             textViewCrouching.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
 
-
             int kneelingPostureCounterHours=totalKneelingTime/3600;
             int kneelingPostureCounterMinutes=(totalKneelingTime%3600)/60;
             int kneelingPostureCounterSeconds=(totalKneelingTime%3600)%60;
@@ -439,6 +456,15 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
             textViewTiptoes.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
 
         });
+    }
 
+    private void processEnablingStartSafetyActivityButton(){
+
+        if (isLeftServiceDiscovered&&isRightServiceDiscovered){
+            runOnUiThread(() -> {
+                buttonStartActivity.setEnabled(true);
+            });
+
+        }
     }
 }
