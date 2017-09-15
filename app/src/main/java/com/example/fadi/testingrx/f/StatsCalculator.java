@@ -37,6 +37,9 @@ public class StatsCalculator {
     int standingTimeLeft;
     int standingTimeRight;
 
+    int vibrationTimeLeft;
+    int vibrationTimeRight;
+
     byte firstByteVibrationLeft;
     byte firstByteVibrationRight;
 
@@ -87,9 +90,9 @@ public class StatsCalculator {
         totalWalkingTimeLeft = (bytes[11] & 0xFF) | ((bytes[12]) << 8);
         Log.d(TAG, " walking time of left is:" + totalWalkingTimeLeft);
 
-        // calculating pronation supination angle of left insole
+        // calculating standing time angle of left insole
         standingTimeLeft = (bytes[13] & 0xFF) | ((bytes[14]) << 8);
-        Log.d(TAG, " standing (static) time of left is:" + angleLeft);
+        Log.d(TAG, " standing (static) time of left is:" + standingTimeLeft);
 
         // storing first byte of vibration data of left insole
         firstByteVibrationLeft = bytes[15];
@@ -99,6 +102,8 @@ public class StatsCalculator {
 
     public void processSecondHalfLeft(byte[] bytes){
         secondByteVibrationLeft = bytes [3];
+
+        vibrationTimeLeft = (firstByteVibrationLeft&0xFF)|((secondByteVibrationLeft) <<8);
 
         secondHalfLeftReceived = true;
         notifyCallerIfReady();
@@ -127,7 +132,7 @@ public class StatsCalculator {
 
         // calculating pronation supination angle of left insole
         standingTimeRight = (bytes[13] & 0xFF) | ((bytes[14]) << 8);
-        Log.d(TAG, " standing (static) time of right is:" + angleRight);
+        Log.d(TAG, " standing (static) time of right is:" + standingTimeRight);
 
         // storing first byte of vibration data of right insole
         firstByteVibrationRight = bytes[15];
@@ -138,6 +143,8 @@ public class StatsCalculator {
     public void processSecondHalfRight(byte[] bytes){
 
         secondByteVibrationRight = bytes [3];
+        vibrationTimeRight = (firstByteVibrationRight&0xFF)|((secondByteVibrationRight) <<8);
+
         secondHalfRightReceived = true;
 
         notifyCallerIfReady();
@@ -147,8 +154,30 @@ public class StatsCalculator {
     private void notifyCallerIfReady(){
         if (secondHalfLeftReceived && secondHalfRightReceived) {
             // notify caller with all the necessary statistics data
-            caller.updateStatsOnUI(String.valueOf(numberOfStepsLeft+numberOfStepsRight));
+            String standingString= convertSecond((standingTimeLeft+standingTimeRight)/2);
+            String stairsString=String.valueOf(numberOfStairsLeft+numberOfStairsRight);
+            String stepsString=String.valueOf(numberOfStepsLeft+numberOfStepsRight);
+            String walkingString=convertSecond((totalWalkingTimeLeft+totalWalkingTimeRight)/2);
+            String vibrationString=convertSecond((vibrationTimeLeft+vibrationTimeRight)/2);;
+            String leftAngleString=String.valueOf(angleLeft);
+            String rightAngleString=String.valueOf(angleRight);
+            caller.updateStatsOnUI(standingString,
+                    stairsString,
+                    stepsString,
+                    walkingString,
+                    vibrationString,
+                    leftAngleString,
+                    rightAngleString);
         }
+    }
+
+    private String convertSecond(int seconds){
+        int timeInHours=seconds/3600;
+        int timeInMinutes=(seconds%3600)/60;
+        int timeInSeconds=(seconds%3600)%60;
+        return (String.valueOf(timeInHours)+":"+String.valueOf(timeInMinutes)+":"+String.valueOf(timeInSeconds));
+
+
     }
 
 }

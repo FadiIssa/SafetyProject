@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fadi.testingrx.f.StatsCalculator;
 import com.example.fadi.testingrx.f.ble.Insoles;
@@ -28,7 +30,32 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     Button buttonStartActivity;
     Button buttonStopActivity;
 
+    ImageView imageViewCrouching;
+    ImageView imageViewKneeling;
+    ImageView imageViewTiptoes;
+    ImageView imageViewStanding;
+
+    ImageView imageViewStairs;
+    ImageView imageViewSteps;
+    ImageView imageViewVibration;
+    ImageView imageViewWalking;
+
+    ImageView imageViewLogo;
+
+    ImageView imageViewPronSup;
+
+    TextView textViewCrouching;
+    TextView textViewKneeling;
+    TextView textViewTiptoes;
+    TextView textViewStanding;
+
     TextView textViewSteps;
+    TextView textViewStairs;
+    TextView textViewVibration;
+    TextView textViewWalking;
+
+    TextView textViewLeftAngle;
+    TextView textViewRightAngle;
 
     Subscription leftInsoleIndicationSubscription;
     Subscription rightInsoleIndicationSubscription;
@@ -81,22 +108,22 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
             leftInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
                     .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
-
             Log.d(TAG, "activity started, writing to command characteristic of left insole");
         }
         else{
             Log.d(TAG,"could not start activity, no connection with left insole.");
+            Toast.makeText(this, "could not start, left insole disconnected", Toast.LENGTH_SHORT).show();
         }
 
         if (isRightInsoleConnected()){
             rightInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
                     .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
-
             Log.d(TAG, "activity started, writing to command characteristic of right insole");
         }
         else{
             Log.d(TAG,"could not start activity, no connection with right insole.");
+            Toast.makeText(this, "could not start, right insole disconnected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -192,6 +219,36 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                 //counterTiptoesTextView.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
             }
         });
+    }
+
+    @Override
+    public void notifyLeftConnectionDisconnected() {
+
+    }
+
+    @Override
+    public void notifyRightConnectionDisconnected() {
+
+    }
+
+    @Override
+    public void notifyLeftConnectionIsConnecting() {
+
+    }
+
+    @Override
+    public void notifyRightConnectionIsConnecting() {
+
+    }
+
+    @Override
+    public void notifyLeftConnectionConnected() {
+
+    }
+
+    @Override
+    public void notifyRightConnectionConnected() {
+
     }
 
     private void stopSafetyActivity(){
@@ -292,6 +349,49 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     private void initUI(){
 
         textViewSteps = (TextView) findViewById(R.id.textViewSteps);
+        textViewStairs = (TextView) findViewById(R.id.textViewStairs);
+        textViewWalking = (TextView) findViewById(R.id.textViewWalking);
+        textViewVibration = (TextView) findViewById(R.id.textViewVibration);
+
+        textViewCrouching = (TextView) findViewById(R.id.textViewCrouching);
+        textViewKneeling = (TextView) findViewById(R.id.textViewKneeling);
+        textViewTiptoes = (TextView) findViewById(R.id.textViewTiptoes);
+        textViewStanding = (TextView) findViewById(R.id.textViewStanding);
+
+        textViewLeftAngle = (TextView) findViewById(R.id.textViewAngleLeft);
+        textViewRightAngle = (TextView) findViewById(R.id.textViewAngleRight);
+
+        imageViewCrouching = (ImageView) findViewById(R.id.imageViewCrouching);
+        imageViewCrouching.setImageDrawable(getDrawable(R.drawable.crouchingfull));
+
+        imageViewKneeling = (ImageView) findViewById(R.id.imageViewKneeling);
+        imageViewKneeling.setImageDrawable(getDrawable(R.drawable.kneelingfull));
+
+        imageViewTiptoes = (ImageView) findViewById(R.id.imageViewTiptoes);
+        imageViewTiptoes.setImageDrawable(getDrawable(R.drawable.tipoesfull));
+
+        imageViewStanding = (ImageView) findViewById(R.id.imageViewStanding);
+        imageViewStanding.setImageDrawable(getDrawable(R.drawable.stand1));
+
+        imageViewStairs = (ImageView) findViewById(R.id.imageViewStairs);
+        imageViewStairs.setImageDrawable(getDrawable(R.drawable.stairs1));
+
+        imageViewSteps = (ImageView) findViewById(R.id.imageViewSteps);
+        imageViewSteps.setImageDrawable(getDrawable(R.drawable.steps));
+
+
+        imageViewPronSup = (ImageView) findViewById(R.id.imageViewPronSup);
+        imageViewPronSup.setImageDrawable(getDrawable(R.drawable.elten_angles));
+
+        imageViewWalking = (ImageView) findViewById(R.id.imageViewWalkingTime);
+        imageViewWalking.setImageDrawable(getDrawable(R.drawable.walk1));
+
+
+        imageViewVibration = (ImageView) findViewById(R.id.imageViewVibrationTime);
+        imageViewVibration.setImageDrawable(getDrawable(R.drawable.vibra1));
+
+        imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
+        imageViewLogo.setImageDrawable(getDrawable(R.drawable.unknownposition));
 
 
         buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
@@ -310,9 +410,34 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                 });
     }
 
-    public void updateStatsOnUI(final String nSteps){
+    public void updateStatsOnUI(final String standigTime, final String nStairs, final String nSteps, final String walkingTime, final String vibrationTime, final String leftAngle, final String rightAngle ){
         runOnUiThread(() -> {
+            textViewStanding.setText(standigTime);
+            textViewStairs.setText(nStairs);
             textViewSteps.setText(nSteps);
+            textViewWalking.setText(walkingTime);
+            textViewVibration.setText(vibrationTime);
+            textViewLeftAngle.setText(leftAngle);
+            textViewRightAngle.setText(rightAngle);
+
+            //now set the posture times
+            Log.d(TAG,"total crouching time:"+totalCrouchingTime);
+            int crouchingPostureCounterHours=totalCrouchingTime/3600;
+            int crouchingPostureCounterMinutes=(totalCrouchingTime%3600)/60;
+            int crouchingPostureCounterSeconds=(totalCrouchingTime%3600)%60;
+            textViewCrouching.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
+
+
+            int kneelingPostureCounterHours=totalKneelingTime/3600;
+            int kneelingPostureCounterMinutes=(totalKneelingTime%3600)/60;
+            int kneelingPostureCounterSeconds=(totalKneelingTime%3600)%60;
+            textViewKneeling.setText(String.valueOf(kneelingPostureCounterHours)+":"+String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
+
+            int tiptoesPostureCounterHours=totalTiptoesTime/3600;
+            int tiptoesPostureCounterMinutes=(totalTiptoesTime%3600)/60;
+            int tiptoesPostureCounterSeconds=(totalTiptoesTime%3600)%60;
+            textViewTiptoes.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
+
         });
 
     }

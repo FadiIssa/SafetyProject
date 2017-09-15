@@ -148,6 +148,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="0dp"
         android:text="Start"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/crouchingImageView"
         app:layout_constraintLeft_toLeftOf="@+id/crouchingImageView" />
 
@@ -158,7 +159,28 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
         android:text="TextView"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/tiptoesImageView"
         app:layout_constraintRight_toRightOf="@+id/tiptoesImageView" />
+
+    <TextView
+        android:id="@+id/textViewRightConnectionStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="RightNotConnected"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewLeftConnectionStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="LeftNotConnected"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -121,4 +121,8 @@ public class PostureTracker {
 
         processLatestAccelometerReadings();
     }
+
+    public PostureResultCallback getCaller(){
+        return caller;
+    }
 }

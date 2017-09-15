@@ -8,6 +8,18 @@ package com.example.fadi.testingrx.f.posture;
  * to decide whether to show these data in real time, using images, or texts, etc..
  */
 
+// this call back will also play the role of notifying if a connection is lost. to be shown to the user in both the Mainactivity and the normalActivity classes.
 public interface PostureResultCallback {
     public void updatePositionCallBack(final int i, final int currentPosCounter, final int crouchingCounter, final int kneelingCounter, final int tiptoesCounter);
+
+    void notifyLeftConnectionDisconnected();
+    void notifyRightConnectionDisconnected();
+
+    void notifyLeftConnectionIsConnecting();
+    void notifyRightConnectionIsConnecting();
+
+    void notifyLeftConnectionConnected();
+    void notifyRightConnectionConnected();
 }
+
+

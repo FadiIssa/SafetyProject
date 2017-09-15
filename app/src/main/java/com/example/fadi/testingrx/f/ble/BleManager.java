@@ -72,4 +72,8 @@ public class BleManager {
     public Observable<RxBleConnection> getRightInsoleConnectionObservable(){
         return rtConnectionManager.getRightInsoleConnectionObservable();
     }
+
+    public boolean areDevicesAlreadyScanned(){
+        return (leftInsoleDevice!=null && rightInsoleDevice!=null);
+    }
 }

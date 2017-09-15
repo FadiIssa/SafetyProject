@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     TextView counterKneelingTextView;
     TextView counterTiptoesTextView;
 
+    TextView textViewLeftConnectionStatus;
+    TextView textViewRightConnectionStatus;
+
     Button buttonStartActivity;// this is when I have to show that I am doing some advancement.
 
     Drawable drawableTipToesFull; // still silly by all measures.
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG,"MainActivity onCreate is called");
 
         initUI();
 
@@ -260,6 +264,38 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         });
     }
 
+    @Override
+    public void notifyLeftConnectionDisconnected() {
+        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Disconnected");});
+    }
+
+    @Override
+    public void notifyRightConnectionDisconnected() {
+        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Disconnected");});
+    }
+
+    @Override
+    public void notifyLeftConnectionIsConnecting() {
+        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Connecting..");});
+    }
+
+    @Override
+    public void notifyRightConnectionIsConnecting() {
+        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Connecting..");});
+    }
+
+    @Override
+    public void notifyLeftConnectionConnected() {
+        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Connected");});
+    }
+
+    @Override
+    public void notifyRightConnectionConnected() {
+        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Connected");});
+    }
+
+
+
     private void initUI(){
 
         // prepare the drawables that will represent the different postures.
@@ -270,6 +306,11 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
         drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
         drawableUnknown = getDrawable(R.drawable.unknownposition);
+
+        textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatus);
+        textViewLeftConnectionStatus.setText("Communicating");
+        textViewRightConnectionStatus = (TextView) findViewById(R.id.textViewRightConnectionStatus);
+        textViewRightConnectionStatus.setText("Communicating");
 
         buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
 
@@ -301,6 +342,8 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
 
         tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
         tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
+
+
 
         leftInsoleIndicationSubscription=null;
 
@@ -339,5 +382,12 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
                 });
             }
         };
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"MainActivity onDestroy is called");
+        finish();
     }
 }
