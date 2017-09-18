@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -16,6 +17,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class LauncherActivity extends AppCompatActivity {
     String TAG="1Act";
+
+    ImageView imageViewLogo;
     Button rtButton;
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     @Override
@@ -48,6 +51,13 @@ public class LauncherActivity extends AppCompatActivity {
     private void initUI(){
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);
+
+        imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
+        if (MyApplication.EltenMode) {
+            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
+        } else {// it is Uvex
+            imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
+        }
 
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
