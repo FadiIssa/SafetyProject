@@ -29,6 +29,8 @@ public class BleManager {
     RxBleDevice leftInsoleDevice;
     RxBleDevice rightInsoleDevice;
 
+    ScanStatusCallback scanStatusCallback;//it could be the launcher activity, to show scanning status on screen, and to save to shared preferences when mac addresses are found.
+
     public BleManager(){
         this.rxBleClient = MyApplication.getRxBleClient();
         scanManager = new ScanManager();
@@ -37,6 +39,10 @@ public class BleManager {
     // it should check if there are saved insoles in sharedPreferences (saved mac address), if so, it brings them and use them in the scan as filters, if not, it searches for the nearest safety insoles for both left and right.
     public void scanAndPair(ScanFinishedCallBack c){
         scanManager.scanAndPair(c);
+    }
+
+    public void scanForDiscovery(ScanStatusCallback c){
+        scanManager.scanForDiscovery(c);
     }
 
     // this method can be called after the call back from scanAndRepair is finished.
@@ -65,6 +71,7 @@ public class BleManager {
         return rightInsoleDevice;
     }
 
+
     public Observable<RxBleConnection> getLeftInsoleConnectionObservable(){
         return rtConnectionManager.getLeftInsoleConnectionObservable();
     }
@@ -76,4 +83,6 @@ public class BleManager {
     public boolean areDevicesAlreadyScanned(){
         return (leftInsoleDevice!=null && rightInsoleDevice!=null);
     }
+
+    public void registerScanStatusCallback(){}
 }
