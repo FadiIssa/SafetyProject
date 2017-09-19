@@ -23,6 +23,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class LauncherActivity extends AppCompatActivity implements ScanStatusCallback{
     static final String LEFT_INSOLE_MAC_KEY="leftInsoleMac";
     static final String RIGHT_INSOLE_MAC_KEY="rightInsoleMac";
+    public static final String SHARED_PREF_ENTRY="PairedDevices";
     String TAG="1Act";
 
     TextView textViewScanStatusLeft;
@@ -86,6 +87,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     finish();
                 });
 
+        // the user can make a scan if the previous scan timed out without finding any insoles for example.
         RxView.clicks(buttonScan)
                 .subscribe(a->{
                     scan();
@@ -138,15 +140,27 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     }
 
     @Override
-    public void scanSatusFinished(String leftInsoleMac, String rightInsoleMac) {
-        SharedPreferences prefs = getSharedPreferences("PairedDevices", Context.MODE_PRIVATE);
+    public void scanStatusFinished(String leftInsoleMac, String rightInsoleMac) {
+        SharedPreferences prefs = getSharedPreferences(SHARED_PREF_ENTRY, Context.MODE_PRIVATE);
         prefs.edit().putString(LEFT_INSOLE_MAC_KEY,leftInsoleMac).putString(RIGHT_INSOLE_MAC_KEY,rightInsoleMac).commit();
         runOnUiThread(() -> {
             buttonScan.setEnabled(true);
-            textViewScanStatusLeft.setText("insole saved");// this is wrong, we dont know yet if it was saved or not.
-            textViewScanStatusRight.setText("insole saved");
+            textViewScanStatusLeft.setText("detected successfully");// this is wrong, we dont know yet if it was saved or not.
+            textViewScanStatusRight.setText("detected successfully");
+            normalModeButton.setEnabled(true);
+            rtButton.setEnabled(true);
         });
     }
+
+    @Override
+    public void scanStatusFinishedUnsuccessfully() {
+        runOnUiThread(() -> {
+            buttonScan.setEnabled(true);
+            normalModeButton.setEnabled(false);
+            rtButton.setEnabled(false);
+        });
+    }
+
     // this function is called when the activity first launches, and also, if a user decides to make another scan (in case the first scan did not find the insoles due to them being disconnected for example).
     private void scan(){
         Log.d(TAG,"launching scan from LauncherActivity");// scan here means to make a completely new scan, to check for
@@ -154,21 +168,17 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
             // we need to read from shared preferences, to decide which scan versin to call
             SharedPreferences prefs = getApplication().getSharedPreferences(
-                    "PairedDevices", Context.MODE_PRIVATE);
+                    SHARED_PREF_ENTRY, Context.MODE_PRIVATE);
 
             String savedLeftMacAddress=prefs.getString("leftInsoleMac",null);
             String savedRightMacAddress=prefs.getString("rightInsoleMac",null);
 
             if (savedLeftMacAddress==null||savedRightMacAddress==null){
-                Log.d(TAG,"start scan for discovery at:"+ System.currentTimeMillis());
-                MyApplication.getBleManager().scanForDiscovery(this);
-                Log.d(TAG,"scan for discovery ended at:"+ System.currentTimeMillis());// there is no point of this line, because the previous line is asynchronous.
-            }
-            else {
-                MyApplication.getBleManager().scanAndPair(() -> {
-                    rtButton.setEnabled(true);
-                    normalModeButton.setEnabled(true);
-                });
+                Log.d(TAG,"start scan for discovery");
+                MyApplication.getBleManager().scanForDiscovery(this);// the scan for discivery is the one responsible for writing to shared preferences about the mac addresses.
+            } else {
+                Log.d(TAG,"start scanFromSavedPrefs");
+                MyApplication.getBleManager().scanFromSavedPrefs(this);
             }
 
     }

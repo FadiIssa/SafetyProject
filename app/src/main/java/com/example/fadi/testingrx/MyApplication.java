@@ -1,6 +1,7 @@
 package com.example.fadi.testingrx;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.fadi.testingrx.f.ble.BleManager;
@@ -43,6 +44,11 @@ public class MyApplication extends Application{
         //initialize ble manager
         Log.d(TAG,"creating the BleManager instance, to be used throughout the whole application");
         bleManager = new BleManager();
+
+        // for debug purposes
+        // clear the shared preferences, to simulate the scan for discovery process.
+        Log.d(TAG,"clear shared preferences");
+        getSharedPreferences(LauncherActivity.SHARED_PREF_ENTRY,MODE_PRIVATE).edit().clear().commit();
     }
 
     public static BleManager getBleManager(){

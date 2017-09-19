@@ -11,5 +11,6 @@ public interface ScanStatusCallback {
     void scanStatusRightIsScanning();
     void scanStatusLeftFound();
     void scanStatusRightFound();
-    void scanSatusFinished(String leftInsoleMac, String rightInsoleMac);//it will be called when scanning for both devices has found devices.
+    void scanStatusFinished(String leftInsoleMac, String rightInsoleMac);//it will be called when scanning for both devices has found devices.
+    void scanStatusFinishedUnsuccessfully();
 }

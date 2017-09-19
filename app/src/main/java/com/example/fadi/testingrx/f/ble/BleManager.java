@@ -37,8 +37,8 @@ public class BleManager {
     }
 
     // it should check if there are saved insoles in sharedPreferences (saved mac address), if so, it brings them and use them in the scan as filters, if not, it searches for the nearest safety insoles for both left and right.
-    public void scanAndPair(ScanFinishedCallBack c){
-        scanManager.scanAndPair(c);
+    public void scanFromSavedPrefs(ScanStatusCallback c){
+        scanManager.scanFromSavedPrefs(c);
     }
 
     public void scanForDiscovery(ScanStatusCallback c){

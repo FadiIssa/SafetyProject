@@ -9,6 +9,9 @@ import com.polidea.rxandroidble.scan.ScanFilter;
 import com.polidea.rxandroidble.scan.ScanResult;
 import com.polidea.rxandroidble.scan.ScanSettings;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,8 +31,10 @@ public class ScanManager {
     RxBleClient rxBleClient;// it will be passed to it, ideally, it should ask for it locally from the Application.
     // should be called from the bleManager, try to pass an inner class that implements a functional interface, in order to notify the ble manager about the finishing of the scanning.
 
-    // observer
+    // observers
     Observer<ScanResult> myScanObserver;//scan observer, no need for 2 objects, one is enough to find all ble devices.
+
+    Observer<Long> scanTimerObserver;// it will be used to cancel an ongoing scan operation after a time out.
 
     // subscriptions
     Subscription scanSubscription;// this is for scthere will be several subscriptions, for each functionality
@@ -38,6 +43,9 @@ public class ScanManager {
     boolean isLeftInsoleDetectedNearby;
     boolean isRightInsoleDetectedNearby;
 
+    int bestLeftInsoleRSSI;
+    int bestRightInsoleRSSI;
+
     String leftInsoleMacAddress;
     String rightInsoleMacAddress;
 
@@ -45,7 +53,7 @@ public class ScanManager {
         this.rxBleClient = MyApplication.getRxBleClient();
     }
 
-    public void scanFromSavedPrefs(ScanFinishedCallBack callBack){
+    public void scanFromSavedPrefs(ScanStatusCallback callBack){
         Log.d(TAG,"scanFromSavedPrefs is called");
         myScanObserver=new Observer<ScanResult>() {
             @Override
@@ -111,24 +119,31 @@ public class ScanManager {
                     else
                         return (deviceName.equals("ZTSafetyR") || deviceName.equals("ZTSafetyL"));
                 })
-                .take(4)
+                //.take(4)
+                .doOnSubscribe(()->{startScanTimer();})
+                .doOnUnsubscribe(()->{
+
+                })
                 .subscribe(myScanObserver);
     }
 
     public void scanForDiscovery(ScanStatusCallback callback){
         Log.d(TAG,"scanForDiscovery is called");
+
         // first we reset the values related to scanning
         reset();
 
+        Log.d(TAG,"notify callback that status isScanning for both insoles");
         callback.scanStatusLeftIsScanning();
         callback.scanStatusRightIsScanning();
+
         myScanObserver=new Observer<ScanResult>() {
             @Override
             public void onCompleted() {
-                Log.d(TAG,"scan for discovery onCompleted");
+                Log.d(TAG,"scan for discovery onCompleted");// when there is a timer, this should never be called.
                 // I should check if both types of insoles were found or not.
                 if (isLeftInsoleDetectedNearby && isRightInsoleDetectedNearby) {
-                    callback.scanSatusFinished(leftInsoleMacAddress,rightInsoleMacAddress);//notify caller that scan finished, so it can deal with the saved mac addresses. (to save them to shared preferences maybe).
+                    callback.scanStatusFinished(leftInsoleMacAddress,rightInsoleMacAddress);//notify caller that scan finished, so it can deal with the saved mac addresses. (to save them to shared preferences maybe).
                 } else {
                     callback.scanStatusLeftStopped();
                     callback.scanStatusRightStopped();
@@ -146,26 +161,35 @@ public class ScanManager {
             public void onNext(ScanResult scanResult){
                 Log.d(TAG,"scan for discovery onNext "+scanResult.toString());
 
-                if (scanResult.getBleDevice().getName().equals("ZTSafetyR")){
-                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
-                    leftInsoleMacAddress=scanResult.getBleDevice().getMacAddress();
-                    isRightInsoleDetectedNearby=true;
-                    callback.scanStatusRightFound();
-                }
-
                 if (scanResult.getBleDevice().getName().equals("ZTSafetyL")){
                     Log.d(TAG,"signal strength is:"+scanResult.getRssi());
-                    rightInsoleMacAddress=scanResult.getBleDevice().getMacAddress();
+                    int currentDetectedLeftRSSI=scanResult.getRssi();
+
+                    if (currentDetectedLeftRSSI>bestLeftInsoleRSSI){
+                        leftInsoleMacAddress=scanResult.getBleDevice().getMacAddress();;
+                        bestLeftInsoleRSSI=currentDetectedLeftRSSI;
+                    }
+
                     isLeftInsoleDetectedNearby=true;
                     callback.scanStatusLeftFound();
                 }
 
-                if (isLeftInsoleDetectedNearby&&isRightInsoleDetectedNearby){
-                    scanSubscription.unsubscribe();
-                    //should save the mad addresses to sharedPreferences.
-                    callback.scanSatusFinished(leftInsoleMacAddress,rightInsoleMacAddress);
-                    //callBack.notifyScanFinished();
+                if (scanResult.getBleDevice().getName().equals("ZTSafetyR")){
+                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
+                    int currentDetectedRightRSSI=scanResult.getRssi();
 
+                    if (currentDetectedRightRSSI>bestLeftInsoleRSSI){
+                        rightInsoleMacAddress=scanResult.getBleDevice().getMacAddress();;
+                        bestRightInsoleRSSI=currentDetectedRightRSSI;
+                    }
+                    isRightInsoleDetectedNearby=true;
+                    callback.scanStatusRightFound();
+                }
+
+                if (isLeftInsoleDetectedNearby&&isRightInsoleDetectedNearby){
+                    //scanSubscription.unsubscribe();//right now, when we find both devices, we unsubscribe, remove this line if you want the scan to finish only based on timer off, like for detecting the closest insoles in a range.
+                    //should save the mac addresses to sharedPreferences. from the caller activity.
+                    //callback.scanStatusFinished(leftInsoleMacAddress,rightInsoleMacAddress);
                 }
             }
         };
@@ -197,7 +221,18 @@ public class ScanManager {
                     else
                         return (deviceName.equals("ZTSafetyR") || deviceName.equals("ZTSafetyL"));
                 })
-                .take(4)
+                .doOnSubscribe(()->{startScanTimer();})
+                .doOnUnsubscribe(()->{
+                    // I should check if both types of insoles were found or not.
+                    if (isLeftInsoleDetectedNearby && isRightInsoleDetectedNearby) {
+                        callback.scanStatusFinished(leftInsoleMacAddress,rightInsoleMacAddress);//notify caller that scan finished, so it can deal with the saved mac addresses. (to save them to shared preferences maybe).
+                    } else {
+                        callback.scanStatusLeftStopped();
+                        callback.scanStatusRightStopped();
+                        callback.scanStatusFinishedUnsuccessfully();
+                    }
+                })
+                //.take(4)
                 .subscribe(myScanObserver);
     }
 
@@ -205,6 +240,12 @@ public class ScanManager {
         //here we should reset parameters, and unsubscribe any still running subscription.
         isLeftInsoleDetectedNearby=false;
         isRightInsoleDetectedNearby=false;
+
+        leftInsoleMacAddress="";
+        rightInsoleMacAddress="";
+
+        bestLeftInsoleRSSI=-100;
+        bestRightInsoleRSSI=-100;
 
         if (scanSubscription!=null){
             if (!scanSubscription.isUnsubscribed()) {
@@ -219,5 +260,30 @@ public class ScanManager {
 
     public String getRightInsoleMacAddress(){
         return rightInsoleMacAddress;
+    }
+
+    //the purpose is to unsubscribe the scanning (to close scanning) after a timer is finished (in case the scanning was not finished already for finding the desired insoles).
+    private void startScanTimer() {
+        Observable.interval(1, TimeUnit.SECONDS)
+                .take(10)
+                .subscribe(aLong -> {
+                            Log.d(TAG,"one second of scanning passed, it is:"+aLong);
+                        },
+                        t -> {
+                            Log.e(TAG, "error from scanTimerObserver:" + t.toString());
+                        },
+                        () -> {
+                            Log.e(TAG, " scan timer Observer received onCompleted()");
+                            if (scanSubscription != null) {
+                                Log.d(TAG,"scanSubscription is not Null");
+                                if (!scanSubscription.isUnsubscribed()) {
+                                    Log.d(TAG,"scanSubscription is not unsubscribed, so we call unsubscribe");
+                                    scanSubscription.unsubscribe();
+                                }
+                                else {
+                                    Log.d(TAG,"scanSubscription is already unsubscribed");
+                                }
+                            }
+                        });
     }
 }
