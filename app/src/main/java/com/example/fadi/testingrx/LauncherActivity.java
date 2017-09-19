@@ -52,8 +52,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     }
 
     private void initUI(){
-        rtButton = (Button) findViewById(R.id.buttonRT);
-        rtButton.setEnabled(false);
+
 
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.
@@ -63,15 +62,25 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         textViewScanStatusRight = (TextView) findViewById(R.id.textViewScanStatusRight);
         textViewScanStatusRight.setText("");
 
-        imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
-        if (MyApplication.EltenMode) {
-            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
-        } else {// it is Uvex
-            imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
-        }
-
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
+
+        rtButton = (Button) findViewById(R.id.buttonRT);
+        rtButton.setEnabled(false);
+
+        imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
+
+        if (MyApplication.EltenMode) {
+            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
+            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten100));
+            rtButton.setBackground(getDrawable(R.drawable.realtime_elten));
+            normalModeButton.setBackground(getDrawable(R.drawable.normal_mode_elten));
+
+        } else {// it is Uvex
+            imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
+            rtButton.setBackground(getDrawable(R.drawable.realtime_elten));
+            normalModeButton.setBackground(getDrawable(R.drawable.normal_mode_elten));
+        }
 
         RxView.clicks(rtButton)
                 .subscribe(a-> {
@@ -142,7 +151,9 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     @Override
     public void scanStatusFinished(String leftInsoleMac, String rightInsoleMac) {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREF_ENTRY, Context.MODE_PRIVATE);
+        Log.d(TAG,"writing to shared preferences, left mac is:"+leftInsoleMac+" right mac is:"+rightInsoleMac);
         prefs.edit().putString(LEFT_INSOLE_MAC_KEY,leftInsoleMac).putString(RIGHT_INSOLE_MAC_KEY,rightInsoleMac).commit();
+        MyApplication.getBleManager().prepareBleDevices();
         runOnUiThread(() -> {
             buttonScan.setEnabled(true);
             textViewScanStatusLeft.setText("detected successfully");// this is wrong, we dont know yet if it was saved or not.
@@ -154,6 +165,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     @Override
     public void scanStatusFinishedUnsuccessfully() {
+
         runOnUiThread(() -> {
             buttonScan.setEnabled(true);
             normalModeButton.setEnabled(false);
@@ -164,7 +176,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     // this function is called when the activity first launches, and also, if a user decides to make another scan (in case the first scan did not find the insoles due to them being disconnected for example).
     private void scan(){
         Log.d(TAG,"launching scan from LauncherActivity");// scan here means to make a completely new scan, to check for
-
 
             // we need to read from shared preferences, to decide which scan versin to call
             SharedPreferences prefs = getApplication().getSharedPreferences(
@@ -180,6 +191,5 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 Log.d(TAG,"start scanFromSavedPrefs");
                 MyApplication.getBleManager().scanFromSavedPrefs(this);
             }
-
     }
 }

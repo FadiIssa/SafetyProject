@@ -34,12 +34,12 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:background="@drawable/normalmode_icon"
+        android:background="@mipmap/ic_launcher"
         android:text=" "
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonScan"
         app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintBottom_toTopOf="@+id/buttonScan" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/buttonRT"
@@ -49,8 +49,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/realtime_icon"
-        android:backgroundTint="@android:color/white"
+        android:background="@mipmap/ic_launcher"
         android:text=" "
         app:layout_constraintBottom_toTopOf="@+id/buttonNormalMode"
         app:layout_constraintHorizontal_bias="0.4"

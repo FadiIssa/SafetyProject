@@ -53,78 +53,22 @@ public class ScanManager {
         this.rxBleClient = MyApplication.getRxBleClient();
     }
 
-    public void scanFromSavedPrefs(ScanStatusCallback callBack){
-        Log.d(TAG,"scanFromSavedPrefs is called");
-        myScanObserver=new Observer<ScanResult>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG,"scan onCompleted");
-            }
+    private void reset(){
+        //here we should reset parameters, and unsubscribe any still running subscription.
+        isLeftInsoleDetectedNearby=false;
+        isRightInsoleDetectedNearby=false;
 
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"scan onError "+e.toString());
-            }
+        leftInsoleMacAddress="";
+        rightInsoleMacAddress="";
 
-            @Override
-            public void onNext(ScanResult scanResult) {
-                Log.d(TAG,"scan onNext "+scanResult.toString());
-                //deviceMacTextView.setText(scanResult.getBleDevice().getMacAddress());
-                //deviceNameTextView.setText(scanResult.getBleDevice().getName());
+        bestLeftInsoleRSSI=-100;
+        bestRightInsoleRSSI=-100;
 
-                if (scanResult.getBleDevice().getName().equals("ZTSafetyR")){
-                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
-                    isRightInsoleDetectedNearby=true;
-                }
-
-                if (scanResult.getBleDevice().getName().equals("ZTSafetyL")){
-                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
-                    isLeftInsoleDetectedNearby=true;
-                }
-
-                if (isLeftInsoleDetectedNearby&&isRightInsoleDetectedNearby){
-                    //scanSubscription.unsubscribe();
-                    //should save the mad addresses to sharedPreferences.
-
-                    //callBack.notifyScanFinished();
-
-                }
-            }
-        };
-
-        //to deal with the case in case scanning was performed before. maybe for discovery purpose, and now we want to scan for specific device.
         if (scanSubscription!=null){
-            if (!scanSubscription.isUnsubscribed()){
+            if (!scanSubscription.isUnsubscribed()) {
                 scanSubscription.unsubscribe();
             }
         }
-
-        scanSubscription = rxBleClient.scanBleDevices(
-                new ScanSettings.Builder()
-                        .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-                        .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
-                        .build(),
-                new ScanFilter.Builder()
-                        // add custom filters if needed
-                        .build()
-
-        )
-
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter(scanResult -> {
-                    String deviceName= scanResult.getBleDevice().getName();
-                    if (deviceName==null)
-                        return false;
-                    else
-                        return (deviceName.equals("ZTSafetyR") || deviceName.equals("ZTSafetyL"));
-                })
-                //.take(4)
-                .doOnSubscribe(()->{startScanTimer();})
-                .doOnUnsubscribe(()->{
-
-                })
-                .subscribe(myScanObserver);
     }
 
     public void scanForDiscovery(ScanStatusCallback callback){
@@ -236,23 +180,81 @@ public class ScanManager {
                 .subscribe(myScanObserver);
     }
 
-    private void reset(){
-        //here we should reset parameters, and unsubscribe any still running subscription.
-        isLeftInsoleDetectedNearby=false;
-        isRightInsoleDetectedNearby=false;
+    public void scanFromSavedPrefs(ScanStatusCallback callBack){
+        Log.d(TAG,"scanFromSavedPrefs is called");
+        myScanObserver=new Observer<ScanResult>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG,"scan onCompleted");
+            }
 
-        leftInsoleMacAddress="";
-        rightInsoleMacAddress="";
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"scan onError "+e.toString());
+            }
 
-        bestLeftInsoleRSSI=-100;
-        bestRightInsoleRSSI=-100;
+            @Override
+            public void onNext(ScanResult scanResult) {
+                Log.d(TAG,"scan onNext "+scanResult.toString());
+                //deviceMacTextView.setText(scanResult.getBleDevice().getMacAddress());
+                //deviceNameTextView.setText(scanResult.getBleDevice().getName());
 
+                if (scanResult.getBleDevice().getName().equals("ZTSafetyR")){
+                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
+                    isRightInsoleDetectedNearby=true;
+                }
+
+                if (scanResult.getBleDevice().getName().equals("ZTSafetyL")){
+                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
+                    isLeftInsoleDetectedNearby=true;
+                }
+
+                if (isLeftInsoleDetectedNearby&&isRightInsoleDetectedNearby){
+                    //scanSubscription.unsubscribe();
+                    //should save the mad addresses to sharedPreferences.
+
+                    //callBack.notifyScanFinished();
+
+                }
+            }
+        };
+
+        //to deal with the case in case scanning was performed before. maybe for discovery purpose, and now we want to scan for specific device.
         if (scanSubscription!=null){
-            if (!scanSubscription.isUnsubscribed()) {
+            if (!scanSubscription.isUnsubscribed()){
                 scanSubscription.unsubscribe();
             }
         }
+
+        scanSubscription = rxBleClient.scanBleDevices(
+                new ScanSettings.Builder()
+                        .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+                        .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+                        .build(),
+                new ScanFilter.Builder()
+                        // add custom filters if needed
+                        .build()
+
+        )
+
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(scanResult -> {
+                    String deviceName= scanResult.getBleDevice().getName();
+                    if (deviceName==null)
+                        return false;
+                    else
+                        return (deviceName.equals("ZTSafetyR") || deviceName.equals("ZTSafetyL"));
+                })
+                //.take(4)
+                .doOnSubscribe(()->{startScanTimer();})
+                .doOnUnsubscribe(()->{
+
+                })
+                .subscribe(myScanObserver);
     }
+
+
 
     public String getLeftInsoleMacAddress(){
         return leftInsoleMacAddress;

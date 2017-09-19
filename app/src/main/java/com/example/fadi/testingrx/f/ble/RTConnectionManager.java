@@ -304,13 +304,14 @@ public class RTConnectionManager {
             }
         };
 
-        //leftInsoleDevice = rxBleClient.getBleDevice(leftInsoleMacAddress);
-        leftInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.LeftInsoleMacAddress);
-        bleManager.notifyBleManagerOfLeftInsoleDevice(leftInsoleDevice);
+        //leftInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.LeftInsoleMacAddress);
+        leftInsoleDevice = bleManager.getLeftInsoleDevice();
+        //bleManager.notifyBleManagerOfLeftInsoleDevice(leftInsoleDevice);
         Log.d(TAG," device name is:"+leftInsoleDevice.getName());
 
-        rightInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.RightInsoleMacAddress);
-        bleManager.notifyBleManagerOfRightInsoleDevice(rightInsoleDevice);
+        //rightInsoleDevice = MyApplication.getRxBleClient().getBleDevice(Insoles.RightInsoleMacAddress);
+        rightInsoleDevice = bleManager.getRightInsoleDevice();
+        //bleManager.notifyBleManagerOfRightInsoleDevice(rightInsoleDevice);//this step was necessary before, but now, the bleManager is responsible of creating and establishing the bleDevice objects.
         Log.d(TAG," device name is:"+rightInsoleDevice.getName());
 
         leftInsoleDevice.observeConnectionStateChanges()

@@ -22,6 +22,8 @@ import rx.Observable;
 
 public class BleManager {
 
+    String TAG="BleMgr";
+
     RxBleClient rxBleClient;
     ScanManager scanManager;
     RTConnectionManager rtConnectionManager;
@@ -80,9 +82,19 @@ public class BleManager {
         return rtConnectionManager.getRightInsoleConnectionObservable();
     }
 
-    public boolean areDevicesAlreadyScanned(){
-        return (leftInsoleDevice!=null && rightInsoleDevice!=null);
-    }
+    public void prepareBleDevices(){
+        Log.d(TAG,"prepareBleDevices is called");
+        //get the mac addresses from the scan manager, to prepare the connections.
+        //first we prepare the bleDevice based on the macAddresses
+        String leftMac=scanManager.getLeftInsoleMacAddress();
+        String rightMac=scanManager.getRightInsoleMacAddress();
 
-    public void registerScanStatusCallback(){}
+        if (leftMac!=null && rightMac!=null){
+            Log.d(TAG,"creating bleDevice from this lef mac address:"+leftMac);
+            leftInsoleDevice=rxBleClient.getBleDevice(leftMac);
+
+            Log.d(TAG,"creating bleDevice from this right mac address:"+rightMac);
+            rightInsoleDevice=rxBleClient.getBleDevice(rightMac);
+        }
+    }
 }
