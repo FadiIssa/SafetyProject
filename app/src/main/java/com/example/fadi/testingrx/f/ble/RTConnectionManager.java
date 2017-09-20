@@ -56,6 +56,9 @@ public class RTConnectionManager {
 
     String TAG="RTConn";
 
+    boolean leftInsoleSuccessfulyConnected;
+    boolean rightInsoleSuccessfulyConnected;
+
     public RTConnectionManager(RxBleClient c, PostureTracker p, BleManager caller){
         this.rxBleClient = c;
         this.mPostureTracker = p;
@@ -90,7 +93,8 @@ public class RTConnectionManager {
             public void onNext(RxBleConnection rxBleConnection) {
                 Log.d(TAG,"LeftconnectionObserver onNext "+rxBleConnection.toString());
 
-                rxBleConnection.discoverServices().subscribe(myLeftServicesDiscoveryObserver);
+                // discover services, right now I am not sure if I may need this,
+                //rxBleConnection.discoverServices().subscribe(myLeftServicesDiscoveryObserver);
 
                 rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
                         .observeOn(AndroidSchedulers.mainThread())
@@ -120,7 +124,7 @@ public class RTConnectionManager {
             public void onNext(RxBleConnection rxBleConnection) {
                 Log.d(TAG,"RightconnectionObserver onNext "+rxBleConnection.toString());
 
-                rxBleConnection.discoverServices().subscribe(myRightServicesDiscoveryObserver);
+                //rxBleConnection.discoverServices().subscribe(myRightServicesDiscoveryObserver);// testing to see if services were not discovered, would this still not break the app.
 
                 rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
                         .observeOn(AndroidSchedulers.mainThread())
@@ -148,8 +152,14 @@ public class RTConnectionManager {
 
                     if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.DISCONNECTED)){
                         mPostureTracker.getCaller().notifyLeftConnectionDisconnected();
+                        if (leftInsoleSuccessfulyConnected)
+                        {
+                            leftInsoleSuccessfulyConnected=false;
+                            retryLeftConnection();
+                        }
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTING)){
                         mPostureTracker.getCaller().notifyLeftConnectionIsConnecting();
+                        leftInsoleSuccessfulyConnected=true;
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTED)) {
                         mPostureTracker.getCaller().notifyLeftConnectionConnected();
                     } else {
@@ -165,8 +175,14 @@ public class RTConnectionManager {
 
                     if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.DISCONNECTED)){
                         mPostureTracker.getCaller().notifyRightConnectionDisconnected();
+                        if (rightInsoleSuccessfulyConnected)
+                        {
+                            rightInsoleSuccessfulyConnected=false;
+                            retryRightConnection();
+                        }
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTING)){
                         mPostureTracker.getCaller().notifyRightConnectionIsConnecting();
+                        rightInsoleSuccessfulyConnected=true;
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTED)) {
                         mPostureTracker.getCaller().notifyRightConnectionConnected();
                     } else {
@@ -201,13 +217,13 @@ public class RTConnectionManager {
 
     private Observable<RxBleConnection> prepareLeftConnectionObservable() {
         return leftInsoleDevice
-                .establishConnection(true)
+                .establishConnection(false)
                 .compose(new ConnectionSharingAdapter());
     }
 
     private Observable<RxBleConnection> prepareRightConnectionObservable() {
         return rightInsoleDevice
-                .establishConnection(true)
+                .establishConnection(false)
                 .compose(new ConnectionSharingAdapter());
     }
 
