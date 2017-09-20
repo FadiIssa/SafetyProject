@@ -53,7 +53,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     private void initUI(){
 
-
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.
 
@@ -78,8 +77,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         } else {// it is Uvex
             imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
-            rtButton.setBackground(getDrawable(R.drawable.realtime_elten));
-            normalModeButton.setBackground(getDrawable(R.drawable.normal_mode_elten));
+            rtButton.setBackground(getDrawable(R.drawable.realtime_icon0));
+            normalModeButton.setBackground(getDrawable(R.drawable.normalmode_icon));
         }
 
         RxView.clicks(rtButton)
@@ -100,6 +99,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         RxView.clicks(buttonScan)
                 .subscribe(a->{
                     scan();
+                    rtButton.setEnabled(false);
+                    normalModeButton.setEnabled(false);
                     buttonScan.setEnabled(false);
                 });
 
@@ -188,8 +189,9 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 Log.d(TAG,"start scan for discovery");
                 MyApplication.getBleManager().scanForDiscovery(this);// the scan for discivery is the one responsible for writing to shared preferences about the mac addresses.
             } else {
-                Log.d(TAG,"start scanFromSavedPrefs");
-                MyApplication.getBleManager().scanFromSavedPrefs(this);
+                Log.d(TAG,"start scanFromSavedPrefs, looking for the following mac addresses, left:"+savedLeftMacAddress+" right:"+savedRightMacAddress);
+                // I should add a check if the saved mac address is a real one, or maybe an empty string.
+                MyApplication.getBleManager().scanFromSavedPrefs(savedLeftMacAddress,savedRightMacAddress,this);
             }
     }
 }

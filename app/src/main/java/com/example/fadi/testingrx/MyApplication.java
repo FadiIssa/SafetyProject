@@ -16,6 +16,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class MyApplication extends Application{
 
     public static boolean EltenMode = true;
+    public static boolean TestingScanDiscoveryMode = false;
 
     static BleManager bleManager;// one bleManager for the whole application (it is not strict by the library, but it makes sense and it is logical).
 
@@ -47,8 +48,10 @@ public class MyApplication extends Application{
 
         // for debug purposes
         // clear the shared preferences, to simulate the scan for discovery process.
-        Log.d(TAG,"clear shared preferences");
-        getSharedPreferences(LauncherActivity.SHARED_PREF_ENTRY,MODE_PRIVATE).edit().clear().commit();
+        if (TestingScanDiscoveryMode) {
+            Log.d(TAG, "clear shared preferences");
+            getSharedPreferences(LauncherActivity.SHARED_PREF_ENTRY, MODE_PRIVATE).edit().clear().commit();
+        }
     }
 
     public static BleManager getBleManager(){
