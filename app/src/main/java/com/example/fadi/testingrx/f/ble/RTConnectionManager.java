@@ -17,6 +17,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by fadi on 06/09/2017.
@@ -62,187 +63,15 @@ public class RTConnectionManager {
     }
 
     public void connect(){
-        myLeftServicesDiscoveryObserver= new Observer<RxBleDeviceServices>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG," left ServicesDiscoveryObserver onCompleted");
-                mPostureTracker.getCaller().notifyLeftServiceDiscoveryCompleted();
-            }
 
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"left ServicesDiscoveryObserver onError "+e.toString());
-            }
+        myLeftServicesDiscoveryObserver= ObserverPool.getNewLeftInsoleServiceDiscoveryObserver(mPostureTracker);
+        myRightServicesDiscoveryObserver= ObserverPool.getNewRightInsoleServiceDiscoveryObserver(mPostureTracker);
 
-            @Override
-            public void onNext(RxBleDeviceServices rxBleDeviceServices) {
-                Log.d(TAG," left ServicesDiscoveryObserver onNext "+rxBleDeviceServices.toString());
-            }
-        };
+        myLeftBatteryReadObserver = ObserverPool.getNewLeftBatteryReaderObserver();
+        myRightBatteryReadObserver = ObserverPool.getNewRightBatteryReaderObserver();
 
-        myRightServicesDiscoveryObserver= new Observer<RxBleDeviceServices>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG," right ServicesDiscoveryObserver onCompleted");
-                mPostureTracker.getCaller().notifyRightServiceDiscoveryCompleted();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"right ServicesDiscoveryObserver onError "+e.toString());
-            }
-
-            @Override
-            public void onNext(RxBleDeviceServices rxBleDeviceServices) {
-                Log.d(TAG,"right ServicesDiscoveryObserver onNext "+rxBleDeviceServices.toString());
-            }
-        };
-
-        myLeftBatteryReadObserver = new Observer<byte[]>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","LeftBatteryReadObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"LeftBatteryReadObserver onError "+e.toString());
-            }
-
-            @Override
-            public void onNext(byte[] bytes) {
-                int leftBatteryValue=bytes[0]&0xFF;
-                Log.d(TAG,"LeftBatteryReadObserver onNext "+ leftBatteryValue);
-                //updateLeftBattery(leftBatteryValue);
-            }
-        };
-
-        myRightBatteryReadObserver = new Observer<byte[]>() {
-            @Override
-            public void onCompleted() {
-                Log.d("RXTesting","RightBatteryReadObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"RightBatteryReadObserver onError "+e.toString());
-            }
-
-            @Override
-            public void onNext(byte[] bytes) {
-                int rightBatteryValue=bytes[0]&0xFF;
-                Log.d(TAG,"RightBatteryReadObserver onNext "+ rightBatteryValue);
-                //updateRightBattery(rightBatteryValue);
-            }
-        };
-
-        myLeftAccelometerNotifyObserver= new Observer<Observable<byte[]>>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG,"LeftAccelometerNotifyObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"LeftAccelometerNotifyObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(Observable<byte[]> observable) {
-                observable.subscribe(new Observer<byte[]>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG,"LeftAccelometerNotifyObserver reader onCompleted");
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(TAG,"LeftAccelometerNotifyObserver reader "+e.toString());
-
-                    }
-
-                    @Override
-                    public void onNext(byte[] bytes) {
-                        //Log.d(TAG,"LeftAccelometerNotifyObserver reader onNext "+ bytes.toString());
-                        for (int i=0;i<bytes.length;i++){
-                            //Log.d(TAG,"byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }
-
-                        //int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
-                        int accX= (bytes[4]&0xFF)|((bytes[5])<<8);
-                        //Log.d(TAG,"Left accX:"+accX);
-
-                        //int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
-                        int accY= (bytes[6]&0xFF)|((bytes[7])<<8);
-                        //Log.d(TAG,"Left accY:"+accY);
-
-                        //int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
-                        int accZ= (bytes[8]&0xFF)|((bytes[9])<<8);
-                        //Log.d(TAG,"Left accZ:"+accZ);
-
-                        //updateLeftAccelometer(accX,accY,accZ);
-                        mPostureTracker.updateLeftAccelometer(accX,accY,accZ);
-                    }
-                });
-            }
-        };
-
-        myRightAccelometerNotifyObserver= new Observer<Observable<byte[]>>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG,"RightAccelometerNotifyObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"RightAccelometerNotifyObserver onError "+e.toString());
-
-            }
-
-            @Override
-            public void onNext(Observable<byte[]> observable) {
-                observable.subscribe(new Observer<byte[]>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG,"RightAccelometerNotifyObserver reader onCompleted");
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(TAG,"RightAccelometerNotifyObserver reader "+e.toString());
-
-                    }
-
-                    @Override
-                    public void onNext(byte[] bytes) {
-                        //Log.d(TAG,"RightAccelometerNotifyObserver reader onNext "+ bytes.toString());
-
-
-                        /*for (int i=0;i<bytes.length;i++){
-                            Log.d(TAG,"byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }*/
-
-                        //int accX= bytes[4]&0xFF+((bytes[5]&0xFF)<<8);
-                        int accX= (bytes[4]&0xFF)|((bytes[5])<<8);
-                        //Log.d(TAG,"Right accX:"+accX);
-
-                        //int accY= bytes[6]&0xFF+((bytes[7]&0xFF)<<8);
-                        int accY= (bytes[6]&0xFF)|((bytes[7])<<8);
-                        //Log.d(TAG,"Right accY:"+accY);
-
-                        //int accZ= bytes[8]&0xFF+((bytes[9]&0xFF)<<8);
-                        int accZ= (bytes[8]&0xFF)|((bytes[9])<<8);
-                        //Log.d(TAG,"Right accZ:"+accZ);
-
-                        //updateRightAccelometer(accX,accY,accZ);
-                        mPostureTracker.updateRightAccelometer(accX,accY,accZ);
-                    }
-                });
-            }
-        };
+        myLeftAccelometerNotifyObserver= ObserverPool.getNewLeftAccelerometerNotificationObserver(mPostureTracker);
+        myRightAccelometerNotifyObserver= ObserverPool.getNewRightAccelerometerNotificationObserver(mPostureTracker);
 
         leftInsoleConnectionObserver= new Observer<RxBleConnection>() {
             @Override
@@ -255,7 +84,6 @@ public class RTConnectionManager {
                 Log.d(TAG,"LeftconnectionObserver onError "+e.toString());
                 //mPostureTracker.getCaller().notifyLeftConnectionLost();
                 //retryLeftConnection();
-
             }
 
             @Override
@@ -352,13 +180,13 @@ public class RTConnectionManager {
 
         //leftInsoleConnectionObservable=leftInsoleDevice.establishConnection(false);
         leftInsoleConnectionObservable = prepareLeftConnectionObservable();
-        leftInsoleConnectionSubscription=leftInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
+        leftInsoleConnectionSubscription=leftInsoleConnectionObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(leftInsoleConnectionObserver);
 
         //rightInsoleConnectionObservable=rightInsoleDevice.establishConnection(false);
         rightInsoleConnectionObservable= prepareRightConnectionObservable();
-        rightInsoleConnectionSubscription=rightInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
+        rightInsoleConnectionSubscription=rightInsoleConnectionObservable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(rightInsoleConnectionObserver);
     }

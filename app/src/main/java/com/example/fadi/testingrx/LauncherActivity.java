@@ -103,7 +103,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     normalModeButton.setEnabled(false);
                     buttonScan.setEnabled(false);
                 });
-
     }
 
     @Override

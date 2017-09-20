@@ -27,6 +27,10 @@ import rx.Subscription;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
+/*
+this activity will show real time postures, based on real time notifications received from both insoles.
+it should pause the posture tracking in case the connection with one of both insoles is lost.
+* */
 
 public class MainActivity extends AppCompatActivity implements PostureResultCallback{
 
