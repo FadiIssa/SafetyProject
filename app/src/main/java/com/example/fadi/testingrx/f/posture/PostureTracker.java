@@ -28,6 +28,8 @@ public class PostureTracker {
 
     PostureResultCallback caller;
 
+    boolean isPaused;
+
     public PostureTracker(PostureResultCallback father){
         caller=father;
 
@@ -42,10 +44,25 @@ public class PostureTracker {
         counterCurrentPosition=0;
         counterKneeling=0;
         counterTiptoes=0;
+
+        isPaused=true;//at first, the timer should be considered as 0 , so no counting
     }
 
     public void processLatestAccelometerReadings(){
+
         int position;
+
+        if (isPaused)
+        {
+            position=Postures.UNKNOWN;
+            currentPosture=Postures.UNKNOWN;
+            processCounters();
+            Log.d("RXTesting"," postureTracker is paused");
+            caller.updatePositionCallBack(position, counterCurrentPosition, counterCrouching, counterKneeling, counterTiptoes);
+            return;
+        }
+
+
         Log.d("RXTesting","processLatestAccelometerReading(): latest LX:"+latestLX+" LY:"+latestLY+" LZ:"+latestLZ+" RX:"+latestRX+" RY:"+latestRY+" RZ:"+latestRZ);
         if (latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300){
             position=Postures.CROUCHING;
@@ -74,6 +91,10 @@ public class PostureTracker {
 
     //this method will be called after each detection of a posture, its purpose is to maintain a reliable readings of the counter varialbes at any time, these values will be sent to update the UI whenever there is a change from this side.
     private void processCounters(){
+        if (isPaused){
+            return;
+        }
+
         if (currentPosture!=lastPosture){
             counterCurrentPosition=1;//we start by assigning value 1 (represents half a second) to the current posture counter.
             lastPosture=currentPosture;
@@ -124,5 +145,14 @@ public class PostureTracker {
 
     public PostureResultCallback getCaller(){
         return caller;
+    }
+
+    // this could be in case the connection with one insole is lost.
+    public void pauseCounting(){
+        isPaused=true;
+    }
+
+    public void resumeCounting(){
+        isPaused=false;
     }
 }

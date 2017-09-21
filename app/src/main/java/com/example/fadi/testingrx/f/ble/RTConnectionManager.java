@@ -56,8 +56,11 @@ public class RTConnectionManager {
 
     String TAG="RTConn";
 
-    boolean leftInsoleSuccessfulyConnected;
-    boolean rightInsoleSuccessfulyConnected;
+    boolean leftInsoleIsConnecting;
+    boolean rightInsoleIsConnecting;
+
+    boolean leftInsoleReadyForTracking;
+    boolean rightInsoleReadyForTracking;
 
     public RTConnectionManager(RxBleClient c, PostureTracker p, BleManager caller){
         this.rxBleClient = c;
@@ -152,16 +155,22 @@ public class RTConnectionManager {
 
                     if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.DISCONNECTED)){
                         mPostureTracker.getCaller().notifyLeftConnectionDisconnected();
-                        if (leftInsoleSuccessfulyConnected)
+                        leftInsoleReadyForTracking=false;
+                        informPostureTracker();
+                        if (leftInsoleIsConnecting)
                         {
-                            leftInsoleSuccessfulyConnected=false;
+                            leftInsoleIsConnecting=false;
                             retryLeftConnection();
                         }
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTING)){
+                        leftInsoleReadyForTracking=false;
                         mPostureTracker.getCaller().notifyLeftConnectionIsConnecting();
-                        leftInsoleSuccessfulyConnected=true;
+                        leftInsoleIsConnecting=true;
+                        informPostureTracker();
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTED)) {
+                        leftInsoleReadyForTracking=true;
                         mPostureTracker.getCaller().notifyLeftConnectionConnected();
+                        informPostureTracker();
                     } else {
                         mPostureTracker.getCaller().notifyLeftConnectionDisconnected();
                     }
@@ -175,24 +184,28 @@ public class RTConnectionManager {
 
                     if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.DISCONNECTED)){
                         mPostureTracker.getCaller().notifyRightConnectionDisconnected();
-                        if (rightInsoleSuccessfulyConnected)
+                        rightInsoleReadyForTracking=false;
+                        informPostureTracker();
+                        if (rightInsoleIsConnecting)
                         {
-                            rightInsoleSuccessfulyConnected=false;
+                            rightInsoleIsConnecting=false;
                             retryRightConnection();
                         }
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTING)){
                         mPostureTracker.getCaller().notifyRightConnectionIsConnecting();
-                        rightInsoleSuccessfulyConnected=true;
+                        rightInsoleIsConnecting=true;
+                        rightInsoleReadyForTracking=false;
+                        informPostureTracker();
                     } else if (rxBleConnectionState.equals(RxBleConnection.RxBleConnectionState.CONNECTED)) {
                         mPostureTracker.getCaller().notifyRightConnectionConnected();
+                        rightInsoleReadyForTracking=true;
+                        informPostureTracker();
                     } else {
                         mPostureTracker.getCaller().notifyRightConnectionDisconnected();
                     }
                 },throwable -> {
                     Log.d(TAG,"right connectionStateChange error:"+throwable.toString());
                 });
-
-
 
         //leftInsoleConnectionObservable=leftInsoleDevice.establishConnection(false);
         leftInsoleConnectionObservable = prepareLeftConnectionObservable();
@@ -241,5 +254,14 @@ public class RTConnectionManager {
         rightInsoleConnectionSubscription = rightInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(rightInsoleConnectionObserver);
+    }
+
+    private void informPostureTracker(){
+        if (leftInsoleReadyForTracking && rightInsoleReadyForTracking){
+            mPostureTracker.resumeCounting();
+        }
+        else {
+            mPostureTracker.pauseCounting();
+        }
     }
 }
