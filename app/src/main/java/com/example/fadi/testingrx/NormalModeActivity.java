@@ -112,10 +112,26 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     }
 
 
+    private void resetOnScreenStats(){
+        runOnUiThread(() -> {
+            String timeZero="0:0:0";
+            textViewStanding.setText(timeZero);
+            textViewStairs.setText(timeZero);
+            textViewSteps.setText(timeZero);
+            textViewWalking.setText(timeZero);
+            textViewVibration.setText(timeZero);
+            textViewLeftAngle.setText(timeZero);
+            textViewRightAngle.setText(timeZero);
+            textViewCrouching.setText(timeZero);
+            textViewKneeling.setText(timeZero);
+            textViewTiptoes.setText(timeZero);
+        });
+    }
     private void startSafetyActivity(){
 
         //reset posture counters
         mPostureTracker.reset();
+        resetOnScreenStats();
 
         //reset statistics
         mStatsCalculator.startSession();
@@ -523,6 +539,12 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     }
 
     private void startTimer(){
+        // we have first to check if previous subscriptions still exist, to unsubscribe them.
+        if (timerSubscription!=null){
+            if (!timerSubscription.isUnsubscribed()){
+                timerSubscription.unsubscribe();
+            }
+        }
         timerSubscription=timerObservable
                 .subscribe(timerObserver);// creating the observer locally, to listen for the timer ticking, and updating the screen accordingly.
     }
