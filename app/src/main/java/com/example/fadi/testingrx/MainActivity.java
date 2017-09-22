@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     Observable<RxBleConnection> rightInsoleConnectionObservable;
 
     // for reading the indication characteristic
-    Observer<Observable<byte[]>> myLeftInsoleIndicationObserver;
-    Observer<Observable<byte[]>> myRightInsoleIndicationObserver;
+//    Observer<Observable<byte[]>> myLeftInsoleIndicationObserver;
+//    Observer<Observable<byte[]>> myRightInsoleIndicationObserver;
 
     PostureTracker mPostureTracker;
 
@@ -361,40 +361,40 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         leftInsoleIndicationSubscription=null;
 
         //init the indication observer
-        myLeftInsoleIndicationObserver = new Observer<Observable<byte[]>>() {
-            @Override
-            public void onCompleted() {
-                Log.d(TAG,"LeftInsoleIndicationObserver onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG,"LeftInsoleIndicationObserver onError "+e.toString());
-            }
-
-            @Override
-            public void onNext(Observable<byte[]> observable) {
-                observable.subscribe(new Observer<byte[]>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG,"LeftInsoleIndicationObserver reader onCompleted");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+e.toString());
-                    }
-
-                    @Override
-                    public void onNext(byte[] bytes) {
-                        Log.d(TAG,"LeftInsoleIndicationObserver reader onNext "+ bytes.toString());
-                        for (int i=0;i<bytes.length;i++){
-                            Log.d(TAG,"indicastion byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }
-                    }
-                });
-            }
-        };
+//        myLeftInsoleIndicationObserver = new Observer<Observable<byte[]>>() {
+//            @Override
+//            public void onCompleted() {
+//                Log.d(TAG,"LeftInsoleIndicationObserver onCompleted");
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                Log.d(TAG,"LeftInsoleIndicationObserver onError "+e.toString());
+//            }
+//
+//            @Override
+//            public void onNext(Observable<byte[]> observable) {
+//                observable.subscribe(new Observer<byte[]>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        Log.d(TAG,"LeftInsoleIndicationObserver reader onCompleted");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+e.toString());
+//                    }
+//
+//                    @Override
+//                    public void onNext(byte[] bytes) {
+//                        Log.d(TAG,"LeftInsoleIndicationObserver reader onNext "+ bytes.toString());
+//                        for (int i=0;i<bytes.length;i++){
+//                            Log.d(TAG,"indicastion byte nr:"+ i+" is:"+(bytes[i]&0xFF));
+//                        }
+//                    }
+//                });
+//            }
+//        };
     }
 
     @Override

@@ -64,7 +64,10 @@ public class PostureTracker {
 
 
         Log.d("RXTesting","processLatestAccelometerReading(): latest LX:"+latestLX+" LY:"+latestLY+" LZ:"+latestLZ+" RX:"+latestRX+" RY:"+latestRY+" RZ:"+latestRZ);
-        if (latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300){
+        if (
+                (latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300)
+            ||  (latestLZ<300 && latestRZ>800 && latestRZ<1100 && latestLY>700 && latestRY<300 && latestRY>-300)
+                ){
             position=Postures.CROUCHING;
             currentPosture=Postures.CROUCHING;
             Log.d("RXTesting","position:"+position);
@@ -154,5 +157,13 @@ public class PostureTracker {
 
     public void resumeCounting(){
         isPaused=false;
+    }
+
+    // this will be called from the normal activity mode, to allow starting and stopping several times, without counters accumulating.
+    public void reset(){
+        counterCrouching=0;
+        counterCurrentPosition=0;
+        counterKneeling=0;
+        counterTiptoes=0;
     }
 }

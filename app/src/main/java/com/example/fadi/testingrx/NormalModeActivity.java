@@ -18,8 +18,11 @@ import com.polidea.rxandroidble.RxBleConnection;
 import org.w3c.dom.Text;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.disposables.Disposable;
 import rx.Observable;
+import rx.Observer;
 import rx.Subscription;
 
 public class NormalModeActivity extends AppCompatActivity implements PostureResultCallback{
@@ -30,8 +33,14 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     Button buttonStartActivity;
     Button buttonStopActivity;
 
-    boolean isLeftServiceDiscovered;
-    boolean isRightServiceDiscovered;
+    boolean isLeftInsoleConnected;
+    boolean isRightInsoleConnected;
+
+    boolean leftStartActivityCommandSentSuccessfully;
+    boolean rightStartActivityCommandSentSuccessfully;
+
+    boolean leftStopActivityCommandSentSuccessfully;
+    boolean rightStopActivityCommandSentSuccessfully;
 
     ImageView imageViewCrouching;
     ImageView imageViewKneeling;
@@ -60,6 +69,11 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     TextView textViewLeftAngle;
     TextView textViewRightAngle;
 
+    TextView textViewLeftConnectionStatus;
+    TextView textViewRightConnectionStatus;
+
+    TextView textViewTimer;
+
     Subscription leftInsoleIndicationSubscription;
     Subscription rightInsoleIndicationSubscription;
 
@@ -74,6 +88,10 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     Observable<RxBleConnection> leftInsoleConnectionObservable;//this observable will be used any time we want to interact with a characteristic, no need to establish new connection for every operation.
     Observable<RxBleConnection> rightInsoleConnectionObservable;
 
+    Observable<Long> timerObservable;
+    Subscription timerSubscription;
+    Observer<Long> timerObserver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +99,8 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
         mStatsCalculator = new StatsCalculator(this);
 
-        isLeftServiceDiscovered = false;
-        isRightServiceDiscovered = false;
+        isLeftInsoleConnected = false;
+        isRightInsoleConnected = false;
 
         initUI();
 
@@ -96,6 +114,10 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     private void startSafetyActivity(){
 
+        //reset posture counters
+        mPostureTracker.reset();
+
+        //reset statistics
         mStatsCalculator.startSession();
 
         if (leftInsoleConnectionObservable==null){
@@ -109,27 +131,32 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         //check if the activity is not already started
 
         byte[] startCommandArray= {0x01};
-        //send command to stop the activity
-        if (isLeftInsoleConnected()){
-            leftInsoleConnectionObservable
-                    .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
-                    .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
-            Log.d(TAG, "activity started, writing to command characteristic of left insole");
-        }
-        else{
-            Log.d(TAG,"could not start activity, no connection with left insole.");
-            Toast.makeText(this, "could not start, left insole disconnected", Toast.LENGTH_SHORT).show();
-        }
 
-        if (isRightInsoleConnected()){
-            rightInsoleConnectionObservable
-                    .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
-                    .subscribe(bytes -> onWriteSuccess(),(e)->onWriteError(e));
-            Log.d(TAG, "activity started, writing to command characteristic of right insole");
-        }
-        else{
-            Log.d(TAG,"could not start activity, no connection with right insole.");
-            Toast.makeText(this, "could not start, right insole disconnected", Toast.LENGTH_SHORT).show();
+        if (isLeftInsoleConnected()&&isRightInsoleConnected()){
+            //both insoles are connected, now sending commands to each one alone.
+            Log.d(TAG,"startSafety Activity, both insoles are connected now, so sending the write command to them one by one.");
+
+            if (isLeftInsoleConnected()){
+                leftInsoleConnectionObservable
+                        .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
+                        .subscribe(bytes -> onWriteSuccess(true),(e)->onWriteError(e));
+                Log.d(TAG, "activity started, writing to command characteristic of left insole");
+            }
+            else{
+                Log.d(TAG,"could not start activity, no connection with left insole.");
+                Toast.makeText(this, "could not start, left insole disconnected", Toast.LENGTH_SHORT).show();
+            }
+
+            if (isRightInsoleConnected()){
+                rightInsoleConnectionObservable
+                        .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),startCommandArray))
+                        .subscribe(bytes -> onWriteSuccess(false),(e)->onWriteError(e));
+                Log.d(TAG, "activity started, writing to command characteristic of right insole");
+            }
+            else{
+                Log.d(TAG,"could not start activity, no connection with right insole.");
+                Toast.makeText(this, "could not start, right insole disconnected", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -153,29 +180,42 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         }
     }
 
-    private void onWriteSuccess(){
-        Log.d(TAG, "successful write operation");
+    private void onWriteSuccess( boolean isLeftInsole){
+        if (isLeftInsole) {
+            Log.d(TAG, "successful write operation to left insole");
+            leftStartActivityCommandSentSuccessfully=true;
+        } else {
+            Log.d(TAG, "successful write operation to right insole");
+            rightStartActivityCommandSentSuccessfully=true;
+        }
+
+        if (leftStartActivityCommandSentSuccessfully&&rightStartActivityCommandSentSuccessfully){
+            leftStopActivityCommandSentSuccessfully=false;
+            rightStopActivityCommandSentSuccessfully=false;
+            runOnUiThread(() -> {
+                buttonStartActivity.setEnabled(false);
+            });
+        }
 
     }
 
-    private void onStopActivityWriteSuccess(){
-        Log.d(TAG, "successful write operation to stop activity");
+    private void onStopActivityWriteSuccess(boolean isleftInsole){
+        if (isleftInsole) {
+            Log.d(TAG, "successful left write operation to stop activity");
+            leftStopActivityCommandSentSuccessfully=true;
+        } else {
+            Log.d(TAG, "successful right write operation to stop activity");
+            rightStopActivityCommandSentSuccessfully=true;
+        }
 
-        // from here I should start the indication subscription, to read the whole data after the activity finishes.
-
-        /*leftInsoleConnectionObservable
-                .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
-                //.doOnNext(indicationObservable -> {Log.d(TAG,"indication observable is set");})
-                //.subscribe(myLeftInsoleIndicationObserver);
-
-                .flatMap(notificationObservable -> notificationObservable)
-                .first()
-                .subscribe(bytes -> {
-                            for (int i=0;i<bytes.length;i++){
-                            Log.d(TAG,"indication byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }
-                        },
-                        throwable -> {Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+throwable.toString());});*/
+        if (leftStopActivityCommandSentSuccessfully&&rightStopActivityCommandSentSuccessfully){
+            leftStartActivityCommandSentSuccessfully=false;
+            rightStartActivityCommandSentSuccessfully=false;
+            runOnUiThread(() -> {
+                buttonStopActivity.setEnabled(false);
+                buttonStartActivity.setEnabled(true);
+            });
+        }
     }
 
     private void onWriteError(Throwable e){
@@ -229,47 +269,59 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     @Override
     public void notifyLeftConnectionDisconnected() {
-
+        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Disconnected");});
+        isLeftInsoleConnected=false;
     }
 
     @Override
     public void notifyRightConnectionDisconnected() {
-
+        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Disconnected");});
+        isRightInsoleConnected=false;
     }
 
     @Override
     public void notifyLeftConnectionIsConnecting() {
-
+        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Connecting..");});
+        isLeftInsoleConnected=false;
     }
 
     @Override
     public void notifyRightConnectionIsConnecting() {
-
+        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Connecting..");});
+        isRightInsoleConnected=false;
     }
 
     @Override
     public void notifyLeftConnectionConnected() {
-
+        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Connected");});
+        isLeftInsoleConnected=true;
+        processEnablingStartSafetyActivityButton();
     }
 
     @Override
     public void notifyRightConnectionConnected() {
-
+        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Connected");});
+        isRightInsoleConnected = true;
+        processEnablingStartSafetyActivityButton();
     }
 
     @Override
     public void notifyLeftServiceDiscoveryCompleted() {
-        isLeftServiceDiscovered=true;
-        processEnablingStartSafetyActivityButton();
+
     }
 
     @Override
     public void notifyRightServiceDiscoveryCompleted() {
-        isRightServiceDiscovered = true;
-        processEnablingStartSafetyActivityButton();
     }
 
     private void stopSafetyActivity(){
+
+        if (timerSubscription!=null) {
+            if (!timerSubscription.isUnsubscribed()) {
+                timerSubscription.unsubscribe();
+                runOnUiThread(() -> {textViewTimer.setText("0:0:0");});
+            }
+        }
 
         //check if the activity is not already started
         byte[] stopCommandArray= {0x02};
@@ -306,7 +358,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
             leftInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
-                    .subscribe(bytes -> onStopActivityWriteSuccess(),(e)->onWriteError(e));
+                    .subscribe(bytes -> onStopActivityWriteSuccess(true),(e)->onWriteError(e));
 
             Log.d(TAG, "activity stopped, writing to command characteristic of left insole");
 
@@ -352,7 +404,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
             rightInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
-                    .subscribe(bytes -> onStopActivityWriteSuccess(),(e)->onWriteError(e));
+                    .subscribe(bytes -> onStopActivityWriteSuccess(false),(e)->onWriteError(e));
 
 
 
@@ -410,6 +462,12 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
         imageViewLogo.setImageDrawable(getDrawable(R.drawable.unknownposition));
 
+        textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatus);
+        textViewLeftConnectionStatus.setText("Communicating");
+        textViewRightConnectionStatus = (TextView) findViewById(R.id.textViewRightConnectionStatus);
+        textViewRightConnectionStatus.setText("Communicating");
+
+        textViewTimer = (TextView) findViewById(R.id.textViewTimer);
 
         buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
         buttonStartActivity.setEnabled(false);
@@ -418,14 +476,55 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                // .map(a->buttonStartActivity.getText().toString().equals("Start"))
                 .subscribe(a-> {
                         startSafetyActivity();
+                    startTimer();
                 });
 
         buttonStopActivity = (Button) findViewById(R.id.buttonStopActivityNormal);
+        disableStopActivityButton();
 
         RxView.clicks(buttonStopActivity)
                 .subscribe(a->{
                     stopSafetyActivity();
                 });
+
+        // init observables and observers
+        timerObservable=Observable.interval(1, TimeUnit.SECONDS);
+        timerObserver= new Observer<Long>() {
+
+            @Override
+            public void onNext(Long value) {
+                runOnUiThread(() -> {
+                    Long timeInHours=value/3600;
+                    Long timeInMinutes=(value%3600)/60;
+                    Long timeInSeconds=(value%3600)%60;
+                    String finalText= (String.valueOf(timeInHours)+":"+String.valueOf(timeInMinutes)+":"+String.valueOf(timeInSeconds));
+                    textViewTimer.setText(finalText);
+                    if (value>60){
+                        buttonStopActivity.setEnabled(true);
+                    }
+                    else {
+                        buttonStopActivity.setEnabled(false);
+                    }
+
+                });
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"error in time observer:"+e.toString());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        };
+
+    }
+
+    private void startTimer(){
+        timerSubscription=timerObservable
+                .subscribe(timerObserver);// creating the observer locally, to listen for the timer ticking, and updating the screen accordingly.
     }
 
     public void updateStatsOnUI(final String standigTime, final String nStairs, final String nSteps, final String walkingTime, final String vibrationTime, final String leftAngle, final String rightAngle ){
@@ -459,12 +558,20 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     }
 
     private void processEnablingStartSafetyActivityButton(){
-
-        if (isLeftServiceDiscovered&&isRightServiceDiscovered){
+        Log.d(TAG,"processEnablingStartButton, left connection is:"+isLeftInsoleConnected+" right connection is:"+isRightInsoleConnected);
+        if (isLeftInsoleConnected&&isRightInsoleConnected){
             runOnUiThread(() -> {
                 buttonStartActivity.setEnabled(true);
             });
 
         }
+    }
+
+    private void disableStopActivityButton(){
+        buttonStopActivity.setEnabled(false);
+    }
+
+    private void enableStopActivityButton(){
+        buttonStartActivity.setEnabled(true);
     }
 }
