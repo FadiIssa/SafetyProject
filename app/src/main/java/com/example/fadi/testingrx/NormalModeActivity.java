@@ -210,6 +210,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         if (leftStartActivityCommandSentSuccessfully&&rightStartActivityCommandSentSuccessfully){
             leftStopActivityCommandSentSuccessfully=false;
             rightStopActivityCommandSentSuccessfully=false;
+            startTimer();
             runOnUiThread(() -> {
                 buttonStartActivity.setEnabled(false);
             });
@@ -498,7 +499,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                // .map(a->buttonStartActivity.getText().toString().equals("Start"))
                 .subscribe(a-> {
                         startSafetyActivity();
-                    startTimer();
+                    //startTimer();// the timer should only be started if the commands were sent successfuly.
                 });
 
         buttonStopActivity = (Button) findViewById(R.id.buttonStopActivityNormal);
@@ -594,7 +595,6 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
             runOnUiThread(() -> {
                 buttonStartActivity.setEnabled(true);
             });
-
         }
     }
 

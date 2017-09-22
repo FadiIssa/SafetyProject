@@ -97,4 +97,9 @@ public class BleManager {
             rightInsoleDevice=rxBleClient.getBleDevice(rightMac);
         }
     }
+
+    public void closeAllConnections(){
+        Log.d(TAG,"closeAllConnections is called");
+        rtConnectionManager.closeAllConnections();
+    }
 }

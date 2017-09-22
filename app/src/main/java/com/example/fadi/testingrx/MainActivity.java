@@ -39,10 +39,6 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     Observable<RxBleConnection> leftInsoleConnectionObservable;//this observable will be used any time we want to interact with a characteristic, no need to establish new connection for every operation.
     Observable<RxBleConnection> rightInsoleConnectionObservable;
 
-    // for reading the indication characteristic
-//    Observer<Observable<byte[]>> myLeftInsoleIndicationObserver;
-//    Observer<Observable<byte[]>> myRightInsoleIndicationObserver;
-
     PostureTracker mPostureTracker;
 
     ImageView currentPostureImageView;
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     TextView textViewLeftConnectionStatus;
     TextView textViewRightConnectionStatus;
 
-    Button buttonStartActivity;// this is when I have to show that I am doing some advancement.
+    //Button buttonStartActivity;// this is when I have to show that I am doing some advancement.
 
     Drawable drawableTipToesFull; // still silly by all measures.
     Drawable drawableCrouchingFull;
@@ -68,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     Drawable drawableKneelingBorder;
     Drawable drawableUnknown;
 
-    Subscription leftInsoleIndicationSubscription;
+    //Subscription leftInsoleIndicationSubscription;
     String TAG="RxTesting";
 
     // this is to ensure font changes happen in this activity.
@@ -125,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
             }
     }
 
-    private void stopSafetyActivity(){
+    /*private void stopSafetyActivity(){
 
         //check if the activity is not already started
 
@@ -157,21 +153,12 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
                     .subscribe(bytes -> onStopActivityWriteSuccess(),(e)->onWriteError(e));
 
-
-
             Log.d(TAG, "activity stopped, writing to command characteristic of left insole");
-
-            //here I should start the indication thig.
-
-//            leftInsoleConnectionObservable
-//                    .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
-//                    .subscribe(myLeftInsoleIndicationObserver);
-
         }
         else{
             Log.d(TAG,"could not stop activity, no connection with left insole.");
         }
-    }
+    }*/
 
     private boolean isLeftInsoleConnected(){
         if (MyApplication.getBleManager().getLeftInsoleDevice()!=null){
@@ -330,19 +317,19 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         textViewRightConnectionStatus = (TextView) findViewById(R.id.textViewRightConnectionStatus);
         textViewRightConnectionStatus.setText("Communicating");
 
-        buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
+        //buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
 
-        RxView.clicks(buttonStartActivity)
-                .map(a->buttonStartActivity.getText().toString().equals("Start"))
-                .subscribe(a-> {
-                    if (a) {
-                        buttonStartActivity.setText("Stop");
-                        startSafetyActivity();
-                    } else{
-                        buttonStartActivity.setText("Start");
-                        stopSafetyActivity();
-                    }
-                });
+//        RxView.clicks(buttonStartActivity)
+//                .map(a->buttonStartActivity.getText().toString().equals("Start"))
+//                .subscribe(a-> {
+//                    if (a) {
+//                        buttonStartActivity.setText("Stop");
+//                        startSafetyActivity();
+//                    } else{
+//                        buttonStartActivity.setText("Start");
+//                        stopSafetyActivity();
+//                    }
+//                });
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
         if (MyApplication.EltenMode) {
@@ -372,12 +359,7 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         counterKneelingTextView = (TextView) findViewById(R.id.kneelingCounterTextView);
         counterTiptoesTextView = (TextView) findViewById(R.id.tiptoesCounterTextView);
 
-
-
-
-
-
-        leftInsoleIndicationSubscription=null;
+        //leftInsoleIndicationSubscription=null;
 
         //init the indication observer
 //        myLeftInsoleIndicationObserver = new Observer<Observable<byte[]>>() {
@@ -419,7 +401,8 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyApplication.getBleManager().closeAllConnections();
         Log.d(TAG,"MainActivity onDestroy is called");
-        finish();
+        finish();//demo mode
     }
 }

@@ -62,13 +62,18 @@ public class RTConnectionManager {
     boolean leftInsoleReadyForTracking;
     boolean rightInsoleReadyForTracking;
 
+    boolean isRetryConnectionEnabled;//it is usually true, but when the activity gets destroyed, it should be set to false, otherwise the connection will gets subscribed again and stay alive.
+
     public RTConnectionManager(RxBleClient c, PostureTracker p, BleManager caller){
         this.rxBleClient = c;
         this.mPostureTracker = p;
         bleManager = caller;
+        isRetryConnectionEnabled=true;
     }
 
     public void connect(){
+
+        isRetryConnectionEnabled=true;
 
         myLeftServicesDiscoveryObserver= ObserverPool.getNewLeftInsoleServiceDiscoveryObserver(mPostureTracker);
         myRightServicesDiscoveryObserver= ObserverPool.getNewRightInsoleServiceDiscoveryObserver(mPostureTracker);
@@ -242,18 +247,26 @@ public class RTConnectionManager {
 
     private void retryLeftConnection(){
         Log.d(TAG,"retryLeftConnection is called");
-        leftInsoleConnectionSubscription.unsubscribe();
-        leftInsoleConnectionSubscription=leftInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(leftInsoleConnectionObserver);
+        if (isRetryConnectionEnabled) {
+            leftInsoleConnectionSubscription.unsubscribe();
+            leftInsoleConnectionSubscription = leftInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(leftInsoleConnectionObserver);
+        } else {
+            Log.d(TAG,"retry left connection is disabled");
+        }
     }
 
     private void retryRightConnection(){
         Log.d(TAG,"retryRightConnection is called");
-        rightInsoleConnectionSubscription.unsubscribe();
-        rightInsoleConnectionSubscription = rightInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(rightInsoleConnectionObserver);
+        if (isRetryConnectionEnabled) {
+            rightInsoleConnectionSubscription.unsubscribe();
+            rightInsoleConnectionSubscription = rightInsoleConnectionObservable.subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(rightInsoleConnectionObserver);
+        } else {
+            Log.d(TAG,"retry right connection is disabled");
+        }
     }
 
     private void informPostureTracker(){
@@ -263,5 +276,26 @@ public class RTConnectionManager {
         else {
             mPostureTracker.pauseCounting();
         }
+    }
+
+    //this will be called for example when the activity is destroyed, to not leak any subscription.
+    public void closeAllConnections(){
+        isRetryConnectionEnabled=false;
+        if (leftInsoleConnectionSubscription!=null){
+            if (!leftInsoleConnectionSubscription.isUnsubscribed()){
+                Log.d(TAG,"unsubscibr leftConnectionsubscription");
+                leftInsoleConnectionSubscription.unsubscribe();
+
+            }
+        }
+
+        if (rightInsoleConnectionSubscription!=null){
+            if (!rightInsoleConnectionSubscription.isUnsubscribed()){
+                Log.d(TAG,"unsubscibr leftConnectionsubscription");
+                rightInsoleConnectionSubscription.unsubscribe();
+            }
+        }
+
+
     }
 }
