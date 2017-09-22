@@ -5,11 +5,9 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -71,7 +69,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         if (MyApplication.EltenMode) {
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
-            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten100));
+            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
             rtButton.setBackground(getDrawable(R.drawable.realtime_elten));
             normalModeButton.setBackground(getDrawable(R.drawable.normal_mode_elten));
 

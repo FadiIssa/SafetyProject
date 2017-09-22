@@ -3,6 +3,7 @@ package com.example.fadi.testingrx;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -95,6 +96,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_normal_mode);
 
         mStatsCalculator = new StatsCalculator(this);
@@ -464,7 +466,6 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         imageViewSteps = (ImageView) findViewById(R.id.imageViewSteps);
         imageViewSteps.setImageDrawable(getDrawable(R.drawable.steps));
 
-
         imageViewPronSup = (ImageView) findViewById(R.id.imageViewPronSup);
         imageViewPronSup.setImageDrawable(getDrawable(R.drawable.elten_angles));
 
@@ -476,7 +477,12 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         imageViewVibration.setImageDrawable(getDrawable(R.drawable.vibra1));
 
         imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
-        imageViewLogo.setImageDrawable(getDrawable(R.drawable.unknownposition));
+        if (MyApplication.EltenMode) {
+            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
+        } else {
+            imageViewLogo.setImageDrawable(getDrawable(R.drawable.unknownposition));
+        }
+
 
         textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatus);
         textViewLeftConnectionStatus.setText("Communicating");
@@ -561,16 +567,19 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
             //now set the posture times
             Log.d(TAG,"total crouching time:"+totalCrouchingTime);
+            totalCrouchingTime=0;//remove this line after the demo, this is only for stability reasons, since the connectivity is not finalized yet.
             int crouchingPostureCounterHours=totalCrouchingTime/3600;
             int crouchingPostureCounterMinutes=(totalCrouchingTime%3600)/60;
             int crouchingPostureCounterSeconds=(totalCrouchingTime%3600)%60;
             textViewCrouching.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
 
+            totalKneelingTime=0;//remove this line urgently after the demo.
             int kneelingPostureCounterHours=totalKneelingTime/3600;
             int kneelingPostureCounterMinutes=(totalKneelingTime%3600)/60;
             int kneelingPostureCounterSeconds=(totalKneelingTime%3600)%60;
             textViewKneeling.setText(String.valueOf(kneelingPostureCounterHours)+":"+String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
 
+            totalTiptoesTime=0;
             int tiptoesPostureCounterHours=totalTiptoesTime/3600;
             int tiptoesPostureCounterMinutes=(totalTiptoesTime%3600)/60;
             int tiptoesPostureCounterSeconds=(totalTiptoesTime%3600)%60;

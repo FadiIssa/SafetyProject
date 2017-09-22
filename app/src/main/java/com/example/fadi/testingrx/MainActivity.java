@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     Drawable drawableUnknown;
 
     Subscription leftInsoleIndicationSubscription;
-
-
     String TAG="RxTesting";
 
     // this is to ensure font changes happen in this activity.
@@ -81,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
+
         Log.d(TAG,"MainActivity onCreate is called");
 
         initUI();
@@ -318,7 +319,11 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         drawableCrouchingBorder = getDrawable(R.drawable.crouchingborder);
         drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
         drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
-        drawableUnknown = getDrawable(R.drawable.unknownposition);
+        if (MyApplication.EltenMode) {
+            drawableUnknown = getDrawable(R.drawable.elten_logo_red);
+        }else {
+            drawableUnknown = getDrawable(R.drawable.unknownposition);
+        }
 
         textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatus);
         textViewLeftConnectionStatus.setText("Communicating");
@@ -340,21 +345,35 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
                 });
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
-        currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
+        if (MyApplication.EltenMode) {
+            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
+        } else {
+            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
+        }
 
         kneelingImageView = (ImageView) findViewById(R.id.kneelingImageView);
-        kneelingImageView.setImageDrawable(getDrawable(R.drawable.kneelingfull));
-
         crouchingImageView = (ImageView) findViewById(R.id.crouchingImageView);
-        crouchingImageView.setImageDrawable(getDrawable(R.drawable.crouchingfull));
+        tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
+
+
+        // checking if elten mode, to use the relevant icons.
+        if (MyApplication.EltenMode){
+            kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling));
+            crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching));
+            tiptoesImageView.setImageDrawable(getDrawable(R.drawable.elten_tiptoes));
+        } else {
+            kneelingImageView.setImageDrawable(getDrawable(R.drawable.kneelingfull));
+            crouchingImageView.setImageDrawable(getDrawable(R.drawable.crouchingfull));
+            tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
+        }
 
         counterCurrentPostureTextView = (TextView) findViewById(R.id.currentPostureCounterTextView);
         counterCrouchingTextView = (TextView) findViewById(R.id.crouchingCounterTextView);
         counterKneelingTextView = (TextView) findViewById(R.id.kneelingCounterTextView);
         counterTiptoesTextView = (TextView) findViewById(R.id.tiptoesCounterTextView);
 
-        tiptoesImageView = (ImageView) findViewById(R.id.tiptoesImageView);
-        tiptoesImageView.setImageDrawable(getDrawable(R.drawable.tipoesfull));
+
+
 
 
 
