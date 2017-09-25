@@ -43,6 +43,8 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     boolean leftStopActivityCommandSentSuccessfully;
     boolean rightStopActivityCommandSentSuccessfully;
 
+    boolean isActivityStarted;//this will be used to enable/disable the startActivity button.
+
     ImageView imageViewCrouching;
     ImageView imageViewKneeling;
     ImageView imageViewTiptoes;
@@ -211,6 +213,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
             leftStopActivityCommandSentSuccessfully=false;
             rightStopActivityCommandSentSuccessfully=false;
             startTimer();
+            isActivityStarted=true;
             runOnUiThread(() -> {
                 buttonStartActivity.setEnabled(false);
             });
@@ -229,6 +232,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         if (leftStopActivityCommandSentSuccessfully&&rightStopActivityCommandSentSuccessfully){
             leftStartActivityCommandSentSuccessfully=false;
             rightStartActivityCommandSentSuccessfully=false;
+            isActivityStarted=false;
             runOnUiThread(() -> {
                 buttonStopActivity.setEnabled(false);
                 buttonStartActivity.setEnabled(true);
@@ -433,6 +437,8 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     private void initUI(){
 
+        isActivityStarted=false;
+
         textViewSteps = (TextView) findViewById(R.id.textViewSteps);
         textViewStairs = (TextView) findViewById(R.id.textViewStairs);
         textViewWalking = (TextView) findViewById(R.id.textViewWalking);
@@ -592,7 +598,7 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     private void processEnablingStartSafetyActivityButton(){
         Log.d(TAG,"processEnablingStartButton, left connection is:"+isLeftInsoleConnected+" right connection is:"+isRightInsoleConnected);
-        if (isLeftInsoleConnected&&isRightInsoleConnected){
+        if (isLeftInsoleConnected && isRightInsoleConnected && (!isActivityStarted)){
             runOnUiThread(() -> {
                 buttonStartActivity.setEnabled(true);
             });
