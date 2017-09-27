@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,43 +12,44 @@
         android:id="@+id/layout_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
         android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/iv_logo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/uvex_logo"
-            />
+            app:srcCompat="@drawable/uvex_logo_big"
+            android:layout_marginRight="32dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="32dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_login_choices"
-            android:layout_width="match_parent"
+            android:layout_width="379dp"
             android:layout_height="wrap_content"
             android:padding="24dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_logo">
+            app:layout_constraintTop_toBottomOf="@+id/iv_logo"
+            tools:layout_editor_absoluteX="16dp">
 
             <TextView
                 android:id="@+id/tv_log_in_from"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
                 android:paddingBottom="16dp"
                 android:text="@string/login.log_in_with"
                 android:textAllCaps="true"
@@ -55,10 +57,12 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="130dp" />
 
             <Button
                 android:id="@+id/btn_login_email"
+                style="@style/LoginEmailButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:text="@string/global.email"
@@ -66,12 +70,13 @@
                 app:layout_constraintBottom_toTopOf="@+id/btn_login_google"
                 app:layout_constraintEnd_toStartOf="@+id/btn_login_facebook"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_log_in_from"/>
+                app:layout_constraintTop_toBottomOf="@+id/tv_log_in_from"
+                tools:layout_editor_absoluteX="0dp" />
 
             <Button
                 android:id="@+id/btn_login_facebook"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="0dp"
                 android:enabled="false"
                 android:text="@string/global.facebook"
                 android:theme="@style/LoginFacebookButtonStyle"
@@ -79,13 +84,13 @@
                 app:layout_constraintBottom_toTopOf="@+id/btn_login_twitter"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_login_email"
-                app:layout_constraintTop_toBottomOf="@id/tv_log_in_from"/>
+                app:layout_constraintTop_toBottomOf="@+id/tv_log_in_from"
+                tools:layout_editor_absoluteX="363dp" />
 
             <Button
                 android:id="@+id/btn_login_google"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
                 android:enabled="false"
                 android:text="@string/global.google"
                 android:theme="@style/LoginGoogleButtonStyle"
@@ -93,7 +98,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_login_twitter"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_login_email"/>
+                app:layout_constraintTop_toBottomOf="@+id/btn_login_email"
+                tools:layout_editor_absoluteX="0dp" />
 
             <Button
                 android:id="@+id/btn_login_twitter"
@@ -106,35 +112,35 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_login_google"
-                app:layout_constraintTop_toBottomOf="@id/btn_login_facebook"/>
+                app:layout_constraintTop_toBottomOf="@+id/btn_login_facebook"
+                tools:layout_editor_absoluteX="0dp" />
 
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_login_form"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="24dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_logo">
+            app:layout_constraintTop_toBottomOf="@+id/iv_logo"
+            tools:layout_editor_absoluteX="16dp">
 
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/til_username"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/til_password"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="-24dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/et_email"
@@ -149,14 +155,12 @@
                 android:id="@+id/til_password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/btn_login_email_forgot_password"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_username">
+                app:layout_constraintTop_toBottomOf="@+id/til_username"
+                tools:layout_editor_absoluteX="-24dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/et_password"
@@ -173,42 +177,37 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
                 android:text="@string/login.ask_forgot_password"
                 android:textColor="@color/colorPrimaryLight"
                 android:textSize="12sp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/btn_login_email_validate"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_password"/>
+                app:layout_constraintTop_toBottomOf="@+id/til_password"
+                tools:layout_editor_absoluteX="-24dp" />
 
             <Button
                 android:id="@+id/btn_login_email_validate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
                 android:text="@string/login.log_in"
                 app:layout_constraintBottom_toTopOf="@+id/btn_login_email_new_account"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_login_email_forgot_password"/>
+                app:layout_constraintTop_toBottomOf="@+id/btn_login_email_forgot_password"
+                tools:layout_editor_absoluteX="-24dp" />
 
             <Button
                 android:id="@+id/btn_login_email_new_account"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="0dp"
                 android:text="@string/login.create_new_account"
                 android:theme="@style/LoginNewAccountButtonStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_login_email_validate"/>
+                app:layout_constraintTop_toBottomOf="@+id/btn_login_email_validate"
+                tools:layout_editor_absoluteX="-24dp" />
 
             <ProgressBar
                 android:id="@+id/progress_bar_login"
@@ -221,10 +220,24 @@
                 app:layout_constraintBottom_toTopOf="@+id/btn_login_email_validate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="-24dp" />
 
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/buttonSkip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Skip"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginRight="96dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

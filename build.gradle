@@ -28,4 +28,5 @@ task clean(type: Delete) {
 
 ext{
     googlePlayServices = '11.2.0'
+    greenDaoVersion = '3.2.2'
 }

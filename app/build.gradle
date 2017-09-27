@@ -65,4 +65,10 @@ dependencies {
     // keyboard visibility
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 
+    // database management
+    compile "org.greenrobot:greendao:$rootProject.greenDaoVersion"
+
+
+    // for alerter
+    compile 'com.tapadoo.android:alerter:1.0.6'
 }

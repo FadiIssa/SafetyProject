@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
+import com.example.fadi.testingrx.ui.onboarding.Login;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -91,7 +92,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         RxView.clicks(normalModeButton)
                 .subscribe(a->{
-                    Intent intent = new Intent(this, NormalModeActivity.class);
+                    //Intent intent = new Intent(this, NormalModeActivity.class);
+                    Intent intent = new Intent(this, Login.class);
                     startActivity(intent);
                     finish();// for demo mode
                 });
