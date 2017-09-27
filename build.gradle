@@ -15,9 +15,17 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com'
+            // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
+        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext{
+    googlePlayServices = '11.2.0'
 }

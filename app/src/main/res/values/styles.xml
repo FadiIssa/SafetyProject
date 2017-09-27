@@ -1,12 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
+    <!-- will be commented because i added another one with the same name taken from the original safety app
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    -->
 
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
@@ -28,5 +31,101 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <!-- from original Safety app-->
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <!--<item name="android:windowBackground">@drawable/background_drawable</item>-->
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="LoginEmailButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorButtonLoginEmail</item>
+    </style>
+
+    <style name="LoginFacebookButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorButtonLoginFacebook</item>
+    </style>
+
+    <style name="LoginGoogleButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorButtonLoginGoogle</item>
+    </style>
+
+    <style name="LoginTwitterButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorButtonLoginTwitter</item>
+    </style>
+
+    <style name="LoginNewAccountButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">#43A047</item>
+    </style>
+
+    <style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabTextAppearance">@style/TabItemTextAppearance</item>
+    </style>
+
+    <style name="TabItemTextAppearance" parent="TextAppearance.Design.Tab">
+
+    </style>
+
+    <style name="TextViewHeaderStyle">
+        <item name="android:background">@color/colorPrimaryDarkAlpha75</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textAlignment">gravity</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextViewMyStatsLabelStyle" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextViewMyStatsValueStyle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextViewPagerTitleStyle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ActivityDistanceTextAppearance" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">?attr/colorAccent</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ActivityCalorieTextAppearance" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+
+    </style>
+
+    <style name="DialogTheme.Logout">
+        <item name="buttonBarPositiveButtonStyle">@style/LogoutPositiveButtonStyle</item>
+    </style>
+
+    <style name="LogoutPositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+
+    </style>
+
+    <style name="MCVTextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
 </resources>

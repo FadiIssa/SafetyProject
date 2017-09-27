@@ -5,4 +5,54 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_normal_mode">NormalModeActivity</string>
+
+
+    <!-- from Original Safety app -->
+
+    <string name="global.cancel">Cancel</string>
+    <string name="global.enable">Enable</string>
+    <string name="global.ok">OK</string>
+    <string name="global.total_distance">Total distance</string>
+    <string name="global.email">Email</string>
+    <string name="global.facebook">Facebook</string>
+    <string name="global.google">Google</string>
+    <string name="global.twitter">Twitter</string>
+    <string name="global.edit_profile">Edit profile</string>
+    <string name="global.my_profile">My profile</string>
+
+    <string name="login.enter_email">Enter Email</string>
+    <string name="login.enter_password">Enter Password</string>
+    <string name="login.log_in">log in</string>
+    <string name="login.ask_forgot_password">Forgot password?</string>
+    <string name="login.log_in_with">Log in with</string>
+    <string name="login.new_account_created">New account created</string>
+    <string name="login.create_new_account">Create new account</string>
+
+    <string name="fragment_name_my_stats">My stats</string>
+    <string name="fragment_name_history">History</string>
+    <string name="fragment_name_cushioning">Cushioning</string>
+    <string name="fragment_cushioning.test_now">Test now</string>
+
+
+    <string name="history.no_history_strParam">No history for</string>
+
+    <string name="main.start_working_day">Start working day</string>
+
+    <string name="profile.please_fill_in_all_fields">Please fill in all fields</string>
+    <string name="profile.gender">Gender</string>
+    <string name="profile.gender_female">Female</string>
+    <string name="profile.gender_male">Male</string>
+    <string name="fragment_name_working_activity">- Working activity -</string>
+    <string name="global.total_time">Total time</string>
+    <string name="global.walking">Walking</string>
+    <string name="global.static">Static</string>
+    <string name="global.stairs">Stairs</string>
+    <string name="activity.calories_burned">Calories burned</string>
+    <string name="fragment_name_biomechanical_analysis">- Biomechanical analysis -</string>
+    <string name="fragment_biomec.strike_nature">Strike nature</string>
+    <string name="global.time">Time</string>
+    <string name="fragment_biomec.pronation_supination">Pronation / Supination</string>
+    <string name="global.stability">Stability</string>
+    <string name="name_cushioning">- Cushioning measurement -</string>
+    <string name="fragment_cushioning.shoes_cushioning">Shoes cushioning</string>
 </resources>

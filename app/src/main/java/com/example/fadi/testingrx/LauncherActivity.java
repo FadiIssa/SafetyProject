@@ -41,7 +41,10 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
-        getSupportActionBar().hide();
+
+        if (getSupportActionBar()!=null) {// at first I had to hide it myself, but when changed styles and added the UI from the original safety app, this started to return null object.
+            getSupportActionBar().hide();
+        }
         Log.d(TAG,"Launcher activity onCreate is called");
 
         initUI();

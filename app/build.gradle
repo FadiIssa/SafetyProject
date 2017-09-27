@@ -53,4 +53,16 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
+
+    // from Original Safety app
+    // Firebase
+    compile "com.google.firebase:firebase-appindexing:$rootProject.googlePlayServices"
+    compile "com.google.firebase:firebase-core:$rootProject.googlePlayServices"
+    compile "com.google.firebase:firebase-auth:$rootProject.googlePlayServices"
+    compile "com.google.firebase:firebase-database:$rootProject.googlePlayServices"
+    compile "com.google.firebase:firebase-storage:$rootProject.googlePlayServices"
+
+    // keyboard visibility
+    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+
 }
