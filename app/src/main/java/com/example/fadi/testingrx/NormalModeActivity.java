@@ -338,6 +338,14 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     private void stopSafetyActivity(){
 
+
+
+        //check that both insoles are connected now
+        if (!(isLeftInsoleConnected()&&isRightInsoleConnected())) {
+            Toast.makeText(this,"ensure both insoles are connected",Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (timerSubscription!=null) {
             if (!timerSubscription.isUnsubscribed()) {
                 timerSubscription.unsubscribe();
