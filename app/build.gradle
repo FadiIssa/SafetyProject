@@ -71,4 +71,7 @@ dependencies {
 
     // for alerter
     compile 'com.tapadoo.android:alerter:1.0.6'
+
+    // to have a circle shaped image view
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }

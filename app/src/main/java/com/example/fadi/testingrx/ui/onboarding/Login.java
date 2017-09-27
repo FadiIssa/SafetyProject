@@ -2,6 +2,7 @@ package com.example.fadi.testingrx.ui.onboarding;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -113,7 +114,7 @@ public class Login extends AppCompatActivity {
 
         RxView.clicks(findViewById(R.id.buttonSkip))
                 .subscribe(v->{
-                    Intent intent = new Intent (this, NormalModeActivity.class);
+                    Intent intent = new Intent (this, ProfileActivity.class);
                     startActivity(intent);
                     finish();
                 });

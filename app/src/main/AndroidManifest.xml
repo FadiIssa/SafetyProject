@@ -34,6 +34,7 @@
             android:label="@string/title_activity_normal_mode"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.onboarding.Login" />
+        <activity android:name=".ui.onboarding.ProfileActivity"/>
         <activity android:name=".ui.uvex.NormalMode"></activity>
     </application>
 
