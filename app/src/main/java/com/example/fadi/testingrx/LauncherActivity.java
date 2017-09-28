@@ -57,7 +57,12 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.launcherActivity_toolbar);
         myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        //myToolbar.setLogo(getDrawable(R.drawable.uvex_logo_launcher_bar));
+        myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
 
         //getSupportActionBar().setLogo(R.drawable.elten_logo);
 
@@ -70,12 +75,12 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     private void initUI(){
 
-        ActionBar myActionBar=getSupportActionBar();
+        //ActionBar myActionBar=getSupportActionBar();
         //myActionBar.setDisplayShowHomeEnabled(true);
         //myActionBar.setDisplayShowTitleEnabled(false);
         //myActionBar.setIcon(R.drawable.uvex_logo_launcher_bar);
         //myActionBar.
-        myActionBar.setLogo(R.drawable.uvex_logo_launcher_bar);
+        //myActionBar.setLogo(R.drawable.uvex_logo_launcher_bar);
 
         //myActionBar.setDisplayShowHomeEnabled(true);
 
@@ -93,16 +98,16 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);
 
-        imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
+        //imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
 
         if (MyApplication.EltenMode) {
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
-            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
+            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
             rtButton.setBackground(getDrawable(R.drawable.realtime_elten));
             normalModeButton.setBackground(getDrawable(R.drawable.normal_mode_elten));
 
         } else {// it is Uvex
-            imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
+            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
             rtButton.setBackground(getDrawable(R.drawable.realtime_icon0));
             normalModeButton.setBackground(getDrawable(R.drawable.normalmode_icon));
         }
