@@ -2,7 +2,9 @@ package com.example.fadi.testingrx;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -105,6 +107,15 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
         isLeftInsoleConnected = false;
         isRightInsoleConnected = false;
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.normalModeActivity_toolbar);
+        myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        //myToolbar.setLogo(getDrawable(R.drawable.uvex_logo_launcher_bar));
+        myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
 
         initUI();
 
@@ -492,11 +503,11 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         imageViewVibration = (ImageView) findViewById(R.id.imageViewVibrationTime);
         imageViewVibration.setImageDrawable(getDrawable(R.drawable.vibra1));
 
-        imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
+        //imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
         if (MyApplication.EltenMode) {
-            imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
+            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
         } else {
-            imageViewLogo.setImageDrawable(getDrawable(R.drawable.unknownposition));
+            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.unknownposition));
         }
 
 
@@ -619,5 +630,16 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     private void enableStopActivityButton(){
         buttonStartActivity.setEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            return true;
+        } catch (Exception e) {
+            return super.onCreateOptionsMenu(menu);
+        }
+
     }
 }
