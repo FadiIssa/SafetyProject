@@ -11,12 +11,20 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/mainActivity_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="16dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintHorizontal_bias="0.0" />
+
 
     <ImageView
         android:id="@+id/currentPostureImageView"
@@ -27,8 +35,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@android:drawable/alert_dark_frame"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="40dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/mainActivity_toolbar"
+        app:layout_constraintHorizontal_bias="0.502"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/kneelingImageView" />
 
     <ImageView
         android:id="@+id/crouchingImageView"
@@ -38,7 +51,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@mipmap/ic_launcher"
         android:layout_marginLeft="16dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="16dp" />
 
     <ImageView
         android:id="@+id/kneelingImageView"
@@ -51,7 +65,9 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintRight_toLeftOf="@+id/tiptoesImageView"
         android:layout_marginRight="8dp"
-        app:layout_constraintHorizontal_bias="0.489" />
+        app:layout_constraintHorizontal_bias="0.489"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <ImageView
         android:id="@+id/tiptoesImageView"
@@ -61,7 +77,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@mipmap/ic_launcher"
         android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="16dp" />
 
     <TextView
         android:id="@+id/currentPostureCounterTextView"
@@ -73,7 +90,9 @@
         android:text="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentPostureImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/currentPostureImageView"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/crouchingCounterTextView"
@@ -86,7 +105,9 @@
         app:layout_constraintLeft_toLeftOf="@+id/crouchingImageView"
         app:layout_constraintRight_toRightOf="@+id/crouchingImageView"
         app:layout_constraintTop_toBottomOf="@+id/crouchingtextView"
-        app:layout_constraintHorizontal_bias="0.378" />
+        app:layout_constraintHorizontal_bias="0.378"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/tiptoesCounterTextView"
@@ -98,19 +119,21 @@
         android:text="0"
         app:layout_constraintLeft_toLeftOf="@+id/tiptoesImageView"
         app:layout_constraintRight_toRightOf="@+id/tiptoesImageView"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/kneelingCounterTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="0"
         app:layout_constraintLeft_toLeftOf="@+id/kneelingImageView"
         app:layout_constraintRight_toRightOf="@+id/kneelingImageView"
-        app:layout_constraintTop_toBottomOf="@+id/kneelingtextView" />
+        app:layout_constraintTop_toBottomOf="@+id/kneelingtextView"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/crouchingtextView"
@@ -118,12 +141,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
         android:text="CROUCHING"
         app:layout_constraintLeft_toLeftOf="@+id/crouchingImageView"
         app:layout_constraintRight_toRightOf="@+id/crouchingImageView"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintTop_toBottomOf="@+id/crouchingImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/crouchingImageView"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/kneelingtextView"
@@ -131,31 +155,30 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
         android:text="KNEELING"
         app:layout_constraintLeft_toLeftOf="@+id/kneelingImageView"
         app:layout_constraintRight_toRightOf="@+id/kneelingImageView"
         app:layout_constraintTop_toBottomOf="@+id/kneelingImageView"
-        app:layout_constraintHorizontal_bias="0.666" />
+        app:layout_constraintHorizontal_bias="0.666"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ON TIP TOES"
-        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/tiptoesImageView"
-        android:layout_marginLeft="0dp"
         app:layout_constraintLeft_toLeftOf="@+id/tiptoesImageView"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/tiptoesImageView" />
+        app:layout_constraintRight_toRightOf="@+id/tiptoesImageView"
+        android:layout_marginEnd="8dp" />
 
     <Button
         android:id="@+id/buttonStartActivityNormal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="0dp"
         android:text="Start"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/crouchingImageView"
@@ -170,7 +193,8 @@
         android:text="TextView"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/tiptoesImageView"
-        app:layout_constraintRight_toRightOf="@+id/tiptoesImageView" />
+        app:layout_constraintRight_toRightOf="@+id/tiptoesImageView"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/textViewRightConnectionStatus"
@@ -180,7 +204,8 @@
         android:layout_marginTop="8dp"
         android:text="RightNotConnected"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/mainActivity_toolbar"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/textViewLeftConnectionStatus"
@@ -190,6 +215,7 @@
         android:layout_marginTop="8dp"
         android:text="LeftNotConnected"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/mainActivity_toolbar"
+        android:layout_marginStart="8dp" />
 
 </android.support.constraint.ConstraintLayout>

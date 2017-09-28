@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -78,6 +80,15 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.mainActivity_toolbar);
+        myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        //myToolbar.setLogo(getDrawable(R.drawable.uvex_logo_launcher_bar));
+        myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
 
         Log.d(TAG,"MainActivity onCreate is called");
 
@@ -177,22 +188,6 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
 
     private void onStopActivityWriteSuccess(){
         Log.d(TAG, "successful write operation to stop activity");
-
-        // from here I should start the indication subscription, to read the whole data after the activity finishes.
-
-        /*leftInsoleConnectionObservable
-                .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
-                //.doOnNext(indicationObservable -> {Log.d(TAG,"indication observable is set");})
-                //.subscribe(myLeftInsoleIndicationObserver);
-
-                .flatMap(notificationObservable -> notificationObservable)
-                .first()
-                .subscribe(bytes -> {
-                            for (int i=0;i<bytes.length;i++){
-                            Log.d(TAG,"indication byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }
-                        },
-                        throwable -> {Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+throwable.toString());});*/
     }
 
     private void onWriteError(Throwable e){
@@ -317,20 +312,6 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         textViewRightConnectionStatus = (TextView) findViewById(R.id.textViewRightConnectionStatus);
         textViewRightConnectionStatus.setText("Communicating");
 
-        //buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
-
-//        RxView.clicks(buttonStartActivity)
-//                .map(a->buttonStartActivity.getText().toString().equals("Start"))
-//                .subscribe(a-> {
-//                    if (a) {
-//                        buttonStartActivity.setText("Stop");
-//                        startSafetyActivity();
-//                    } else{
-//                        buttonStartActivity.setText("Start");
-//                        stopSafetyActivity();
-//                    }
-//                });
-
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
         if (MyApplication.EltenMode) {
             currentPostureImageView.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
@@ -358,44 +339,6 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         counterCrouchingTextView = (TextView) findViewById(R.id.crouchingCounterTextView);
         counterKneelingTextView = (TextView) findViewById(R.id.kneelingCounterTextView);
         counterTiptoesTextView = (TextView) findViewById(R.id.tiptoesCounterTextView);
-
-        //leftInsoleIndicationSubscription=null;
-
-        //init the indication observer
-//        myLeftInsoleIndicationObserver = new Observer<Observable<byte[]>>() {
-//            @Override
-//            public void onCompleted() {
-//                Log.d(TAG,"LeftInsoleIndicationObserver onCompleted");
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.d(TAG,"LeftInsoleIndicationObserver onError "+e.toString());
-//            }
-//
-//            @Override
-//            public void onNext(Observable<byte[]> observable) {
-//                observable.subscribe(new Observer<byte[]>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        Log.d(TAG,"LeftInsoleIndicationObserver reader onCompleted");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+e.toString());
-//                    }
-//
-//                    @Override
-//                    public void onNext(byte[] bytes) {
-//                        Log.d(TAG,"LeftInsoleIndicationObserver reader onNext "+ bytes.toString());
-//                        for (int i=0;i<bytes.length;i++){
-//                            Log.d(TAG,"indicastion byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-//                        }
-//                    }
-//                });
-//            }
-//        };
     }
 
     @Override
@@ -404,5 +347,16 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         MyApplication.getBleManager().closeAllConnections();
         Log.d(TAG,"MainActivity onDestroy is called");
         finish();//demo mode
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            return true;
+        } catch (Exception e) {
+            return super.onCreateOptionsMenu(menu);
+        }
+
     }
 }
