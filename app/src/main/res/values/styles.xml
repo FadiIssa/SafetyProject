@@ -43,6 +43,11 @@
         <item name="colorButtonNormal">@color/colorAccent</item>
         <!--<item name="android:windowBackground">@drawable/background_drawable</item>-->
         <item name="android:windowBackground">@color/black</item>
+        <item name="android:actionOverflowButtonStyle">@style/fadiFlowButtonStyle</item>
+    </style>
+
+    <style name="fadiFlowButtonStyle" parent="android:Widget.ActionButton.Overflow">
+        <item name="android:src">@drawable/icon_settings</item>
     </style>
 
     <style name="LoginEmailButtonStyle" parent="Widget.AppCompat.Button.Colored">

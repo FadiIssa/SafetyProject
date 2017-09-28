@@ -5,12 +5,18 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
 import com.example.fadi.testingrx.ui.onboarding.Login;
@@ -41,11 +47,20 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_launcher);
 
-        if (getSupportActionBar()!=null) {// at first I had to hide it myself, but when changed styles and added the UI from the original safety app, this started to return null object.
-            getSupportActionBar().hide();
-        }
+//        if (getSupportActionBar()!=null) {// at first I had to hide it myself, but when changed styles and added the UI from the original safety app, this started to return null object.
+//            getSupportActionBar().hide();
+//        }
+
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.launcherActivity_toolbar);
+        myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        setSupportActionBar(myToolbar);
+
+        //getSupportActionBar().setLogo(R.drawable.elten_logo);
+
         Log.d(TAG,"Launcher activity onCreate is called");
 
         initUI();
@@ -54,6 +69,15 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     }
 
     private void initUI(){
+
+        ActionBar myActionBar=getSupportActionBar();
+        //myActionBar.setDisplayShowHomeEnabled(true);
+        //myActionBar.setDisplayShowTitleEnabled(false);
+        //myActionBar.setIcon(R.drawable.uvex_logo_launcher_bar);
+        //myActionBar.
+        myActionBar.setLogo(R.drawable.uvex_logo_launcher_bar);
+
+        //myActionBar.setDisplayShowHomeEnabled(true);
 
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.
@@ -92,8 +116,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         RxView.clicks(normalModeButton)
                 .subscribe(a->{
-                    //Intent intent = new Intent(this, NormalModeActivity.class);
-                    Intent intent = new Intent(this, Login.class);
+                    Intent intent = new Intent(this, NormalModeActivity.class);
+                    //Intent intent = new Intent(this, Login.class);
                     startActivity(intent);
                     finish();// for demo mode
                 });
@@ -195,5 +219,28 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 // I should add a check if the saved mac address is a real one, or maybe an empty string.
                 MyApplication.getBleManager().scanFromSavedPrefs(savedLeftMacAddress,savedRightMacAddress,this);
             }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuLauncherResetMacAddresses:
+                Toast.makeText(this,"insoles addresses deleted from phone",Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            return true;
+        } catch (Exception e) {
+            return super.onCreateOptionsMenu(menu);
+        }
+
     }
 }

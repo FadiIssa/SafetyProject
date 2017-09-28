@@ -12,14 +12,15 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/elten_app_icon"
+        android:icon="@drawable/uvex_app_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
         <activity
             android:name=".LauncherActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_launcher"
             android:theme="@style/FullscreenTheme">
@@ -31,6 +32,7 @@
         </activity>
         <activity
             android:name=".NormalModeActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_normal_mode"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.onboarding.Login" />
