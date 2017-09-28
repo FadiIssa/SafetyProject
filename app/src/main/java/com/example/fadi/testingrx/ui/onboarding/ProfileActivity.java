@@ -2,6 +2,7 @@ package com.example.fadi.testingrx.ui.onboarding;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
@@ -20,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.fadi.testingrx.MainActivity;
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.db.model.UserGender;
 import com.example.fadi.testingrx.ui.base.fBaseActivity;
@@ -99,7 +101,15 @@ public class ProfileActivity extends fBaseActivity {
 
     void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         profileImage = (CircleImageView) findViewById(R.id.iv_profile_picture);
+        // adding temporary event when the profile image is clicked, to go skip to the actual screen
+        profileImage.setOnClickListener(view -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
         fabEditProfileImage = (FloatingActionButton) findViewById(R.id.fab_edit_picture);
         fabEditProfile = (FloatingActionButton) findViewById(R.id.fab_edit_profile);
         rdGender = (RadioGroup) findViewById(R.id.rg_gender);
@@ -127,6 +137,8 @@ public class ProfileActivity extends fBaseActivity {
 
         usernameConstraintSet.clone(layoutUsernameConstraintSet);
         usernameConstraintSet.applyTo(layoutUsernameConstraintSet);
+
+
 
     }
 
