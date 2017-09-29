@@ -188,13 +188,13 @@
 
     <ImageView
         android:id="@+id/imageViewPronSup"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="66dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginBottom="60dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
@@ -306,17 +306,17 @@
         app:layout_constraintTop_toBottomOf="@id/normalModeActivity_toolbar" />
 
     <ImageView
-        android:id="@+id/imageViewDistance"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:id="@+id/imageViewCalories"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="43dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textViewStairs"
         app:srcCompat="@mipmap/ic_launcher" />
 
     <ImageView
-        android:id="@+id/imageViewCalories"
+        android:id="@+id/imageViewDistance"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginRight="16dp"
@@ -326,28 +326,28 @@
         app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCalories"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/imageViewCalories"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageViewCalories" />
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:text="0"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewDistance"
+        app:layout_constraintRight_toRightOf="@+id/imageViewDistance"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewDistance" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewCalories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:text="TextView"
-        app:layout_constraintLeft_toLeftOf="@+id/imageViewDistance"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewDistance"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/imageViewDistance" />
+        android:layout_marginTop="8dp"
+        android:text="0"
+        app:layout_constraintLeft_toLeftOf="@+id/imageViewCalories"
+        app:layout_constraintRight_toRightOf="@+id/imageViewCalories"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCalories" />
 
 </android.support.constraint.ConstraintLayout>
 

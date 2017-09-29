@@ -18,12 +18,9 @@ import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
 
-import org.w3c.dom.Text;
-
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.disposables.Disposable;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -57,7 +54,10 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
     ImageView imageViewVibration;
     ImageView imageViewWalking;
 
-    ImageView imageViewLogo;
+    //ImageView imageViewLogo;// it was removed, the logo is shown now on the action bar
+
+    ImageView imageViewcalories;
+    ImageView imageViewDistance;
 
     ImageView imageViewPronSup;
 
@@ -76,6 +76,9 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     TextView textViewLeftConnectionStatus;
     TextView textViewRightConnectionStatus;
+
+    TextView textViewDistance;
+    TextView textViewCalories;
 
     TextView textViewTimer;
 
@@ -135,8 +138,8 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
             textViewSteps.setText(timeZero);
             textViewWalking.setText(timeZero);
             textViewVibration.setText(timeZero);
-            textViewLeftAngle.setText(timeZero);
-            textViewRightAngle.setText(timeZero);
+            textViewLeftAngle.setText("0");
+            textViewRightAngle.setText("0");
             textViewCrouching.setText(timeZero);
             textViewKneeling.setText(timeZero);
             textViewTiptoes.setText(timeZero);
@@ -468,6 +471,9 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
         textViewTiptoes = (TextView) findViewById(R.id.textViewTiptoes);
         textViewStanding = (TextView) findViewById(R.id.textViewStanding);
 
+        textViewDistance = (TextView) findViewById(R.id.textViewDistance);
+        textViewCalories = (TextView) findViewById(R.id.textViewCalories);
+
         textViewLeftAngle = (TextView) findViewById(R.id.textViewAngleLeft);
         textViewRightAngle = (TextView) findViewById(R.id.textViewAngleRight);
 
@@ -488,6 +494,12 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
         imageViewSteps = (ImageView) findViewById(R.id.imageViewSteps);
         imageViewSteps.setImageDrawable(getDrawable(R.drawable.steps));
+
+        imageViewcalories = (ImageView) findViewById(R.id.imageViewCalories);
+        imageViewcalories.setImageDrawable(getDrawable(R.drawable.ic_calories));
+
+        imageViewDistance = (ImageView) findViewById(R.id.imageViewDistance);
+        imageViewDistance.setImageDrawable(getDrawable(R.drawable.ic_distance));
 
         imageViewPronSup = (ImageView) findViewById(R.id.imageViewPronSup);
         if (MyApplication.EltenMode) {
@@ -582,15 +594,19 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
                 .subscribe(timerObserver);// creating the observer locally, to listen for the timer ticking, and updating the screen accordingly.
     }
 
-    public void updateStatsOnUI(final String standigTime, final String nStairs, final String nSteps, final String walkingTime, final String vibrationTime, final String leftAngle, final String rightAngle ){
+    public void updateStatsOnUI(final String standigTime, final String nStairs, final String nSteps, final String walkingTime, final String vibrationTime, final String leftAngle, final String rightAngle, final String distance, final String calories ){
         runOnUiThread(() -> {
             textViewStanding.setText(standigTime);
-            textViewStairs.setText(nStairs);
+            //textViewStairs.setText(nStairs);
+            textViewStairs.setText("0");//this is temporar, I should revert back to the previous line once the firmware detects stairs correctly.
             textViewSteps.setText(nSteps);
             textViewWalking.setText(walkingTime);
             textViewVibration.setText(vibrationTime);
             textViewLeftAngle.setText(leftAngle);
             textViewRightAngle.setText(rightAngle);
+            textViewDistance.setText(distance);
+            textViewCalories.setText(calories);
+
 
             //now set the posture times
             Log.d(TAG,"total crouching time:"+totalCrouchingTime);

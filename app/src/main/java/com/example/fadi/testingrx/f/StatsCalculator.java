@@ -157,17 +157,38 @@ public class StatsCalculator {
             String standingString= convertSecond((standingTimeLeft+standingTimeRight)/2);
             String stairsString=String.valueOf(numberOfStairsLeft+numberOfStairsRight);
             String stepsString=String.valueOf(numberOfStepsLeft+numberOfStepsRight);
-            String walkingString=convertSecond((totalWalkingTimeLeft+totalWalkingTimeRight)/2);
+
+            int totalWalkingTime= (totalWalkingTimeLeft+totalWalkingTimeRight)/2;
+            String walkingString=convertSecond(totalWalkingTime);
+
             String vibrationString=convertSecond((vibrationTimeLeft+vibrationTimeRight)/2);;
             String leftAngleString=String.valueOf(angleLeft);
             String rightAngleString=String.valueOf(angleRight);
+
+            //calculating distance;
+            int totalSteps= numberOfStepsLeft+numberOfStepsRight;
+            double averageHeight = 1.7;
+            int distance=(int)(totalSteps* averageHeight * 0.505);
+            String distanceString = String.valueOf(distance) + " meters";
+
+            double caloriesDouble= (((double)totalWalkingTime)/3600) * 213;
+            Log.d(TAG,"caloriesDouble is:"+caloriesDouble);
+            int caloriesInt = (int) caloriesDouble;
+            Log.d(TAG,"caloriesInt is:"+caloriesInt);
+            // 213 is the burned calories per hour for a man with weigth of 75 kilograms walking for one hour with a speed of 3 km/h
+
+            Log.d(TAG,"total walking time is:"+totalWalkingTime+" and calories are:"+caloriesInt);
+
             caller.updateStatsOnUI(standingString,
                     stairsString,
                     stepsString,
                     walkingString,
                     vibrationString,
                     leftAngleString,
-                    rightAngleString);
+                    rightAngleString,
+                    distanceString,
+                    String.valueOf(caloriesInt)+" Kcal"
+                    );
         }
     }
 
