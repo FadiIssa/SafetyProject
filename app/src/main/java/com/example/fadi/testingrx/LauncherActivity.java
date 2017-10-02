@@ -63,6 +63,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
+        //getSupportActionBar();
 
         //getSupportActionBar().setLogo(R.drawable.elten_logo);
 
@@ -235,13 +236,13 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
             getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            //menu.findItem(R.id.menuLauncherResetMacAddresses).setVisible(false);
             return true;
         } catch (Exception e) {
             return super.onCreateOptionsMenu(menu);
