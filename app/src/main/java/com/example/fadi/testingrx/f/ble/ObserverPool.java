@@ -59,11 +59,11 @@ public class ObserverPool {
         };
     }
 
-    public static Observer<byte[]> getNewLeftBatteryReaderObserver(){
+    public static Observer<byte[]> getNewLeftBatteryReaderObserver(PostureTracker p){
         return new Observer<byte[]>() {
             @Override
             public void onCompleted() {
-                Log.d("RXTesting","LeftBatteryReadObserver onCompleted");
+                Log.d(TAG,"LeftBatteryReadObserver onCompleted");
             }
 
             @Override
@@ -75,16 +75,17 @@ public class ObserverPool {
             public void onNext(byte[] bytes) {
                 int leftBatteryValue=bytes[0]&0xFF;
                 Log.d(TAG,"LeftBatteryReadObserver onNext "+ leftBatteryValue);
+                p.updateLeftBattery(leftBatteryValue);
                 //updateLeftBattery(leftBatteryValue);
             }
         };
     }
 
-    public static Observer<byte[]> getNewRightBatteryReaderObserver(){
+    public static Observer<byte[]> getNewRightBatteryReaderObserver(PostureTracker p){
         return new Observer<byte[]>() {
             @Override
             public void onCompleted() {
-                Log.d("RXTesting","RightBatteryReadObserver onCompleted");
+                Log.d(TAG,"RightBatteryReadObserver onCompleted");
             }
 
             @Override
@@ -96,6 +97,7 @@ public class ObserverPool {
             public void onNext(byte[] bytes) {
                 int rightBatteryValue=bytes[0]&0xFF;
                 Log.d(TAG,"RightBatteryReadObserver onNext "+ rightBatteryValue);
+                p.updateRightBattery(rightBatteryValue);
                 //updateRightBattery(rightBatteryValue);
             }
         };

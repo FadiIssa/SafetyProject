@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.fadi.testingrx.f.StatsCalculator;
 import com.example.fadi.testingrx.f.ble.Insoles;
-import com.example.fadi.testingrx.f.posture.PostureResultCallback;
+import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -25,7 +25,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 
-public class NormalModeActivity extends AppCompatActivity implements PostureResultCallback{
+public class NormalModeActivity extends AppCompatActivity implements CommunicationCallback {
 
     String TAG="NormAct";
 
@@ -348,6 +348,16 @@ public class NormalModeActivity extends AppCompatActivity implements PostureResu
 
     @Override
     public void notifyRightServiceDiscoveryCompleted() {
+    }
+
+    @Override
+    public void notifyLeftBattery(int value) {
+
+    }
+
+    @Override
+    public void notifyRightBattery(int value) {
+
     }
 
     private void stopSafetyActivity(){

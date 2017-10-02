@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fadi.testingrx.f.ble.Insoles;
-import com.example.fadi.testingrx.f.posture.PostureResultCallback;
+import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.example.fadi.testingrx.f.posture.Postures;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -35,7 +35,7 @@ this activity will show real time postures, based on real time notifications rec
 it should pause the posture tracking in case the connection with one of both insoles is lost.
 * */
 
-public class MainActivity extends AppCompatActivity implements PostureResultCallback{
+public class MainActivity extends AppCompatActivity implements CommunicationCallback {
 
     // observables
     Observable<RxBleConnection> leftInsoleConnectionObservable;//this observable will be used any time we want to interact with a characteristic, no need to establish new connection for every operation.
@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
 
     TextView textViewLeftConnectionStatus;
     TextView textViewRightConnectionStatus;
+
+    TextView textViewLeftBatteryValue;
+    TextView textViewRightBatteryValue;
 
     //Button buttonStartActivity;// this is when I have to show that I am doing some advancement.
 
@@ -263,12 +266,14 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
 
     @Override
     public void notifyLeftConnectionIsConnecting() {
-        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Connecting..");});
+        runOnUiThread(() -> {textViewLeftConnectionStatus.setText("Connecting..");
+                            textViewLeftBatteryValue.setText("?");});
     }
 
     @Override
     public void notifyRightConnectionIsConnecting() {
-        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Connecting..");});
+        runOnUiThread(() -> {textViewRightConnectionStatus.setText("Connecting..");
+                                textViewRightBatteryValue.setText("?");});
     }
 
     @Override
@@ -291,6 +296,16 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
 
     }
 
+    @Override
+    public void notifyLeftBattery(int value) {
+        runOnUiThread(() -> {textViewLeftBatteryValue.setText(String.valueOf(value));});
+    }
+
+    @Override
+    public void notifyRightBattery(int value) {
+        runOnUiThread(() -> {textViewRightBatteryValue.setText(String.valueOf(value));});
+    }
+
 
     private void initUI(){
 
@@ -311,6 +326,9 @@ public class MainActivity extends AppCompatActivity implements PostureResultCall
         textViewLeftConnectionStatus.setText("Communicating");
         textViewRightConnectionStatus = (TextView) findViewById(R.id.textViewRightConnectionStatus);
         textViewRightConnectionStatus.setText("Communicating");
+
+        textViewLeftBatteryValue = (TextView) findViewById(R.id.textViewLeftBatteryValue);
+        textViewRightBatteryValue = (TextView) findViewById(R.id.textViewRightBatteryValue);
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
         if (MyApplication.EltenMode) {

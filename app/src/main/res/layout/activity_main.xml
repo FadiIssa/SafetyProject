@@ -218,4 +218,24 @@
         app:layout_constraintTop_toBottomOf="@id/mainActivity_toolbar"
         android:layout_marginStart="8dp" />
 
+    <TextView
+        android:id="@+id/textViewLeftBatteryValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="NAN"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLeftConnectionStatus" />
+
+    <TextView
+        android:id="@+id/textViewRightBatteryValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:text="NAN"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRightConnectionStatus" />
+
 </android.support.constraint.ConstraintLayout>

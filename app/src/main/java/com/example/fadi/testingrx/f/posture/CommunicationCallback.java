@@ -9,7 +9,7 @@ package com.example.fadi.testingrx.f.posture;
  */
 
 // this call back will also play the role of notifying if a connection is lost. to be shown to the user in both the Mainactivity and the normalActivity classes.
-public interface PostureResultCallback {
+public interface CommunicationCallback {
     public void updatePositionCallBack(final int i, final int currentPosCounter, final int crouchingCounter, final int kneelingCounter, final int tiptoesCounter);
 
     void notifyLeftConnectionDisconnected();
@@ -23,6 +23,9 @@ public interface PostureResultCallback {
 
     void notifyLeftServiceDiscoveryCompleted();
     void notifyRightServiceDiscoveryCompleted();
+
+    void notifyLeftBattery(int value);
+    void notifyRightBattery(int value);
 }
 
 

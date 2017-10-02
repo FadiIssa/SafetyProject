@@ -26,11 +26,11 @@ public class PostureTracker {
     int lastPosture;//this will be used to know when a specific counter should be incremented or reset.
     int currentPosture;//this will also be used to decide what counters to increase.
 
-    PostureResultCallback caller;
+    CommunicationCallback caller;
 
     boolean isPaused;
 
-    public PostureTracker(PostureResultCallback father){
+    public PostureTracker(CommunicationCallback father){
         caller=father;
 
         latestLX=0;
@@ -146,7 +146,7 @@ public class PostureTracker {
         processLatestAccelometerReadings();
     }
 
-    public PostureResultCallback getCaller(){
+    public CommunicationCallback getCaller(){
         return caller;
     }
 
@@ -165,5 +165,13 @@ public class PostureTracker {
         counterCurrentPosition=0;
         counterKneeling=0;
         counterTiptoes=0;
+    }
+
+    public void updateLeftBattery(int value){
+        caller.notifyLeftBattery(value);
+    }
+
+    public void updateRightBattery(int value){
+        caller.notifyRightBattery(value);
     }
 }

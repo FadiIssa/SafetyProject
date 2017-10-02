@@ -78,8 +78,8 @@ public class RTConnectionManager {
         myLeftServicesDiscoveryObserver= ObserverPool.getNewLeftInsoleServiceDiscoveryObserver(mPostureTracker);
         myRightServicesDiscoveryObserver= ObserverPool.getNewRightInsoleServiceDiscoveryObserver(mPostureTracker);
 
-        myLeftBatteryReadObserver = ObserverPool.getNewLeftBatteryReaderObserver();
-        myRightBatteryReadObserver = ObserverPool.getNewRightBatteryReaderObserver();
+        myLeftBatteryReadObserver = ObserverPool.getNewLeftBatteryReaderObserver(mPostureTracker);
+        myRightBatteryReadObserver = ObserverPool.getNewRightBatteryReaderObserver(mPostureTracker);
 
         myLeftAccelometerNotifyObserver= ObserverPool.getNewLeftAccelerometerNotificationObserver(mPostureTracker);
         myRightAccelometerNotifyObserver= ObserverPool.getNewRightAccelerometerNotificationObserver(mPostureTracker);
