@@ -112,10 +112,12 @@ public class RTConnectionManager {
                 //rxBleConnection.discoverServices().subscribe(myLeftServicesDiscoveryObserver);
 
                 rxBleConnection.readCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
+                        .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myLeftBatteryReadObserver);
 
                 rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
+                        .subscribeOn(Schedulers.newThread())
                         .flatMap(observable -> observable)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myLeftBatteryNotifyObserver);

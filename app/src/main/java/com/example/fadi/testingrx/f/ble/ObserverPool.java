@@ -139,7 +139,7 @@ public class ObserverPool {
             @Override
             public void onNext(byte[] bytes) {
                 int rightBatteryValue=bytes[0]&0xFF;
-                Log.d(TAG,"RightBatteryNotifyObserver onNext "+ rightBatteryValue);
+                Log.d(TAG,String.format("RightBatteryNotify observer onNext is %1$d",rightBatteryValue));
                 p.updateLeftBattery(rightBatteryValue);
             }
         };

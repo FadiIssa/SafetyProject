@@ -29,6 +29,8 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
     String TAG="NormAct";
 
+    private static final int MINIMUM_ACTIVITY_TIME=30;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
+
     //UI items
     Button buttonStartActivity;
     Button buttonStopActivity;
@@ -570,7 +572,7 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
                     Long timeInSeconds=(value%3600)%60;
                     String finalText= (String.valueOf(timeInHours)+":"+String.valueOf(timeInMinutes)+":"+String.valueOf(timeInSeconds));
                     textViewTimer.setText(finalText);
-                    if (value>60){
+                    if (value>MINIMUM_ACTIVITY_TIME){
                         buttonStopActivity.setEnabled(true);
                     }
                     else {
