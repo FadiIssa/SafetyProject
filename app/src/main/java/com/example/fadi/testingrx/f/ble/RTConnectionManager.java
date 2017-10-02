@@ -33,6 +33,9 @@ public class RTConnectionManager {
     Observer<byte[]> myLeftBatteryReadObserver;
     Observer<byte[]> myRightBatteryReadObserver;
 
+    Observer<byte[]> myLeftBatteryNotifyObserver;
+    Observer<byte[]> myRightBatteryNotifyObserver;
+
     Observer<Observable<byte[]>> myLeftAccelometerNotifyObserver;
     Observer<Observable<byte[]>> myRightAccelometerNotifyObserver;
 
@@ -81,6 +84,10 @@ public class RTConnectionManager {
         myLeftBatteryReadObserver = ObserverPool.getNewLeftBatteryReaderObserver(mPostureTracker);
         myRightBatteryReadObserver = ObserverPool.getNewRightBatteryReaderObserver(mPostureTracker);
 
+        myLeftBatteryNotifyObserver = ObserverPool.getNewLeftBatteryNotifyObserver(mPostureTracker);
+        myRightBatteryNotifyObserver = ObserverPool.getNewRightBatteryNotifyObserver(mPostureTracker);
+
+
         myLeftAccelometerNotifyObserver= ObserverPool.getNewLeftAccelerometerNotificationObserver(mPostureTracker);
         myRightAccelometerNotifyObserver= ObserverPool.getNewRightAccelerometerNotificationObserver(mPostureTracker);
 
@@ -104,11 +111,16 @@ public class RTConnectionManager {
                 // discover services, right now I am not sure if I may need this,
                 //rxBleConnection.discoverServices().subscribe(myLeftServicesDiscoveryObserver);
 
-                rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
+                rxBleConnection.readCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myLeftBatteryReadObserver);
 
-                rxBleConnection.setupNotification(UUID.fromString("99dd0108-a80c-4f94-be5d-c66b9fba40cf"))
+                rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
+                        .flatMap(observable -> observable)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(myLeftBatteryNotifyObserver);
+
+                rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_ACCELEROMETER))
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myLeftAccelometerNotifyObserver);
@@ -134,11 +146,16 @@ public class RTConnectionManager {
 
                 //rxBleConnection.discoverServices().subscribe(myRightServicesDiscoveryObserver);// testing to see if services were not discovered, would this still not break the app.
 
-                rxBleConnection.readCharacteristic(UUID.fromString("99dd0016-a80c-4f94-be5d-c66b9fba40cf"))
+                rxBleConnection.readCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myRightBatteryReadObserver);
 
-                rxBleConnection.setupNotification(UUID.fromString("99dd0108-a80c-4f94-be5d-c66b9fba40cf"))
+                rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
+                        .flatMap(observable -> observable)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(myRightBatteryNotifyObserver);
+
+                rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_ACCELEROMETER))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myRightAccelometerNotifyObserver);
             }

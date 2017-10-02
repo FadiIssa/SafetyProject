@@ -13,4 +13,8 @@ public class Insoles {
     public static final String CHARACTERISTIC_COMMAND="99dd0014-a80c-4f94-be5d-c66b9fba40cf";
 
     public static final String CHARACTERISTIC_CHUNK="99dd0004-a80c-4f94-be5d-c66b9fba40cf";
+
+    public static final String CHARACTERISTIC_BATTERY="99dd0016-a80c-4f94-be5d-c66b9fba40cf";
+
+    public static final String CHARACTERISTIC_ACCELEROMETER="99dd0108-a80c-4f94-be5d-c66b9fba40cf";
 }

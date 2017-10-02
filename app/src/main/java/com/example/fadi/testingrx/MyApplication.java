@@ -16,7 +16,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class MyApplication extends Application{
 
     public static boolean EltenMode = false;
-    public static boolean TestingScanDiscoveryMode = false;//put this to true if you want to always scan for discovery at each time the app is started.
+    public static boolean TestingScanDiscoveryMode = true;//put this to true if you want to always scan for discovery at each time the app is started.
 
     static BleManager bleManager;// one bleManager for the whole application (it is not strict by the library, but it makes sense and it is logical).
 

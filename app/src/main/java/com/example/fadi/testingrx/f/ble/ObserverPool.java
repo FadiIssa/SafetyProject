@@ -103,6 +103,49 @@ public class ObserverPool {
         };
     }
 
+    public static Observer<byte[]> getNewLeftBatteryNotifyObserver(PostureTracker p){
+        return new Observer<byte[]>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG,"LeftBatteryNotifyObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"LefttBatteryNotifyObserver onError "+e.toString());
+            }
+
+            @Override
+            public void onNext(byte[] bytes) {
+                int leftBatteryValue=bytes[0]&0xFF;
+                Log.d(TAG,"LeftBatteryNotifyObserver onNext "+ leftBatteryValue);
+                p.updateLeftBattery(leftBatteryValue);
+            }
+        };
+    }
+
+    public static Observer<byte[]> getNewRightBatteryNotifyObserver(PostureTracker p){
+        return new Observer<byte[]>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG,"RightBatteryNotifyObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"RightBatteryNotifyObserver onError "+e.toString());
+            }
+
+            @Override
+            public void onNext(byte[] bytes) {
+                int rightBatteryValue=bytes[0]&0xFF;
+                Log.d(TAG,"RightBatteryNotifyObserver onNext "+ rightBatteryValue);
+                p.updateLeftBattery(rightBatteryValue);
+            }
+        };
+    }
+
+
     public static Observer<Observable<byte[]>> getNewLeftAccelerometerNotificationObserver(PostureTracker p){
         return new Observer<Observable<byte[]>>() {
             @Override
