@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="30dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_working_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/fragment_name_working_activity"
+            android:textAppearance="@style/TextViewPagerTitleStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/view_dash_separator"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/dash_separator"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_working_activity"/>
+
+        <TextView
+            android:id="@+id/tv_total_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/global.total_time"
+            android:theme="@style/TextViewHeaderStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_dash_separator"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_walking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_time">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/img_walking"
+                android:layout_width="24dp"
+                android:layout_height="36dp"
+                android:scaleType="fitStart"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/ic_walk"/>
+
+            <TextView
+                android:id="@+id/tv_walking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:text="@string/global.walking"
+                android:textAppearance="@style/TextViewMyStatsLabelStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_walking_value"
+                app:layout_constraintHorizontal_bias="0.3"
+                app:layout_constraintStart_toEndOf="@id/img_walking"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_walking_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01:23:45"
+                android:textAppearance="@style/TextViewMyStatsValueStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/view_dash_separator_walking"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/dash_separator"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_walking"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_static"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_dash_separator_walking">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/img_static"
+                android:layout_width="24dp"
+                android:layout_height="36dp"
+                android:scaleType="fitStart"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/ic_static"/>
+
+            <TextView
+                android:id="@+id/tv_static"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:text="@string/global.static"
+                android:textAppearance="@style/TextViewMyStatsLabelStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_static_value"
+                app:layout_constraintHorizontal_bias="0.3"
+                app:layout_constraintStart_toEndOf="@id/img_static"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_static_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01:23:45"
+                android:textAppearance="@style/TextViewMyStatsValueStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/view_dash_separator_static"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/dash_separator"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_static"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_stairs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_dash_separator_static">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/img_stairs"
+                android:layout_width="24dp"
+                android:layout_height="36dp"
+                android:scaleType="fitStart"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/ic_stairs"/>
+
+            <TextView
+                android:id="@+id/tv_stairs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:text="@string/global.stairs"
+                android:textAppearance="@style/TextViewMyStatsLabelStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_stairs_value"
+                app:layout_constraintHorizontal_bias="0.3"
+                app:layout_constraintStart_toEndOf="@id/img_stairs"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_stairs_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01:23:45"
+                android:textAppearance="@style/TextViewMyStatsValueStyle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_total_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/global.total_distance"
+            android:theme="@style/TextViewHeaderStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_stairs"/>
+
+        <TextView
+            android:id="@+id/tv_total_distance_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:text="2.6Km"
+            android:textAppearance="@style/ActivityDistanceTextAppearance"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_distance"/>
+
+        <TextView
+            android:id="@+id/tv_calories_burned"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/activity.calories_burned"
+            android:theme="@style/TextViewHeaderStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_distance_value"/>
+
+        <TextView
+            android:id="@+id/tv_calories_burned_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:text="1012 cal"
+            android:textAppearance="@style/ActivityCalorieTextAppearance"
+            android:drawableStart="@drawable/ic_calories"
+            android:gravity="center"
+            android:textAlignment="gravity"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_calories_burned"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

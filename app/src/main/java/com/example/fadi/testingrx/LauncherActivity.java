@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
 import com.example.fadi.testingrx.ui.onboarding.Login;
+import com.example.fadi.testingrx.ui.uvex.NormalMode;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -38,6 +39,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button rtButton;
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
+
+    Button buttonSavedActivity;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -88,6 +91,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.
 
+        buttonSavedActivity = (Button) findViewById(R.id.buttonSavedActivity);
+
         textViewScanStatusLeft = (TextView) findViewById(R.id.textViewScanStatusLeft);
         textViewScanStatusLeft.setText("");
         textViewScanStatusRight = (TextView) findViewById(R.id.textViewScanStatusRight);
@@ -135,6 +140,12 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     rtButton.setEnabled(false);
                     normalModeButton.setEnabled(false);
                     buttonScan.setEnabled(false);
+                });
+
+        RxView.clicks(buttonSavedActivity)
+                .subscribe(a->{
+                    Intent intent = new Intent(this, NormalMode.class);
+                    startActivity(intent);
                 });
     }
 

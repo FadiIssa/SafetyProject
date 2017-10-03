@@ -24,11 +24,13 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_launcher"
             android:theme="@style/FullscreenTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".NormalModeActivity"
@@ -37,7 +39,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.onboarding.Login" />
         <activity android:name=".ui.onboarding.ProfileActivity"/>
-        <activity android:name=".ui.uvex.NormalMode"></activity>
+        <activity android:name=".ui.uvex.NormalMode">
+        </activity>
     </application>
 
 </manifest>
