@@ -23,6 +23,8 @@ public class NormalMode extends AppCompatActivity {
         setContentView(R.layout.activity_normal_mode_uvex);
 
         Intent receivedIntent=getIntent();
+        int walkingSteps= receivedIntent.getIntExtra("walking",0);
+
         mViewPager = (ViewPager) findViewById(R.id.viewPagerSavedActivity);
 
         mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
@@ -49,7 +51,11 @@ public class NormalMode extends AppCompatActivity {
         public Fragment getItem(int position) {
             if (position==0) {
                 // maybe I have to prepare a list of fragments in the activity when it is created.
-                return new FragmentSavedWorkingActivity();
+                Fragment result = new FragmentSavedWorkingActivity();
+                Bundle bundle = new Bundle();
+                bundle.putInt("walking",16);
+                result.setArguments(bundle);
+                return result;
             } else {
                 return new Fragment2();
             }

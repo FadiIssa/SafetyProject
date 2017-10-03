@@ -145,6 +145,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         RxView.clicks(buttonSavedActivity)
                 .subscribe(a->{
                     Intent intent = new Intent(this, NormalMode.class);
+                    intent.putExtra("walking",14);
                     startActivity(intent);
                 });
     }

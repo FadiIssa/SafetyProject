@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.fadi.testingrx.R;
 
@@ -20,6 +21,10 @@ public class FragmentSavedWorkingActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_saved_working_activity,container,false);
         Bundle mBundle=getArguments();
+
+        String walkingText=String.format("steps are:%d",mBundle.getInt("walking",2));
+
+        ((TextView)rootView.findViewById(R.id.tv_walking_value)).setText(walkingText);
 
         return rootView;
     }
