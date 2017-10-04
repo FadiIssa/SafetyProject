@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.fadi.testingrx.data.DataManager;
 import com.example.fadi.testingrx.f.ble.BleManager;
 import com.polidea.rxandroidble.RxBleClient;
 
@@ -23,6 +24,8 @@ public class MyApplication extends Application{
     // bluetooth client
     // one instance in the whole app lifecycle// maybe this variable should be in a service.
     static RxBleClient rxBleClient;// maybe I should experiment with making it static.
+
+    public static DataManager dataManager = new DataManager();
 
     String TAG = "MyApp";
 
@@ -60,6 +63,10 @@ public class MyApplication extends Application{
 
     public static RxBleClient getRxBleClient(){
         return rxBleClient;
+    }
+
+    public static DataManager getDataManager(){
+        return dataManager;
     }
 
 }

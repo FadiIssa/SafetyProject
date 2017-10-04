@@ -41,6 +41,10 @@
         <activity android:name=".ui.onboarding.ProfileActivity"/>
         <activity android:name=".ui.uvex.NormalMode">
         </activity>
+        <activity android:name=".ui.uvex.SessionStatsActivity">
+
+        </activity>
+
     </application>
 
 </manifest>

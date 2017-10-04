@@ -5,6 +5,7 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,9 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fadi.testingrx.data.DataProcessing;
+import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
 import com.example.fadi.testingrx.ui.onboarding.Login;
 import com.example.fadi.testingrx.ui.uvex.NormalMode;
+import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -144,8 +148,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         RxView.clicks(buttonSavedActivity)
                 .subscribe(a->{
-                    Intent intent = new Intent(this, NormalMode.class);
-                    intent.putExtra("walking",14);
+                    Intent intent = new Intent(this, SessionStatsActivity.class);
+                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
                     startActivity(intent);
                 });
     }
@@ -156,6 +160,18 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
             textViewScanStatusLeft.setText("stopped");
         });
 
+    }
+
+    private void populateIntentWithSessionData(Intent intent, SessionData sessionData){
+        intent.putExtra(DataProcessing.NUM_STEPS,sessionData.getNumSteps());
+        intent.putExtra(DataProcessing.NUM_STAIRS,sessionData.getNumStairs());
+        intent.putExtra(DataProcessing.DURATION_CROUCHING,sessionData.getDurationCrouching());
+        intent.putExtra(DataProcessing.DURATION_KNEELING,sessionData.getDurationKneeling());
+        intent.putExtra(DataProcessing.DURATION_TIPTOES,sessionData.getDurationTiptoes());
+        intent.putExtra(DataProcessing.DURATION_WALKING,sessionData.getDurationWalking());
+        intent.putExtra(DataProcessing.DURATION_STATIC,sessionData.getDurationStatic());
+        intent.putExtra(DataProcessing.CALORIES,sessionData.getCalories());
+        intent.putExtra(DataProcessing.DISTANCE_METERS,sessionData.getDistanceMeters());
     }
 
     @Override

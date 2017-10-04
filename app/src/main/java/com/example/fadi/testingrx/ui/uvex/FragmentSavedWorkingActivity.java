@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.fadi.testingrx.R;
+import com.example.fadi.testingrx.data.DataProcessing;
 
 /**
  * Created by fadi on 03/10/2017.
@@ -22,7 +23,7 @@ public class FragmentSavedWorkingActivity extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_saved_working_activity,container,false);
         Bundle mBundle=getArguments();
 
-        String walkingText=String.format("steps are:%d",mBundle.getInt("walking",2));
+        String walkingText=String.format("steps are:%d",mBundle.getInt(DataProcessing.NUM_STEPS,2));
 
         ((TextView)rootView.findViewById(R.id.tv_walking_value)).setText(walkingText);
 
