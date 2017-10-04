@@ -9,6 +9,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.WindowManager;
 
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
@@ -42,7 +45,16 @@ public class SessionStatsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_normal_mode_uvex);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.savedStats_toolbar);
+        myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
 
         Intent receivedIntent=getIntent();
 
@@ -108,6 +120,17 @@ public class SessionStatsActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    Fragment result = new FragmentSavedWorkingActivity();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(DataProcessing.NUM_STEPS,numSteps);
+                    bundle.putInt(DataProcessing.NUM_STAIRS,numStairs);
+                    result.setArguments(bundle);
+                    return result;
+                case 1:
+
+            }
             if (position==0) {
                 // maybe I have to prepare a list of fragments in the activity when it is created.
                 Fragment result = new FragmentSavedWorkingActivity();
@@ -125,6 +148,18 @@ public class SessionStatsActivity extends AppCompatActivity {
         public int getCount() {
             return 5;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            //menu.findItem(R.id.menuLauncherResetMacAddresses).setVisible(false);
+            return true;
+        } catch (Exception e) {
+            return super.onCreateOptionsMenu(menu);
+        }
+
     }
 }
 
