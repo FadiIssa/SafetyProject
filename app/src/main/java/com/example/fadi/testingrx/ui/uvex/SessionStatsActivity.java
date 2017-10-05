@@ -131,6 +131,9 @@ public class SessionStatsActivity extends AppCompatActivity {
                 case 1:
                     Fragment result2 = new FragmentBioMec();
                     return result2;
+                case 2:
+                    Fragment result3 = new FragmentVibration();
+                    return result3;
                 default:
                     return new Fragment2();
 
