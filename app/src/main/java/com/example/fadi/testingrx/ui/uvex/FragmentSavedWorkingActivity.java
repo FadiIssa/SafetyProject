@@ -23,7 +23,7 @@ public class FragmentSavedWorkingActivity extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_saved_working_activity,container,false);
         Bundle mBundle=getArguments();
 
-        String walkingText=String.format("steps are:%d",mBundle.getInt(DataProcessing.NUM_STEPS,2));
+        String walkingText=String.format("%d",mBundle.getInt(DataProcessing.NUM_STEPS,2));
 
         ((TextView)rootView.findViewById(R.id.tv_walking_value)).setText(walkingText);
 

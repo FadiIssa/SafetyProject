@@ -122,26 +122,20 @@ public class SessionStatsActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    Fragment result = new FragmentSavedWorkingActivity();
+                    Fragment result1 = new FragmentSavedWorkingActivity();
                     Bundle bundle = new Bundle();
                     bundle.putInt(DataProcessing.NUM_STEPS,numSteps);
                     bundle.putInt(DataProcessing.NUM_STAIRS,numStairs);
-                    result.setArguments(bundle);
-                    return result;
+                    result1.setArguments(bundle);
+                    return result1;
                 case 1:
+                    Fragment result2 = new FragmentBioMec();
+                    return result2;
+                default:
+                    return new Fragment2();
 
             }
-            if (position==0) {
-                // maybe I have to prepare a list of fragments in the activity when it is created.
-                Fragment result = new FragmentSavedWorkingActivity();
-                Bundle bundle = new Bundle();
-                bundle.putInt(DataProcessing.NUM_STEPS,numSteps);
-                bundle.putInt(DataProcessing.NUM_STAIRS,numStairs);
-                result.setArguments(bundle);
-                return result;
-            } else {
-                return new Fragment2();
-            }
+
         }
 
         @Override
