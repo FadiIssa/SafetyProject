@@ -41,6 +41,10 @@ public class SessionStatsActivity extends AppCompatActivity {
     int durationTiptoes;
     int calories;
     int ditanceInMeters;
+    int angleLeft;
+    int angleRight;
+    int fatigue;
+    int vibrationDuration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,10 @@ public class SessionStatsActivity extends AppCompatActivity {
         this.durationWalking=receivedIntent.getIntExtra(DataProcessing.DURATION_WALKING,-1);
         this.calories=receivedIntent.getIntExtra(DataProcessing.CALORIES,-1);
         this.ditanceInMeters=receivedIntent.getIntExtra(DataProcessing.DISTANCE_METERS,-1);
+        this.angleLeft=receivedIntent.getIntExtra(DataProcessing.ANGLE_LEFT,-1);
+        this.angleRight=receivedIntent.getIntExtra(DataProcessing.ANGLE_RIGHT,-1);
+        this.fatigue=receivedIntent.getIntExtra(DataProcessing.FATIGUE,-1);
+        this.vibrationDuration=receivedIntent.getIntExtra(DataProcessing.VIBRATION_DURATION,-1);
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
@@ -123,17 +131,42 @@ public class SessionStatsActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     Fragment result1 = new FragmentSavedWorkingActivity();
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(DataProcessing.NUM_STEPS,numSteps);
-                    bundle.putInt(DataProcessing.NUM_STAIRS,numStairs);
-                    result1.setArguments(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putInt(DataProcessing.DURATION_WALKING,durationWalking);
+                    bundle1.putInt(DataProcessing.DURATION_STATIC,durationStatic);
+                    bundle1.putInt(DataProcessing.NUM_STAIRS,numStairs);
+                    bundle1.putInt(DataProcessing.DISTANCE_METERS,ditanceInMeters);
+                    bundle1.putInt(DataProcessing.CALORIES,calories);
+                    result1.setArguments(bundle1);
                     return result1;
                 case 1:
                     Fragment result2 = new FragmentBioMec();
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putInt(DataProcessing.ANGLE_LEFT,angleLeft);
+                    bundle2.putInt(DataProcessing.ANGLE_RIGHT,angleRight);
+                    result2.setArguments(bundle2);
                     return result2;
                 case 2:
                     Fragment result3 = new FragmentVibration();
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putInt(DataProcessing.VIBRATION_DURATION,vibrationDuration);
+                    result3.setArguments(bundle3);
                     return result3;
+                case 3:
+                    Fragment result4 = new FragmentFatigue();
+                    Bundle bundle4 = new Bundle();
+                    bundle4.putInt(DataProcessing.FATIGUE,fatigue);
+                    result4.setArguments(bundle4);
+                    return result4;
+                case 4:
+                    Fragment result5 = new FragmentPostures();
+                    Bundle bundle5= new Bundle();
+                    bundle5.putInt(DataProcessing.DURATION_CROUCHING,durationCrouching);
+                    bundle5.putInt(DataProcessing.DURATION_KNEELING,durationKneeling);
+                    bundle5.putInt(DataProcessing.DURATION_TIPTOES,durationTiptoes);
+                    bundle5.putInt(DataProcessing.DURATION_STATIC,durationStatic);
+                    result5.setArguments(bundle5);
+                    return result5;
                 default:
                     return new Fragment2();
 

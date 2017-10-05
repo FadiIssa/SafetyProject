@@ -15,6 +15,10 @@ public interface DataProcessing {
     static final String DURATION_STATIC="dur_static";
     static final String CALORIES="calories";
     static final String DISTANCE_METERS="distance_meters";
+    static final String ANGLE_LEFT="angle_left";
+    static final String ANGLE_RIGHT="angle_right";
+    static final String FATIGUE="fatigue";
+    static final String VIBRATION_DURATION="vibration_duration";
 
     SessionData getSessionData(int day, int month, int year);
 }

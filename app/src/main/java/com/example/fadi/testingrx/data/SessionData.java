@@ -16,8 +16,15 @@ public class SessionData {
     int calories;
     int distanceMeters;
 
+    int angleLeft;
+    int angleRight;
+    int fatigueLevel;
 
-    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance){
+    int vibrationDuration;
+
+
+
+    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime){
         this.numSteps=nSteps;
         this.numStairs=nStairs;
         this.durationWalking=dWalking;
@@ -27,6 +34,10 @@ public class SessionData {
         this.durationTiptoes=dTiptoes;
         this.calories=nCalories;
         this.distanceMeters=distance;
+        this.angleLeft=angleLeft;
+        this.angleRight= angleRight;
+        this.fatigueLevel=fatigue;
+        this.vibrationDuration=vibrationTime;
     }
 
     public int getNumSteps() {
@@ -65,6 +76,22 @@ public class SessionData {
         return distanceMeters;
     }
 
+    public int getAngleLeft() {
+        return angleLeft;
+    }
+
+    public int getAngleRight() {
+        return angleRight;
+    }
+
+    public int getFatigueLevel() {
+        return fatigueLevel;
+    }
+
+    public int getVibrationDuration() {
+        return vibrationDuration;
+    }
+
 
     public static class Builder {
         int numSteps;
@@ -76,6 +103,10 @@ public class SessionData {
         int durationTiptoes;
         int calories;
         int distanceMeters;
+        int angleLeft;
+        int angleRight;
+        int fatigueLevel;
+        int vibrationDuration;
 
         public Builder setNumSteps(int n){
             this.numSteps = n;
@@ -107,11 +138,33 @@ public class SessionData {
 
         public Builder setCalories(int n){
             this.calories = n;
-            return this;}
+            return this;
+        }
 
         public Builder setDistanceMeters(int n){
             this.distanceMeters = n;
-            return this;}
+            return this;
+        }
+
+        public Builder setAngleLeft(int l){
+            this.angleLeft=l;
+            return this;
+        }
+
+        public Builder setAngleRight(int r){
+            this.angleRight=r;
+            return this;
+        }
+
+        public Builder setFatigue(int f){
+            this.fatigueLevel=f;
+            return this;
+        }
+
+        public Builder setVibrationDuration(int d){
+            this.vibrationDuration=d;
+            return this;
+        }
 
         public SessionData createSessionData(){
             return new SessionData(
@@ -123,13 +176,12 @@ public class SessionData {
                     this.durationKneeling,
                     this.durationTiptoes,
                     this.calories,
-                    this.distanceMeters
+                    this.distanceMeters,
+                    this.angleLeft,
+                    this.angleRight,
+                    this.fatigueLevel,
+                    this.vibrationDuration
             );
         }
     }
-
-
-
-
-
 }

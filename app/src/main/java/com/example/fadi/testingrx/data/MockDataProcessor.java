@@ -17,6 +17,10 @@ public class MockDataProcessor implements DataProcessing {
                 .setDurationWalking(14)
                 .setCalories(30)
                 .setDistanceMeters(40)
+                .setAngleLeft(-4)
+                .setAngleRight(6)
+                .setFatigue(8)
+                .setVibrationDuration(33)
                 .createSessionData();
 
         return result;

@@ -23,9 +23,20 @@ public class FragmentSavedWorkingActivity extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_saved_working_activity,container,false);
         Bundle mBundle=getArguments();
 
-        String walkingText=String.format("%d",mBundle.getInt(DataProcessing.NUM_STEPS,2));
-
+        String walkingText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_WALKING,0));
         ((TextView)rootView.findViewById(R.id.tv_walking_value)).setText(walkingText);
+
+        String staticText = String.format("%d",mBundle.getInt(DataProcessing.DURATION_STATIC,0));
+        ((TextView)rootView.findViewById(R.id.tv_static_value)).setText(staticText);
+
+        String stairsText = String.format("%d",mBundle.getInt(DataProcessing.NUM_STAIRS),0);
+        ((TextView) rootView.findViewById(R.id.tv_stairs_value)).setText(stairsText);
+
+        String distanceText = String.format("%d",mBundle.getInt(DataProcessing.DISTANCE_METERS),0);
+        ((TextView)rootView.findViewById(R.id.tv_total_distance_value)).setText(distanceText);
+
+        String caloriesText = String.format("%d",mBundle.getInt(DataProcessing.CALORIES),0);
+        ((TextView)rootView.findViewById(R.id.tv_calories_burned_value)).setText(caloriesText);
 
         return rootView;
     }

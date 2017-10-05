@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_fatigue_detection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="-   Fatigue detection   -"
+            android:textAppearance="@style/TextViewPagerTitleStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="86dp" />
+
+        <View
+            android:id="@+id/view_dash_separator"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/dash_separator"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fatigue_detection"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:id="@+id/tv_fatigue"
+            android:layout_width="365dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Fatigue"
+            android:theme="@style/TextViewHeaderStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_dash_separator"
+            tools:layout_editor_absoluteX="8dp" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_fatigue_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fatigue"
+            tools:layout_editor_absoluteX="131dp">
+
+            <TextView
+                android:id="@+id/tv_fatigue_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_fatigue_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="0dp" />
+
+            <TextView
+                android:id="@+id/tv_fatigue_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/10"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_fatigue_value"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="84dp"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_fatigue_desc"
+            android:layout_width="365dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Be careful, You are tired"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_fatigue_value"
+            tools:layout_editor_absoluteX="8dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

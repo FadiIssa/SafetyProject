@@ -8,7 +8,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        >
 
         <TextView
             android:id="@+id/tv_vibration_detection"
@@ -92,8 +94,6 @@
             android:text="66:55:22"
             app:layout_constraintTop_toBottomOf="@id/tv_vibration_time"
             />
-
-
 
     </android.support.constraint.ConstraintLayout>
 

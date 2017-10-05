@@ -172,6 +172,10 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         intent.putExtra(DataProcessing.DURATION_STATIC,sessionData.getDurationStatic());
         intent.putExtra(DataProcessing.CALORIES,sessionData.getCalories());
         intent.putExtra(DataProcessing.DISTANCE_METERS,sessionData.getDistanceMeters());
+        intent.putExtra(DataProcessing.ANGLE_LEFT,sessionData.getAngleLeft());
+        intent.putExtra(DataProcessing.ANGLE_RIGHT,sessionData.getAngleRight());
+        intent.putExtra(DataProcessing.FATIGUE,sessionData.getFatigueLevel());
+        intent.putExtra(DataProcessing.VIBRATION_DURATION,sessionData.getVibrationDuration());
     }
 
     @Override

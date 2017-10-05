@@ -12,10 +12,10 @@ import com.example.fadi.testingrx.R;
  * Created by fadi on 05/10/2017.
  */
 
-public class FragmentVibration extends Fragment {
+public class FragmentPostures extends Fragment {
 
 
-    public FragmentVibration() {
+    public FragmentPostures() {
         // Required empty public constructor
     }
 
@@ -24,10 +24,9 @@ public class FragmentVibration extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_vibration, container, false);
+        ViewGroup viewGroup= (ViewGroup) inflater.inflate(R.layout.fragment_postures, container, false);
 
         return viewGroup;
     }
 
 }
-
