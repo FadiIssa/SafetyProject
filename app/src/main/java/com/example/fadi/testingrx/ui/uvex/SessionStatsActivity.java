@@ -1,6 +1,8 @@
 package com.example.fadi.testingrx.ui.uvex;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -10,11 +12,14 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
 
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
+import com.example.fadi.testingrx.data.SessionContract;
+import com.example.fadi.testingrx.data.SessionDBHelper;
 
 /**
  * Created by fadi on 04/10/2017.
@@ -25,6 +30,8 @@ import com.example.fadi.testingrx.data.DataProcessing;
  */
 
 public class SessionStatsActivity extends AppCompatActivity {
+
+    String TAG = "SSAct";
 
     ViewPager mViewPager;
 
@@ -45,6 +52,8 @@ public class SessionStatsActivity extends AppCompatActivity {
     int angleRight;
     int fatigue;
     int vibrationDuration;
+
+    SessionDBHelper myDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +199,34 @@ public class SessionStatsActivity extends AppCompatActivity {
             return super.onCreateOptionsMenu(menu);
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //test how the db looks like
+        myDBHelper = new SessionDBHelper(getApplicationContext());
+
+        //now putting data in the database
+        // Gets the data repository in write mode
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        Log.d(TAG,"after getWritableDB, this is what we got:"+db.toString());
+
+// Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC, "15");
+        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING, "30");
+
+// Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
+        Log.d(TAG,"after inserting a new row, here is its id:"+newRowId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG,"onDestroy is called");
+        myDBHelper.close();
+        super.onDestroy();
     }
 }
 
