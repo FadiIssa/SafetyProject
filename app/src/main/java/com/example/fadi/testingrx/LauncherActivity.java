@@ -5,8 +5,6 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +20,7 @@ import android.widget.Toast;
 import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
-import com.example.fadi.testingrx.ui.onboarding.Login;
-import com.example.fadi.testingrx.ui.uvex.NormalMode;
+import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
 import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -45,6 +42,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button buttonScan;
 
     Button buttonSavedActivity;
+    Button buttonUvexNormalMode;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -104,6 +102,14 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
+
+        buttonUvexNormalMode = (Button) findViewById(R.id.buttonUvexNormal);
+        RxView.clicks(buttonUvexNormalMode)
+                .subscribe(a->{
+                    Intent intent=new Intent(this, NormalModeUvex.class);
+                    startActivity(intent);
+                    finish();
+                });
 
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);

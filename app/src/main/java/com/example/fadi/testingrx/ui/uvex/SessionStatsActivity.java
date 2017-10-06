@@ -59,7 +59,7 @@ public class SessionStatsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_normal_mode_uvex);
+        setContentView(R.layout.activity_stats_browser);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.savedStats_toolbar);
         myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));

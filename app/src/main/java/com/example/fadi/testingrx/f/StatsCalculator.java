@@ -3,6 +3,7 @@ package com.example.fadi.testingrx.f;
 import android.util.Log;
 
 import com.example.fadi.testingrx.NormalModeActivity;
+import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
 
 /**
  * Created by fadi on 14/09/2017.
@@ -46,10 +47,11 @@ public class StatsCalculator {
     byte secondByteVibrationLeft;
     byte secondByteVibrationRight;
 
-    NormalModeActivity caller;
+    //NormalModeActivity caller;
+    StatsCalculaterCallback caller;
 
     // optimally the parameter should be an interface, not a concrete object. to allow flexibility in who can construct this class.
-    public StatsCalculator(NormalModeActivity n){
+    public StatsCalculator(StatsCalculaterCallback n){
         caller = n;
     }
     public void reset(){
@@ -179,7 +181,7 @@ public class StatsCalculator {
 
             Log.d(TAG,"total walking time is:"+totalWalkingTime+" and calories are:"+caloriesInt);
 
-            caller.updateStatsOnUI(standingString,
+            caller.updateStatsOnUIString(standingString,
                     stairsString,
                     stepsString,
                     walkingString,
@@ -189,6 +191,19 @@ public class StatsCalculator {
                     distanceString,
                     String.valueOf(caloriesInt)+" Kcal"
                     );
+
+            caller.updateStatsOnUIValues(
+                    (standingTimeLeft+standingTimeRight)/2,
+                    numberOfStairsLeft+numberOfStairsRight,
+                    numberOfStepsLeft+numberOfStepsRight,
+                    totalWalkingTime,
+                    (vibrationTimeLeft+vibrationTimeRight)/2,
+                    angleLeft,
+                    angleRight,
+                    distance,
+                    caloriesInt
+            );
+
         }
     }
 

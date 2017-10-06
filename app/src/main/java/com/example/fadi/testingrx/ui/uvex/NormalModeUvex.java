@@ -1,7 +1,13 @@
-package com.example.fadi.testingrx;
+package com.example.fadi.testingrx.ui.uvex;
 
-import android.os.Bundle;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fadi.testingrx.MyApplication;
+import com.example.fadi.testingrx.R;
+import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.f.StatsCalculator;
 import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
@@ -26,15 +35,11 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 
-public class NormalModeActivity extends AppCompatActivity implements CommunicationCallback, StatsCalculaterCallback {
+public class NormalModeUvex extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback{
 
-    String TAG="NormAct";
+    private static final int MINIMUM_ACTIVITY_TIME=65;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
 
-    private static final int MINIMUM_ACTIVITY_TIME=30;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
-
-    //UI items
-    Button buttonStartActivity;
-    Button buttonStopActivity;
+    String TAG="UvexN";
 
     boolean isLeftInsoleConnected;
     boolean isRightInsoleConnected;
@@ -47,41 +52,11 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
     boolean isActivityStarted;//this will be used to enable/disable the startActivity button.
 
-    ImageView imageViewCrouching;
-    ImageView imageViewKneeling;
-    ImageView imageViewTiptoes;
-    ImageView imageViewStanding;
-
-    ImageView imageViewStairs;
-    ImageView imageViewSteps;
-    ImageView imageViewVibration;
-    ImageView imageViewWalking;
-
-    //ImageView imageViewLogo;// it was removed, the logo is shown now on the action bar
-
-    ImageView imageViewcalories;
-    ImageView imageViewDistance;
-
-    ImageView imageViewPronSup;
-
-    TextView textViewCrouching;
-    TextView textViewKneeling;
-    TextView textViewTiptoes;
-    TextView textViewStanding;
-
-    TextView textViewSteps;
-    TextView textViewStairs;
-    TextView textViewVibration;
-    TextView textViewWalking;
-
-    TextView textViewLeftAngle;
-    TextView textViewRightAngle;
-
     TextView textViewLeftConnectionStatus;
     TextView textViewRightConnectionStatus;
 
-    TextView textViewDistance;
-    TextView textViewCalories;
+    Button buttonStartActivityUvex;
+    Button buttonStopActivityUvex;
 
     TextView textViewTimer;
 
@@ -107,14 +82,14 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_normal_mode);
+        setContentView(R.layout.activity_uvex_normal);
 
         mStatsCalculator = new StatsCalculator(this);
 
         isLeftInsoleConnected = false;
         isRightInsoleConnected = false;
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.normalModeActivity_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.uvex_normal_toolbar);
         myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
         //myToolbar.setLogo(getDrawable(R.drawable.uvex_logo_launcher_bar));
         myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
@@ -132,22 +107,12 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
         MyApplication.getBleManager().connectRealTime(mPostureTracker);
     }
 
-
     private void resetOnScreenStats(){
         runOnUiThread(() -> {
-            String timeZero="0:0:0";
-            textViewStanding.setText(timeZero);
-            textViewStairs.setText(timeZero);
-            textViewSteps.setText(timeZero);
-            textViewWalking.setText(timeZero);
-            textViewVibration.setText(timeZero);
-            textViewLeftAngle.setText("0");
-            textViewRightAngle.setText("0");
-            textViewCrouching.setText(timeZero);
-            textViewKneeling.setText(timeZero);
-            textViewTiptoes.setText(timeZero);
+
         });
     }
+
     private void startSafetyActivity(){
 
         //reset posture counters
@@ -232,7 +197,7 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
             startTimer();
             isActivityStarted=true;
             runOnUiThread(() -> {
-                buttonStartActivity.setEnabled(false);
+                buttonStartActivityUvex.setEnabled(false);
             });
         }
     }
@@ -251,8 +216,8 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
             rightStartActivityCommandSentSuccessfully=false;
             isActivityStarted=false;
             runOnUiThread(() -> {
-                buttonStopActivity.setEnabled(false);
-                buttonStartActivity.setEnabled(true);
+                buttonStopActivityUvex.setEnabled(false);
+                buttonStartActivityUvex.setEnabled(true);
             });
         }
     }
@@ -400,17 +365,17 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
                     //       .first()
                     //   .doOnCompleted(()->{leftInsoleIndicationSubscription.unsubscribe();})
                     .subscribe(bytes -> {
-                        for (int i=0;i<bytes.length;i++){
-                            Log.d(TAG,"indication left byte nr:"+ i+" is:"+(bytes[i]&0xFF));
-                        }
+                                for (int i=0;i<bytes.length;i++){
+                                    Log.d(TAG,"indication left byte nr:"+ i+" is:"+(bytes[i]&0xFF));
+                                }
 
-                        if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==0) ) {
-                            mStatsCalculator.processFirstHalfLeft(bytes);
-                        }
-                        if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==128) ) {
-                            mStatsCalculator.processSecondHalfLeft(bytes);
-                        }
-                    },
+                                if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==0) ) {
+                                    mStatsCalculator.processFirstHalfLeft(bytes);
+                                }
+                                if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==128) ) {
+                                    mStatsCalculator.processSecondHalfLeft(bytes);
+                                }
+                            },
                             throwable -> {Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+throwable.toString());});
 
             leftInsoleConnectionObservable
@@ -474,89 +439,28 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
         isActivityStarted=false;
 
-        textViewSteps = (TextView) findViewById(R.id.textViewSteps);
-        textViewStairs = (TextView) findViewById(R.id.textViewStairs);
-        textViewWalking = (TextView) findViewById(R.id.textViewWalking);
-        textViewVibration = (TextView) findViewById(R.id.textViewVibration);
 
-        textViewCrouching = (TextView) findViewById(R.id.textViewCrouching);
-        textViewKneeling = (TextView) findViewById(R.id.textViewKneeling);
-        textViewTiptoes = (TextView) findViewById(R.id.textViewTiptoes);
-        textViewStanding = (TextView) findViewById(R.id.textViewStanding);
-
-        textViewDistance = (TextView) findViewById(R.id.textViewDistance);
-        textViewCalories = (TextView) findViewById(R.id.textViewCalories);
-
-        textViewLeftAngle = (TextView) findViewById(R.id.textViewAngleLeft);
-        textViewRightAngle = (TextView) findViewById(R.id.textViewAngleRight);
-
-        imageViewCrouching = (ImageView) findViewById(R.id.imageViewCrouching);
-        imageViewCrouching.setImageDrawable(getDrawable(R.drawable.crouchingfull));
-
-        imageViewKneeling = (ImageView) findViewById(R.id.imageViewKneeling);
-        imageViewKneeling.setImageDrawable(getDrawable(R.drawable.kneelingfull));
-
-        imageViewTiptoes = (ImageView) findViewById(R.id.imageViewTiptoes);
-        imageViewTiptoes.setImageDrawable(getDrawable(R.drawable.tipoesfull));
-
-        imageViewStanding = (ImageView) findViewById(R.id.imageViewStanding);
-        imageViewStanding.setImageDrawable(getDrawable(R.drawable.stand1));
-
-        imageViewStairs = (ImageView) findViewById(R.id.imageViewStairs);
-        imageViewStairs.setImageDrawable(getDrawable(R.drawable.stairs1));
-
-        imageViewSteps = (ImageView) findViewById(R.id.imageViewSteps);
-        imageViewSteps.setImageDrawable(getDrawable(R.drawable.steps));
-
-        imageViewcalories = (ImageView) findViewById(R.id.imageViewCalories);
-        imageViewcalories.setImageDrawable(getDrawable(R.drawable.ic_calories));
-
-        imageViewDistance = (ImageView) findViewById(R.id.imageViewDistance);
-        imageViewDistance.setImageDrawable(getDrawable(R.drawable.ic_distance));
-
-        imageViewPronSup = (ImageView) findViewById(R.id.imageViewPronSup);
-        if (MyApplication.EltenMode) {
-            imageViewPronSup.setImageDrawable(getDrawable(R.drawable.elten_angles));
-        } else {
-            imageViewPronSup.setImageDrawable(getDrawable(R.drawable.uvex_angles));
-        }
-
-        imageViewWalking = (ImageView) findViewById(R.id.imageViewWalkingTime);
-        imageViewWalking.setImageDrawable(getDrawable(R.drawable.walk1));
-
-
-        imageViewVibration = (ImageView) findViewById(R.id.imageViewVibrationTime);
-        imageViewVibration.setImageDrawable(getDrawable(R.drawable.vibra1));
-
-        //imageViewLogo = (ImageView) findViewById(R.id.imageViewLogo);
-        if (MyApplication.EltenMode) {
-            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
-        } else {
-            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.unknownposition));
-        }
-
-
-        textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatus);
+        textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatusUvex);
         textViewLeftConnectionStatus.setText("Communicating");
-        textViewRightConnectionStatus = (TextView) findViewById(R.id.textViewRightConnectionStatus);
+        textViewRightConnectionStatus = (TextView) findViewById(R.id.textViewRightConnectionStatusUvex);
         textViewRightConnectionStatus.setText("Communicating");
 
-        textViewTimer = (TextView) findViewById(R.id.textViewTimer);
+        textViewTimer = (TextView) findViewById(R.id.textViewTimerUvex);
 
-        buttonStartActivity = (Button) findViewById(R.id.buttonStartActivityNormal);
-        buttonStartActivity.setEnabled(false);
+        buttonStartActivityUvex = (Button) findViewById(R.id.buttonStartActivityUvexNormal);
+        buttonStartActivityUvex.setEnabled(false);
 
-        RxView.clicks(buttonStartActivity)
-               // .map(a->buttonStartActivity.getText().toString().equals("Start"))
+        RxView.clicks(buttonStartActivityUvex)
+                // .map(a->buttonStartActivity.getText().toString().equals("Start"))
                 .subscribe(a-> {
-                        startSafetyActivity();
+                    startSafetyActivity();
                     //startTimer();// the timer should only be started if the commands were sent successfuly.
                 });
 
-        buttonStopActivity = (Button) findViewById(R.id.buttonStopActivityNormal);
+        buttonStopActivityUvex = (Button) findViewById(R.id.buttonStopActivityUvexNormal);
         disableStopActivityButton();
 
-        RxView.clicks(buttonStopActivity)
+        RxView.clicks(buttonStopActivityUvex)
                 .subscribe(a->{
                     stopSafetyActivity();
                 });
@@ -574,10 +478,10 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
                     String finalText= (String.valueOf(timeInHours)+":"+String.valueOf(timeInMinutes)+":"+String.valueOf(timeInSeconds));
                     textViewTimer.setText(finalText);
                     if (value>MINIMUM_ACTIVITY_TIME){
-                        buttonStopActivity.setEnabled(true);
+                        buttonStopActivityUvex.setEnabled(true);
                     }
                     else {
-                        buttonStopActivity.setEnabled(false);
+                        buttonStopActivityUvex.setEnabled(false);
                     }
 
                 });
@@ -590,7 +494,6 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
             @Override
             public void onCompleted() {
-
             }
         };
 
@@ -610,17 +513,6 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
     @Override
     public void updateStatsOnUIString(final String standigTime, final String nStairs, final String nSteps, final String walkingTime, final String vibrationTime, final String leftAngle, final String rightAngle, final String distance, final String calories ){
         runOnUiThread(() -> {
-            textViewStanding.setText(standigTime);
-            //textViewStairs.setText(nStairs);
-            textViewStairs.setText("0");//this is temporar, I should revert back to the previous line once the firmware detects stairs correctly.
-            textViewSteps.setText(nSteps);
-            textViewWalking.setText(walkingTime);
-            textViewVibration.setText(vibrationTime);
-            textViewLeftAngle.setText(leftAngle);
-            textViewRightAngle.setText(rightAngle);
-            textViewDistance.setText(distance);
-            textViewCalories.setText(calories);
-
 
             //now set the posture times
             Log.d(TAG,"total crouching time:"+totalCrouchingTime);
@@ -628,19 +520,19 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
             int crouchingPostureCounterHours=totalCrouchingTime/3600;
             int crouchingPostureCounterMinutes=(totalCrouchingTime%3600)/60;
             int crouchingPostureCounterSeconds=(totalCrouchingTime%3600)%60;
-            textViewCrouching.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
+            //textViewCrouching.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
 
             //totalKneelingTime=0;//remove this line urgently after the demo.
             int kneelingPostureCounterHours=totalKneelingTime/3600;
             int kneelingPostureCounterMinutes=(totalKneelingTime%3600)/60;
             int kneelingPostureCounterSeconds=(totalKneelingTime%3600)%60;
-            textViewKneeling.setText(String.valueOf(kneelingPostureCounterHours)+":"+String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
+            //textViewKneeling.setText(String.valueOf(kneelingPostureCounterHours)+":"+String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
 
             //totalTiptoesTime=0;//remove this line urgently after the demo.
             int tiptoesPostureCounterHours=totalTiptoesTime/3600;
             int tiptoesPostureCounterMinutes=(totalTiptoesTime%3600)/60;
             int tiptoesPostureCounterSeconds=(totalTiptoesTime%3600)%60;
-            textViewTiptoes.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
+            //textViewTiptoes.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
 
         });
     }
@@ -649,17 +541,17 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
         Log.d(TAG,"processEnablingStartButton, left connection is:"+isLeftInsoleConnected+" right connection is:"+isRightInsoleConnected);
         if (isLeftInsoleConnected && isRightInsoleConnected && (!isActivityStarted)){
             runOnUiThread(() -> {
-                buttonStartActivity.setEnabled(true);
+                buttonStartActivityUvex.setEnabled(true);
             });
         }
     }
 
     private void disableStopActivityButton(){
-        buttonStopActivity.setEnabled(false);
+        buttonStopActivityUvex.setEnabled(false);
     }
 
     private void enableStopActivityButton(){
-        buttonStartActivity.setEnabled(true);
+        buttonStartActivityUvex.setEnabled(true);
     }
 
     @Override
@@ -673,10 +565,29 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
     }
 
-    //here is it nor useful, but in the uvex normal activity , it will be used instead of the string one, to create intent and pass the data to the stats activity browser.
     @Override
     public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories) {
 
+        //release any connection, to allow reconnecting when restarting the app for example.
+        MyApplication.getBleManager().closeAllConnections();
 
+        //generate an intent, and save its data to sql, and send the intent to statsActivityBrowser.
+        Intent intent=new Intent(this,SessionStatsActivity.class);
+
+        intent.putExtra(DataProcessing.NUM_STEPS,steps);
+        intent.putExtra(DataProcessing.NUM_STAIRS,stairs);
+        intent.putExtra(DataProcessing.DURATION_CROUCHING,totalCrouchingTime);
+        intent.putExtra(DataProcessing.DURATION_KNEELING,totalKneelingTime);
+        intent.putExtra(DataProcessing.DURATION_TIPTOES,totalTiptoesTime);
+        intent.putExtra(DataProcessing.DURATION_WALKING,walkingTime);
+        intent.putExtra(DataProcessing.DURATION_STATIC,standingTime);
+        intent.putExtra(DataProcessing.CALORIES,calories);
+        intent.putExtra(DataProcessing.DISTANCE_METERS,distanceMeters);
+        intent.putExtra(DataProcessing.ANGLE_LEFT,leftAngle);
+        intent.putExtra(DataProcessing.ANGLE_RIGHT,rightAngle);
+        intent.putExtra(DataProcessing.FATIGUE,0);//needs to be calculated
+        intent.putExtra(DataProcessing.VIBRATION_DURATION,vibrationTime);
+
+        startActivity(intent);
     }
 }
