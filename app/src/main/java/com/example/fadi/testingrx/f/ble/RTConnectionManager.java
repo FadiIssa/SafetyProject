@@ -67,11 +67,17 @@ public class RTConnectionManager {
 
     boolean isRetryConnectionEnabled;//it is usually true, but when the activity gets destroyed, it should be set to false, otherwise the connection will gets subscribed again and stay alive.
 
+    boolean firstLeftConnectionDone;//this will be used to determine the behavior of the resumeAllConnections function.
+    boolean firstRightConnectionDone;
+
     public RTConnectionManager(RxBleClient c, PostureTracker p, BleManager caller){
         this.rxBleClient = c;
         this.mPostureTracker = p;
         bleManager = caller;
         isRetryConnectionEnabled=true;
+
+        firstLeftConnectionDone=false;
+        firstRightConnectionDone=false;
     }
 
     public void connect(){
@@ -107,6 +113,8 @@ public class RTConnectionManager {
             @Override
             public void onNext(RxBleConnection rxBleConnection) {
                 Log.d(TAG,"LeftconnectionObserver onNext "+rxBleConnection.toString());
+
+                firstLeftConnectionDone=true;
 
                 // discover services, right now I am not sure if I may need this,
                 //rxBleConnection.discoverServices().subscribe(myLeftServicesDiscoveryObserver);
@@ -146,6 +154,7 @@ public class RTConnectionManager {
             public void onNext(RxBleConnection rxBleConnection) {
                 Log.d(TAG,"RightconnectionObserver onNext "+rxBleConnection.toString());
 
+                firstRightConnectionDone=true;
                 //rxBleConnection.discoverServices().subscribe(myRightServicesDiscoveryObserver);// testing to see if services were not discovered, would this still not break the app.
 
                 rxBleConnection.readCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
@@ -304,17 +313,25 @@ public class RTConnectionManager {
             if (!leftInsoleConnectionSubscription.isUnsubscribed()){
                 Log.d(TAG,"unsubscibr leftConnectionsubscription");
                 leftInsoleConnectionSubscription.unsubscribe();
-
             }
         }
 
         if (rightInsoleConnectionSubscription!=null){
             if (!rightInsoleConnectionSubscription.isUnsubscribed()){
-                Log.d(TAG,"unsubscibr leftConnectionsubscription");
+                Log.d(TAG,"unsubscibr rightConnectionsubscription");
                 rightInsoleConnectionSubscription.unsubscribe();
             }
         }
 
+    }
 
+    //this will be called in order to restore old connections after they were closed by (closeAllConnections) for cases like switching between activities.
+    public void resumetAllConnections(){
+        Log.d(TAG,"resumeAllConnections is called from the RTConnectionManager");
+        // maybe I should make some checks here, before asking to
+        if (firstLeftConnectionDone&&firstLeftConnectionDone) {
+            retryLeftConnection();
+            retryRightConnection();
+        }
     }
 }

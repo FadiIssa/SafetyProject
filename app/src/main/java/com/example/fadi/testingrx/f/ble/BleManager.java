@@ -102,4 +102,9 @@ public class BleManager {
         Log.d(TAG,"closeAllConnections is called");
         rtConnectionManager.closeAllConnections();
     }
+
+    public void resumeAllConnections(){
+        Log.d(TAG,"resumeAllConnections is called");
+        rtConnectionManager.resumetAllConnections();
+    }
 }

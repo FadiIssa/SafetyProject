@@ -41,8 +41,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
 
-    Button buttonSavedActivity;
-    Button buttonUvexNormalMode;
+    //Button buttonSavedActivity;
+    //Button buttonUvexNormalMode;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -93,7 +93,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.
 
-        buttonSavedActivity = (Button) findViewById(R.id.buttonSavedActivity);
+        //buttonSavedActivity = (Button) findViewById(R.id.buttonSavedActivity);
 
         textViewScanStatusLeft = (TextView) findViewById(R.id.textViewScanStatusLeft);
         textViewScanStatusLeft.setText("");
@@ -103,13 +103,13 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
 
-        buttonUvexNormalMode = (Button) findViewById(R.id.buttonUvexNormal);
-        RxView.clicks(buttonUvexNormalMode)
-                .subscribe(a->{
-                    Intent intent=new Intent(this, NormalModeUvex.class);
-                    startActivity(intent);
-                    finish();
-                });
+        //buttonUvexNormalMode = (Button) findViewById(R.id.buttonUvexNormal);
+//        RxView.clicks(buttonUvexNormalMode)
+//                .subscribe(a->{
+//                    Intent intent=new Intent(this, NormalModeUvex.class);
+//                    startActivity(intent);
+//                    finish();
+//                });
 
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);
@@ -132,15 +132,16 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 .subscribe(a-> {
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
-                    finish();//for demo mode
+                    //finish();//for demo mode
                 });
 
         RxView.clicks(normalModeButton)
                 .subscribe(a->{
-                    Intent intent = new Intent(this, NormalModeActivity.class);
+                    //Intent intent = new Intent(this, NormalModeActivity.class);
                     //Intent intent = new Intent(this, Login.class);
+                    Intent intent = new Intent(this, NormalModeUvex.class);
                     startActivity(intent);
-                    finish();// for demo mode
+                    //finish();// for demo mode
                 });
 
         // the user can make a scan if the previous scan timed out without finding any insoles for example.
@@ -152,12 +153,12 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     buttonScan.setEnabled(false);
                 });
 
-        RxView.clicks(buttonSavedActivity)
-                .subscribe(a->{
-                    Intent intent = new Intent(this, SessionStatsActivity.class);
-                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
-                    startActivity(intent);
-                });
+//        RxView.clicks(buttonSavedActivity)
+//                .subscribe(a->{
+//                    Intent intent = new Intent(this, SessionStatsActivity.class);
+//                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
+//                    startActivity(intent);
+//                });
     }
 
     @Override

@@ -1,15 +1,9 @@
-package com.example.fadi.testingrx.ui.uvex;
+package com.example.fadi.testingrx.ui.elten;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -27,6 +21,7 @@ import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
+import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
 
@@ -37,7 +32,11 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 
-public class NormalModeUvex extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback{
+/**
+ * Created by fadi on 09/10/2017.
+ */
+
+public class ActivityNormalModeElten extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback {
 
     private static final int MINIMUM_ACTIVITY_TIME=65;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
 
@@ -295,7 +294,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
             imageViewLeftConnectionStatus.setImageDrawable(drawableLeftConnecting);//I am using the same as connecting, maybe this should be changed.
         });
 
-            isLeftInsoleConnected=false;
+        isLeftInsoleConnected=false;
     }
 
     @Override
@@ -330,7 +329,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         runOnUiThread(() -> {
             //textViewLeftConnectionStatus.setText("Connected");
             imageViewLeftConnectionStatus.setImageDrawable(drawableLeftConnected);
-            });
+        });
         isLeftInsoleConnected=true;
         processEnablingStartSafetyActivityButton();
     }
@@ -338,7 +337,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     @Override
     public void notifyRightConnectionConnected() {
         runOnUiThread(() -> {
-        //    textViewRightConnectionStatus.setText("Connected");
+            //    textViewRightConnectionStatus.setText("Connected");
             imageViewRightConnectionStatus.setImageDrawable(drawableRightConnected);
         });
         isRightInsoleConnected = true;
@@ -631,23 +630,5 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         intent.putExtra(DataProcessing.VIBRATION_DURATION,vibrationTime);
 
         startActivity(intent);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MyApplication.getBleManager().closeAllConnections();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MyApplication.getBleManager().closeAllConnections();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MyApplication.getBleManager().resumeAllConnections();
     }
 }
