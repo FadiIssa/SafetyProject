@@ -64,6 +64,8 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     Drawable drawableRightConnecting;
     Drawable drawableRightConnected;
 
+    Drawable drawableConnectionStopped;
+
     Button buttonStartActivityUvex;
     Button buttonStopActivityUvex;
 
@@ -292,7 +294,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     public void notifyLeftConnectionDisconnected() {
         runOnUiThread(() -> {
             //textViewLeftConnectionStatus.setText("Disconnected");
-            imageViewLeftConnectionStatus.setImageDrawable(drawableLeftConnecting);//I am using the same as connecting, maybe this should be changed.
+            imageViewLeftConnectionStatus.setImageDrawable(drawableConnectionStopped);//I am using the same as connecting, maybe this should be changed.
         });
 
             isLeftInsoleConnected=false;
@@ -302,7 +304,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     public void notifyRightConnectionDisconnected() {
         runOnUiThread(() -> {
             //textViewRightConnectionStatus.setText("Disconnected");
-            imageViewRightConnectionStatus.setImageDrawable(drawableRightConnecting);
+            imageViewRightConnectionStatus.setImageDrawable(drawableConnectionStopped);
         });
         isRightInsoleConnected=false;
     }
@@ -475,11 +477,13 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
 
         isActivityStarted=false;
 
-        drawableLeftConnected = getDrawable(R.drawable.ic_connected_left);
-        drawableLeftConnecting = getDrawable(R.drawable.ic_connecting_left);
+        drawableLeftConnected = getDrawable(R.drawable.elten_connection_left_connected);
+        drawableLeftConnecting = getDrawable(R.drawable.elten_connection_left_searching);
 
-        drawableRightConnected = getDrawable(R.drawable.ic_connected_right);
-        drawableRightConnecting = getDrawable(R.drawable.ic_connecting_right);
+        drawableRightConnected = getDrawable(R.drawable.elten_connection_right_connected);
+        drawableRightConnecting = getDrawable(R.drawable.elten_connection_right_searching);
+
+        drawableConnectionStopped = getDrawable(R.drawable.elten_connection_stopped);
 
         imageViewLeftConnectionStatus = (ImageView) findViewById(R.id.imageViewLeftConnectionStatus);
         imageViewLeftConnectionStatus.setImageDrawable(drawableLeftConnecting);

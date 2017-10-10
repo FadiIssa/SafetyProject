@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
             drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
         }
         if (MyApplication.EltenMode) {
-            drawableUnknown = getDrawable(R.drawable.elten_logo_red_big);
+            drawableUnknown = getDrawable(R.drawable.elten_logo_red_big );
         }else {
             drawableUnknown = getDrawable(R.drawable.unknownposition);
         }
