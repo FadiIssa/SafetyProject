@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_intensity"
             android:layout_marginLeft="8dp"
-            android:text="15.67"
+            android:text="Level 1"
             android:layout_margin="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginRight="8dp"

@@ -132,7 +132,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 .subscribe(a-> {
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
-                    //finish();//for demo mode
+                    finish();//for demo mode
                 });
 
         RxView.clicks(normalModeButton)
@@ -141,7 +141,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     //Intent intent = new Intent(this, Login.class);
                     Intent intent = new Intent(this, NormalModeUvex.class);
                     startActivity(intent);
-                    //finish();// for demo mode
+                    finish();// for demo mode
                 });
 
         // the user can make a scan if the previous scan timed out without finding any insoles for example.

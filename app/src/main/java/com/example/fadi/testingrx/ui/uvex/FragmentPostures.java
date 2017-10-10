@@ -30,19 +30,30 @@ public class FragmentPostures extends Fragment {
 
         Bundle mBundle=getArguments();
 
-        String crouchingText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_CROUCHING,-1));
+        //String crouchingText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_CROUCHING,-1));
+        String crouchingText=convertSecond(mBundle.getInt(DataProcessing.DURATION_CROUCHING,-1));
         ((TextView)rootView.findViewById(R.id.tv_crounching_value)).setText(crouchingText);
 
-        String kneelingText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_KNEELING,-1));
+        //String kneelingText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_KNEELING,-1));
+        String kneelingText=convertSecond(mBundle.getInt(DataProcessing.DURATION_KNEELING,-1));
         ((TextView)rootView.findViewById(R.id.tv_kneeling_value)).setText(kneelingText);
 
-        String standingText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_STATIC,-1));
+        //String standingText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_STATIC,-1));
+        String standingText=convertSecond(mBundle.getInt(DataProcessing.DURATION_STATIC,-1));
         ((TextView)rootView.findViewById(R.id.tv_standing_value)).setText(standingText);
 
-        String tiptoesText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_TIPTOES,-1));
+        //String tiptoesText=String.format("%d",mBundle.getInt(DataProcessing.DURATION_TIPTOES,-1));
+        String tiptoesText=convertSecond(mBundle.getInt(DataProcessing.DURATION_TIPTOES,-1));
         ((TextView)rootView.findViewById(R.id.tv_tip_toes_value)).setText(tiptoesText);
 
         return rootView;
+    }
+
+    private String convertSecond(int seconds){
+        int timeInHours=seconds/3600;
+        int timeInMinutes=(seconds%3600)/60;
+        int timeInSeconds=(seconds%3600)%60;
+        return (String.valueOf(timeInHours)+":"+String.valueOf(timeInMinutes)+":"+String.valueOf(timeInSeconds));
     }
 
 }
