@@ -9,7 +9,6 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
         >
 
         <TextView
@@ -65,6 +64,7 @@
                 android:text="9"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                 android:textStyle="bold"
+                android:textColor="@color/fBlack"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_fatigue_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:text="/10"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                android:textColor="@color/white"
+                android:textColor="@color/fBlack"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_fatigue_value"
@@ -95,6 +95,7 @@
             android:text="Not Tired"
             android:textAlignment="center"
             android:textAllCaps="true"
+            android:textColor="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_fatigue_value"

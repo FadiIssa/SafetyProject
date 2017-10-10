@@ -2,13 +2,13 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
         >
 
         <TextView
@@ -20,67 +20,66 @@
             android:textAppearance="@style/TextViewPagerTitleStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="128dp" />
 
         <View
             android:id="@+id/view_dash_separator"
             android:layout_width="0dp"
             android:layout_height="4dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="0dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/dash_separator"
             android:layerType="software"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_postures"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_postures"
+            tools:layout_editor_absoluteX="0dp" />
 
         <TextView
             android:id="@+id/tv_total_time"
-            android:layout_width="match_parent"
+            android:layout_width="365dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="24dp"
             android:text="Total time"
             android:theme="@style/TextViewHeaderStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_dash_separator"/>
+            app:layout_constraintTop_toBottomOf="@+id/view_dash_separator"
+            tools:layout_editor_absoluteX="8dp" />
 
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_crounching"
-            android:layout_width="match_parent"
+            android:layout_width="365dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_total_time">
+            app:layout_constraintTop_toBottomOf="@+id/tv_total_time"
+            tools:layout_editor_absoluteX="8dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_crounching"
                 android:layout_width="24dp"
                 android:layout_height="36dp"
                 android:scaleType="fitStart"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/ic_crouching_new"/>
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_crouching_new"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp" />
 
             <TextView
                 android:id="@+id/tv_crounching"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
                 android:text="Crouching"
                 android:textAppearance="@style/TextViewMyStatsLabelStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_crounching_value"
                 app:layout_constraintHorizontal_bias="0.3"
                 app:layout_constraintStart_toEndOf="@id/img_crounching"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="70dp" />
 
             <TextView
                 android:id="@+id/tv_crounching_value"
@@ -90,7 +89,8 @@
                 android:textAppearance="@style/TextViewMyStatsValueStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="246dp" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -98,47 +98,46 @@
             android:id="@+id/view_dash_separator_crounching"
             android:layout_width="0dp"
             android:layout_height="4dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/dash_separator"
             android:layerType="software"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_crounching"/>
+            app:layout_constraintTop_toBottomOf="@+id/layout_crounching"
+            tools:layout_editor_absoluteX="24dp" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_kneeling"
-            android:layout_width="match_parent"
+            android:layout_width="365dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_dash_separator_crounching">
+            app:layout_constraintTop_toBottomOf="@+id/view_dash_separator_crounching"
+            tools:layout_editor_absoluteX="8dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_kneeling"
                 android:layout_width="24dp"
                 android:layout_height="36dp"
                 android:scaleType="fitStart"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/ic_kneeling"/>
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_kneeling"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp" />
 
             <TextView
                 android:id="@+id/tv_kneeling"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
                 android:text="Kneeling"
                 android:textAppearance="@style/TextViewMyStatsLabelStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_kneeling_value"
                 app:layout_constraintHorizontal_bias="0.3"
                 app:layout_constraintStart_toEndOf="@id/img_kneeling"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="73dp" />
 
             <TextView
                 android:id="@+id/tv_kneeling_value"
@@ -148,7 +147,8 @@
                 android:textAppearance="@style/TextViewMyStatsValueStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="246dp" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -156,26 +156,23 @@
             android:id="@+id/view_dash_separator_kneeling"
             android:layout_width="0dp"
             android:layout_height="4dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/dash_separator"
             android:layerType="software"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_kneeling"/>
+            app:layout_constraintTop_toBottomOf="@+id/layout_kneeling"
+            tools:layout_editor_absoluteX="24dp" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_standing"
-            android:layout_width="match_parent"
+            android:layout_width="365dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_dash_separator_kneeling">
+            app:layout_constraintTop_toBottomOf="@+id/view_dash_separator_kneeling"
+            tools:layout_editor_absoluteX="8dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_standing"
@@ -183,20 +180,22 @@
                 android:layout_height="36dp"
                 android:scaleType="fitStart"
                 android:tint="?attr/colorAccent"
-                app:srcCompat="@drawable/ic_static"/>
+                app:srcCompat="@drawable/ic_static"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp" />
 
             <TextView
                 android:id="@+id/tv_standing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
                 android:text="Standing"
                 android:textAppearance="@style/TextViewMyStatsLabelStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_standing_value"
                 app:layout_constraintHorizontal_bias="0.3"
                 app:layout_constraintStart_toEndOf="@id/img_standing"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="73dp" />
 
             <TextView
                 android:id="@+id/tv_standing_value"
@@ -206,7 +205,8 @@
                 android:textAppearance="@style/TextViewMyStatsValueStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="246dp" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -214,47 +214,46 @@
             android:id="@+id/view_dash_separator_standing"
             android:layout_width="0dp"
             android:layout_height="4dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/dash_separator"
             android:layerType="software"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_standing"/>
+            app:layout_constraintTop_toBottomOf="@+id/layout_standing"
+            tools:layout_editor_absoluteX="24dp" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/layout_tip_toes"
-            android:layout_width="match_parent"
+            android:layout_width="365dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_dash_separator_standing">
+            app:layout_constraintTop_toBottomOf="@+id/view_dash_separator_standing"
+            tools:layout_editor_absoluteX="8dp">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_tip_toes"
                 android:layout_width="24dp"
                 android:layout_height="36dp"
                 android:scaleType="fitStart"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/ic_tip_toes"/>
+                android:tint="?attr/colorAccent"
+                app:srcCompat="@drawable/ic_tip_toes"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="0dp" />
 
             <TextView
                 android:id="@+id/tv_tip_toes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="0dp"
                 android:text="On tip toes"
                 android:textAppearance="@style/TextViewMyStatsLabelStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_tip_toes_value"
                 app:layout_constraintHorizontal_bias="0.3"
                 app:layout_constraintStart_toEndOf="@id/img_tip_toes"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="69dp" />
 
             <TextView
                 android:id="@+id/tv_tip_toes_value"
@@ -264,7 +263,8 @@
                 android:textAppearance="@style/TextViewMyStatsValueStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="246dp" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -272,15 +272,13 @@
             android:id="@+id/view_dash_separator_tip_toes"
             android:layout_width="0dp"
             android:layout_height="4dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/dash_separator"
             android:layerType="software"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_tip_toes"/>
+            app:layout_constraintTop_toBottomOf="@+id/layout_tip_toes"
+            tools:layout_editor_absoluteX="24dp" />
 
     </android.support.constraint.ConstraintLayout>
 

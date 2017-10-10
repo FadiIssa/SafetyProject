@@ -9,7 +9,6 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
         >
 
         <TextView
@@ -55,6 +54,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_intensity"
             android:layout_marginLeft="8dp"
             android:text="Level 1"
+            android:textColor="@color/fBlack"
             android:layout_margin="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginRight="8dp"
@@ -92,6 +92,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_margin="16dp"
             android:text="66:55:22"
+            android:textColor="@color/fBlack"
             app:layout_constraintTop_toBottomOf="@id/tv_vibration_time"
             />
 
