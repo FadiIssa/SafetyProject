@@ -5,6 +5,8 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +33,14 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     static final String LEFT_INSOLE_MAC_KEY="leftInsoleMac";
     static final String RIGHT_INSOLE_MAC_KEY="rightInsoleMac";
     public static final String SHARED_PREF_ENTRY="PairedDevices";
+
+    private static final float[] NEGATIVE = {
+            -1.0f,     0,     0,    0, 255, // red
+            0, -1.0f,     0,    0, 255, // green
+            0,     0, -1.0f,    0, 255, // blue
+            0,     0,     0, 1.0f,   0  // alpha
+    };
+
     String TAG="1Act";
 
     TextView textViewScanStatusLeft;
@@ -119,8 +129,11 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         if (MyApplication.EltenMode) {
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
-            rtButton.setBackground(getDrawable(R.drawable.realtime_elten));
+            Drawable rtDrawable=getDrawable(R.drawable.realtime_elten);
+            //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
+            rtButton.setBackground(rtDrawable);
             normalModeButton.setBackground(getDrawable(R.drawable.normal_mode_elten));
+
 
         } else {// it is Uvex
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));

@@ -4,16 +4,17 @@
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#a25871</color>-->
     <color name="fBlack">#000000</color>
+    <color name="fWhite">#ffffff</color>
 
     <color name="black_overlay">#66000000</color>
 
     <!-- from Original Safety app -->
-    <color name="colorPrimary">#616161</color>
-    <color name="colorPrimaryDark">#373737</color>
+    <color name="colorPrimary">#d12d2d</color>
+    <color name="colorPrimaryDark">#840303</color>
     <color name="colorPrimaryDarkAlpha75">#bf616161</color>
     <color name="colorPrimaryLight">#8e8e8e</color>
     <color name="colorPrimaryLightAlpha50">#7f8e8e8e</color>
-    <color name="colorAccent">#ff6600</color>
+    <color name="colorAccent">#ff4040</color>
 
     <color name="colorButtonLoginEmail">#651fff</color>
     <color name="colorButtonLoginFacebook">#3b5998</color>

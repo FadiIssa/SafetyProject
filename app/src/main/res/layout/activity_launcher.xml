@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@android:style/Theme.Black"
-    android:background="@color/fBlack"
+    android:background="@color/fWhite"
     tools:context="com.example.fadi.testingrx.LauncherActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
