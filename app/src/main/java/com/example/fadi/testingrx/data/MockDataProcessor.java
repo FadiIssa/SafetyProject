@@ -21,6 +21,7 @@ public class MockDataProcessor implements DataProcessing {
                 .setAngleRight(6)
                 .setFatigue(8)
                 .setVibrationDuration(33)
+                .setVibrationIntensity(44)
                 .createSessionData();
 
         return result;

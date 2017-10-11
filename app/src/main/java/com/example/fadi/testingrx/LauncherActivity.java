@@ -5,6 +5,9 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +27,8 @@ import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
 import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
 
+import java.util.Random;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -41,8 +46,9 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
 
-    //Button buttonSavedActivity;
-    //Button buttonUvexNormalMode;
+    Button buttonSampleSession;
+    Button buttonHistory;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -103,13 +109,15 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
 
-        //buttonUvexNormalMode = (Button) findViewById(R.id.buttonUvexNormal);
-//        RxView.clicks(buttonUvexNormalMode)
-//                .subscribe(a->{
-//                    Intent intent=new Intent(this, NormalModeUvex.class);
-//                    startActivity(intent);
-//                    finish();
-//                });
+        buttonSampleSession = (Button) findViewById(R.id.buttonSampleSession);
+        buttonHistory = (Button) findViewById(R.id.buttonShowHistory);
+
+        RxView.clicks(buttonSampleSession)
+                .subscribe(a->{
+                    Intent intent = new Intent(this,SessionStatsActivity.class);
+                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
+                    startActivity(intent);
+                });
 
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);
@@ -119,8 +127,11 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         if (MyApplication.EltenMode) {
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
-            rtButton.setBackground(getDrawable(R.drawable.realtime_elten));
-            normalModeButton.setBackground(getDrawable(R.drawable.normal_mode_elten));
+            //Drawable rtDrawable=getDrawable(R.drawable.elten_real_time);
+            //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
+            rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
+            normalModeButton.setBackground(getDrawable(R.drawable.elten_normal_mode));
+
 
         } else {// it is Uvex
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
@@ -183,6 +194,21 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         intent.putExtra(DataProcessing.ANGLE_RIGHT,sessionData.getAngleRight());
         intent.putExtra(DataProcessing.FATIGUE,sessionData.getFatigueLevel());
         intent.putExtra(DataProcessing.VIBRATION_DURATION,sessionData.getVibrationDuration());
+
+        Random myRandom= new Random(SystemClock.currentThreadTimeMillis());
+        int randomVibrationIntensity;
+        if (sessionData.getVibrationDuration()>=10) {
+            randomVibrationIntensity = myRandom.nextInt(50);
+        } else if (sessionData.getVibrationDuration()>=2){
+            randomVibrationIntensity = myRandom.nextInt(30);
+        } else {
+            randomVibrationIntensity=1;
+        }
+        if (randomVibrationIntensity<0){
+            randomVibrationIntensity*=-1;
+        }
+        // the vibration intensity is supposed to come ready from the mock object, the following line is a temporary solution until that feature is implemented in the firmware.
+        intent.putExtra(DataProcessing.VIBRATION_INTENSITY,randomVibrationIntensity);
     }
 
     @Override

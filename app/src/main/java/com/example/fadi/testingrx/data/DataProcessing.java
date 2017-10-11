@@ -19,6 +19,7 @@ public interface DataProcessing {
     static final String ANGLE_RIGHT="angle_right";
     static final String FATIGUE="fatigue";
     static final String VIBRATION_DURATION="vibration_duration";
+    static final String VIBRATION_INTENSITY="vibration_intensity";
 
     SessionData getSessionData(int day, int month, int year);
 }

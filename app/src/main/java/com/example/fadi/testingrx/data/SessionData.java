@@ -21,10 +21,11 @@ public class SessionData {
     int fatigueLevel;
 
     int vibrationDuration;
+    int vibrationIntensity;
 
 
 
-    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime){
+    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime, int vibrationIntensity){
         this.numSteps=nSteps;
         this.numStairs=nStairs;
         this.durationWalking=dWalking;
@@ -38,6 +39,8 @@ public class SessionData {
         this.angleRight= angleRight;
         this.fatigueLevel=fatigue;
         this.vibrationDuration=vibrationTime;
+        this.vibrationIntensity=vibrationIntensity;
+
     }
 
     public int getNumSteps() {
@@ -92,6 +95,10 @@ public class SessionData {
         return vibrationDuration;
     }
 
+    public int getVibrationIntensity(){
+        return vibrationIntensity;
+    }
+
 
     public static class Builder {
         int numSteps;
@@ -107,6 +114,7 @@ public class SessionData {
         int angleRight;
         int fatigueLevel;
         int vibrationDuration;
+        int vibrationIntensity;
 
         public Builder setNumSteps(int n){
             this.numSteps = n;
@@ -166,6 +174,11 @@ public class SessionData {
             return this;
         }
 
+        public Builder setVibrationIntensity(int d){
+            this.vibrationIntensity=d;
+            return this;
+        }
+
         public SessionData createSessionData(){
             return new SessionData(
                     this.numSteps,
@@ -180,7 +193,8 @@ public class SessionData {
                     this.angleLeft,
                     this.angleRight,
                     this.fatigueLevel,
-                    this.vibrationDuration
+                    this.vibrationDuration,
+                    this.vibrationIntensity
             );
         }
     }
