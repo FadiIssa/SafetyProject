@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +21,8 @@ import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
+
+import java.util.Random;
 
 /**
  * Created by fadi on 04/10/2017.
@@ -52,6 +55,7 @@ public class SessionStatsActivity extends AppCompatActivity {
     int angleRight;
     int fatigue;
     int vibrationDuration;
+    int vibrationIntensity;
 
     SessionDBHelper myDBHelper;
 
@@ -84,6 +88,8 @@ public class SessionStatsActivity extends AppCompatActivity {
         this.angleRight=receivedIntent.getIntExtra(DataProcessing.ANGLE_RIGHT,-1);
         this.fatigue=receivedIntent.getIntExtra(DataProcessing.FATIGUE,-1);
         this.vibrationDuration=receivedIntent.getIntExtra(DataProcessing.VIBRATION_DURATION,-1);
+
+        this.vibrationIntensity=receivedIntent.getIntExtra(DataProcessing.VIBRATION_INTENSITY,-2);
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
@@ -159,6 +165,7 @@ public class SessionStatsActivity extends AppCompatActivity {
                     Fragment result3 = new FragmentVibration();
                     Bundle bundle3 = new Bundle();
                     bundle3.putInt(DataProcessing.VIBRATION_DURATION,vibrationDuration);
+                    bundle3.putInt(DataProcessing.VIBRATION_INTENSITY,vibrationIntensity);
                     result3.setArguments(bundle3);
                     return result3;
                 case 3:

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,8 @@ import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
 import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
 import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
+
+import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -192,6 +195,21 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         intent.putExtra(DataProcessing.ANGLE_RIGHT,sessionData.getAngleRight());
         intent.putExtra(DataProcessing.FATIGUE,sessionData.getFatigueLevel());
         intent.putExtra(DataProcessing.VIBRATION_DURATION,sessionData.getVibrationDuration());
+
+        Random myRandom= new Random(SystemClock.currentThreadTimeMillis());
+        int randomVibrationIntensity;
+        if (sessionData.getVibrationDuration()>=10) {
+            randomVibrationIntensity = myRandom.nextInt(50);
+        } else if (sessionData.getVibrationDuration()>=2){
+            randomVibrationIntensity = myRandom.nextInt(30);
+        } else {
+            randomVibrationIntensity=1;
+        }
+        if (randomVibrationIntensity<0){
+            randomVibrationIntensity*=-1;
+        }
+        // the vibration intensity is supposed to come ready from the mock object, the following line is a temporary solution until that feature is implemented in the firmware.
+        intent.putExtra(DataProcessing.VIBRATION_INTENSITY,randomVibrationIntensity);
     }
 
     @Override
