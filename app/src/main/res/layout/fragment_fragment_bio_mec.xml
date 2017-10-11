@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:paddingBottom="70dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -91,6 +92,46 @@
             app:layout_constraintVertical_bias="0.497"
             app:layout_constraintLeft_toRightOf="@+id/imageView"
             android:layout_marginLeft="8dp" />
+
+        <View
+            android:id="@+id/view_dash_separator_pronation"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/dash_separator"
+            android:layerType="software"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView"
+            tools:layout_editor_absoluteX="0dp" />
+
+
+        <TextView
+            android:id="@+id/tv_strike_pattern"
+            android:layout_width="395dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/fragment.biomec.strike.pattern"
+            android:theme="@style/TextViewHeaderStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_dash_separator_pronation"
+            tools:layout_editor_absoluteX="8dp" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+
+
+            android:layout_marginTop="20dp"
+            android:src="@drawable/strike_pattern_elten"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_strike_pattern"
+            android:id="@+id/imageViewStrikePattern" />
+
 
     </android.support.constraint.ConstraintLayout>
 
