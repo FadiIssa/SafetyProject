@@ -151,6 +151,7 @@ public class SessionStatsActivity extends AppCompatActivity {
                     bundle1.putInt(DataProcessing.DURATION_STATIC,durationStatic);
                     bundle1.putInt(DataProcessing.NUM_STAIRS,numStairs);
                     bundle1.putInt(DataProcessing.DISTANCE_METERS,ditanceInMeters);
+                    bundle1.putInt(DataProcessing.NUM_STEPS,numSteps);
                     bundle1.putInt(DataProcessing.CALORIES,calories);
                     result1.setArguments(bundle1);
                     return result1;

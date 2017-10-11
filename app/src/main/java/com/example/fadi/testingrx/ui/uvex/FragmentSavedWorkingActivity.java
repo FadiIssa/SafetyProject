@@ -37,6 +37,9 @@ public class FragmentSavedWorkingActivity extends Fragment {
         String distanceText = String.format("%d meters",mBundle.getInt(DataProcessing.DISTANCE_METERS),0);
         ((TextView)rootView.findViewById(R.id.tv_total_distance_value)).setText(distanceText);
 
+        String stepsText = String.format("%d steps",mBundle.getInt(DataProcessing.NUM_STEPS),0);
+        ((TextView)rootView.findViewById(R.id.tv_total_steps_value)).setText(stepsText);
+
         String caloriesText = String.format("%d",mBundle.getInt(DataProcessing.CALORIES),0);
         ((TextView)rootView.findViewById(R.id.tv_calories_burned_value)).setText(caloriesText);
 
