@@ -34,13 +34,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     static final String RIGHT_INSOLE_MAC_KEY="rightInsoleMac";
     public static final String SHARED_PREF_ENTRY="PairedDevices";
 
-    private static final float[] NEGATIVE = {
-            -1.0f,     0,     0,    0, 255, // red
-            0, -1.0f,     0,    0, 255, // green
-            0,     0, -1.0f,    0, 255, // blue
-            0,     0,     0, 1.0f,   0  // alpha
-    };
-
     String TAG="1Act";
 
     TextView textViewScanStatusLeft;
@@ -51,8 +44,9 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
 
-    //Button buttonSavedActivity;
-    //Button buttonUvexNormalMode;
+    Button buttonSampleSession;
+    Button buttonHistory;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -113,13 +107,15 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
 
-        //buttonUvexNormalMode = (Button) findViewById(R.id.buttonUvexNormal);
-//        RxView.clicks(buttonUvexNormalMode)
-//                .subscribe(a->{
-//                    Intent intent=new Intent(this, NormalModeUvex.class);
-//                    startActivity(intent);
-//                    finish();
-//                });
+        buttonSampleSession = (Button) findViewById(R.id.buttonSampleSession);
+        buttonHistory = (Button) findViewById(R.id.buttonShowHistory);
+
+        RxView.clicks(buttonSampleSession)
+                .subscribe(a->{
+                    Intent intent = new Intent(this,SessionStatsActivity.class);
+                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
+                    startActivity(intent);
+                });
 
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);

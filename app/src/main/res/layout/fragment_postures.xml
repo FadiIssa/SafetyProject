@@ -4,11 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         >
 
         <TextView
@@ -55,6 +57,8 @@
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_total_time"
             tools:layout_editor_absoluteX="8dp">
 
@@ -62,6 +66,7 @@
                 android:id="@+id/img_crounching"
                 android:layout_width="24dp"
                 android:layout_height="36dp"
+                app:layout_constraintStart_toStartOf="parent"
                 android:scaleType="fitStart"
                 android:tint="?attr/colorAccent"
                 app:srcCompat="@drawable/ic_crouching_new"
@@ -113,6 +118,8 @@
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             app:layout_constraintTop_toBottomOf="@+id/view_dash_separator_crounching"
             tools:layout_editor_absoluteX="8dp">
 
@@ -171,6 +178,8 @@
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             app:layout_constraintTop_toBottomOf="@+id/view_dash_separator_kneeling"
             tools:layout_editor_absoluteX="8dp">
 
@@ -229,6 +238,8 @@
             android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             app:layout_constraintTop_toBottomOf="@+id/view_dash_separator_standing"
             tools:layout_editor_absoluteX="8dp">
 

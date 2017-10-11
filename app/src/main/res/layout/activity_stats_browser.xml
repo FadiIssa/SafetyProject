@@ -25,16 +25,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:theme="@style/TabLayoutStyle"
+
+        app:tabBackground="@color/colorPrimaryDarkAlpha75"
+
         app:layout_constraintTop_toBottomOf="@+id/savedStats_toolbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:tabGravity="center"
-        tools:layout_editor_absoluteX="8dp">
+        app:tabGravity="center">
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_item_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:icon="@drawable/icon_tab_activity"/>
 
         <android.support.design.widget.TabItem
@@ -65,9 +68,12 @@
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/viewPagerSavedActivity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="395dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout"
+        android:paddingBottom="50dp"
         tools:layout_editor_absoluteX="8dp" />
 
 </android.support.constraint.ConstraintLayout>

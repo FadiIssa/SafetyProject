@@ -134,5 +134,16 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="eltenAppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+        <!--<item name="android:windowBackground">@drawable/background_drawable</item>-->
+        <item name="android:windowBackground">@color/fBlack</item>
+        <item name="android:actionOverflowButtonStyle">@style/fadiFlowButtonStyle</item>
+    </style>
+
 
 </resources>
