@@ -52,6 +52,7 @@
     <string name="fragment_biomec.strike_nature">Strike nature</string>
     <string name="global.time">Time</string>
     <string name="fragment_biomec.pronation_supination">Pronation / Supination</string>
+    <string name="fragment.biomec.strike.pattern">Strike Pattern</string>
     <string name="global.stability">Stability</string>
     <string name="name_cushioning">- Cushioning measurement -</string>
     <string name="fragment_cushioning.shoes_cushioning">Shoes cushioning</string>
