@@ -140,7 +140,7 @@ public class PostureTracker {
 
     public void updateLeftAccelometer(int x, int y, int z) {
         latestLX = x;
-        latestLY = -1*y;// the old way I was inverting the sign of Y myself, right now it comes inverted from the firmware.
+        latestLY = y;// the old way I was inverting the sign of Y myself, right now it comes inverted from the firmware.
         latestLZ = z;
 
         processLatestAccelometerReadings();

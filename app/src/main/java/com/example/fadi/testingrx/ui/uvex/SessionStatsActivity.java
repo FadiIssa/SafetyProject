@@ -213,27 +213,11 @@ public class SessionStatsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //test how the db looks like
-        myDBHelper = new SessionDBHelper(getApplicationContext());
-
-        //now putting data in the database
-        // Gets the data repository in write mode
-        SQLiteDatabase db = myDBHelper.getWritableDatabase();
-        Log.d(TAG,"after getWritableDB, this is what we got:"+db.toString());
-
-// Create a new map of values, where column names are the keys
-        ContentValues values = new ContentValues();
-        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC, "15");
-        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING, "30");
-
-// Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
-        Log.d(TAG,"after inserting a new row, here is its id:"+newRowId);
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG,"onDestroy is called");
-        myDBHelper.close();
         super.onDestroy();
     }
 }
