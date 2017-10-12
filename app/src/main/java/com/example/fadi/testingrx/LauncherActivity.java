@@ -1,10 +1,12 @@
 package com.example.fadi.testingrx;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
@@ -21,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fadi.testingrx.data.DataProcessing;
+import com.example.fadi.testingrx.data.SessionContract;
+import com.example.fadi.testingrx.data.SessionDBHelper;
 import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
 import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
@@ -46,8 +50,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
 
-    Button buttonSampleSession;
-    Button buttonHistory;
+    Button buttonSaveData;
+    Button buttonLoadData;
 
 
     @Override
@@ -95,6 +99,30 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         //myActionBar.setLogo(R.drawable.uvex_logo_launcher_bar);
 
         //myActionBar.setDisplayShowHomeEnabled(true);
+
+        buttonSaveData = (Button) findViewById(R.id.buttonSaveSession);
+        RxView.clicks(buttonSaveData)
+                .subscribe(a->{
+                    SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
+
+                    //now putting data in the database
+                    // Gets the data repository in write mode
+                    SQLiteDatabase db = myDBHelper.getWritableDatabase();
+                    Log.d(TAG,"after getWritableDB, this is what we got:"+db.toString());
+
+// Create a new map of values, where column names are the keys
+                    ContentValues values = new ContentValues();
+                    values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC, "15");
+                    values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING, "30");
+
+// Insert the new row, returning the primary key value of the new row
+                    long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
+                    Log.d(TAG,"after inserting a new row, here is its id:"+newRowId);
+
+                    myDBHelper.close();
+                });
+
+
 
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.

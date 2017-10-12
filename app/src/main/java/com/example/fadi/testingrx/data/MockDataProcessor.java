@@ -26,4 +26,9 @@ public class MockDataProcessor implements DataProcessing {
 
         return result;
     }
+
+    @Override
+    public int saveSessionData(SessionData s) {
+        return 0;
+    }
 }

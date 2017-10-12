@@ -22,4 +22,7 @@ public interface DataProcessing {
     static final String VIBRATION_INTENSITY="vibration_intensity";
 
     SessionData getSessionData(int day, int month, int year);
+
+    int saveSessionData(SessionData s);
+
 }
