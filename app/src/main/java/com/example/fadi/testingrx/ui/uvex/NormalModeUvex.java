@@ -70,6 +70,13 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     Button buttonStopActivityUvex;
 
     TextView textViewTimer;
+    ImageView imageViewTimer;
+
+    Drawable drawableTimer0;
+    Drawable drawableTimer1;
+    Drawable drawableTimer2;
+    Drawable drawableTimer3;
+    Drawable drawableTimer4;
 
     Subscription leftInsoleIndicationSubscription;
     Subscription rightInsoleIndicationSubscription;
@@ -477,11 +484,17 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
 
         isActivityStarted=false;
 
-        drawableLeftConnected = getDrawable(R.drawable.elten_connection_left_connected);
-        drawableLeftConnecting = getDrawable(R.drawable.elten_connection_left_searching);
+        drawableLeftConnected = getDrawable(R.drawable.ic_connected_left);
+        drawableLeftConnecting = getDrawable(R.drawable.ic_connecting_left);
 
-        drawableRightConnected = getDrawable(R.drawable.elten_connection_right_connected);
-        drawableRightConnecting = getDrawable(R.drawable.elten_connection_right_searching);
+        drawableRightConnected = getDrawable(R.drawable.ic_connected_right);
+        drawableRightConnecting = getDrawable(R.drawable.ic_connecting_right);
+
+        drawableTimer0 = getDrawable(R.drawable.ic_timer0);
+        drawableTimer1 = getDrawable(R.drawable.ic_timer1);
+        drawableTimer2 = getDrawable(R.drawable.ic_timer2);
+        drawableTimer3 = getDrawable(R.drawable.ic_timer3);
+        drawableTimer4 = getDrawable(R.drawable.ic_timer4);
 
         drawableConnectionStopped = getDrawable(R.drawable.elten_connection_stopped);
 
@@ -493,6 +506,9 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
 
 
         textViewTimer = (TextView) findViewById(R.id.textViewTimerUvex);
+        imageViewTimer = (ImageView) findViewById(R.id.imageViewTimer);
+
+        imageViewTimer.setImageDrawable(drawableTimer0);
 
         buttonStartActivityUvex = (Button) findViewById(R.id.buttonStartActivityUvexNormal);
         buttonStartActivityUvex.setEnabled(false);
@@ -524,6 +540,24 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
                     Long timeInSeconds=(value%3600)%60;
                     String finalText= (String.valueOf(timeInHours)+":"+String.valueOf(timeInMinutes)+":"+String.valueOf(timeInSeconds));
                     textViewTimer.setText(finalText);
+
+                    switch (value.intValue()%4){
+                        case 1:
+                            imageViewTimer.setImageDrawable(drawableTimer1);
+                            break;
+                        case 2:
+                            imageViewTimer.setImageDrawable(drawableTimer2);
+                            break;
+                        case 3:
+                            imageViewTimer.setImageDrawable(drawableTimer3);
+                            break;
+                        case 0:
+                            imageViewTimer.setImageDrawable(drawableTimer4);
+                            break;
+                        default:
+                            imageViewTimer.setImageDrawable(drawableTimer0);
+                            break;
+                    }
                     if (value>MINIMUM_ACTIVITY_TIME){
                         buttonStopActivityUvex.setEnabled(true);
                     }
@@ -612,7 +646,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     }
 
     @Override
-    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories) {
+    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories, int vibrationIntensity) {
 
         //release any connection, to allow reconnecting when restarting the app for example.
         //MyApplication.getBleManager().closeAllConnections();//maybe I should not cancel all subscriptions, since going back to previous activities will not enable reconnecting automatically, the retryConnection will be disabled, to solve this, handle the reconnection and unsubscribing in onStop, onResume callbacks of the activity lifecycle.
@@ -633,6 +667,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         intent.putExtra(DataProcessing.ANGLE_RIGHT,rightAngle);
         intent.putExtra(DataProcessing.FATIGUE,0);//needs to be calculated
         intent.putExtra(DataProcessing.VIBRATION_DURATION,vibrationTime);
+        intent.putExtra(DataProcessing.VIBRATION_INTENSITY,vibrationIntensity);
 
         startActivity(intent);
     }

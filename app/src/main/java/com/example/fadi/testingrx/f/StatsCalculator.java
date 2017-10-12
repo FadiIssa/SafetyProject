@@ -1,9 +1,12 @@
 package com.example.fadi.testingrx.f;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.example.fadi.testingrx.NormalModeActivity;
 import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
+
+import java.util.Random;
 
 /**
  * Created by fadi on 14/09/2017.
@@ -40,6 +43,8 @@ public class StatsCalculator {
 
     int vibrationTimeLeft;
     int vibrationTimeRight;
+
+    int vibrationIntensity;
 
     byte firstByteVibrationLeft;
     byte firstByteVibrationRight;
@@ -163,7 +168,34 @@ public class StatsCalculator {
             int totalWalkingTime= (totalWalkingTimeLeft+totalWalkingTimeRight)/2;
             String walkingString=convertSecond(totalWalkingTime);
 
-            String vibrationString=convertSecond((vibrationTimeLeft+vibrationTimeRight)/2);;
+
+            int vibrationDuration=(vibrationTimeLeft+vibrationTimeRight)/2;
+            String vibrationString=convertSecond(vibrationDuration);
+
+            //calculating vibration intensity (emulation, since it is nor ready yet in the firmware)
+            Random myRandom= new Random(SystemClock.currentThreadTimeMillis());
+            int randomVibrationIntensity;
+            if (vibrationDuration>=10) {
+                randomVibrationIntensity = myRandom.nextInt(40);
+            } else if (vibrationDuration>=2){
+                randomVibrationIntensity = myRandom.nextInt(20);
+            } else {
+                randomVibrationIntensity=1;
+            }
+            if (randomVibrationIntensity<0){
+                randomVibrationIntensity*=-1;
+            }
+
+            if (randomVibrationIntensity!=1) {
+                randomVibrationIntensity += 10;//we add 10, to 10 is the minimum value.
+            }
+
+            vibrationIntensity = randomVibrationIntensity;
+            Log.d(TAG,"vibrationIntensity is:"+vibrationIntensity);
+
+
+
+
             String leftAngleString=String.valueOf(angleLeft);
             String rightAngleString=String.valueOf(angleRight);
 
@@ -201,7 +233,8 @@ public class StatsCalculator {
                     angleLeft,
                     angleRight,
                     distance,
-                    caloriesInt
+                    caloriesInt,
+                    vibrationIntensity
             );
 
         }

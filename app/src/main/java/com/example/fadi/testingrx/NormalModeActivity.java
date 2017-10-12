@@ -675,7 +675,7 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
     //here is it nor useful, but in the uvex normal activity , it will be used instead of the string one, to create intent and pass the data to the stats activity browser.
     @Override
-    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories) {
+    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories, int vibIntensity) {
 
 
     }

@@ -307,16 +307,17 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     }
 
 
-    private void initUI(){
+    private void initUI() {
 
         // prepare the drawables that will represent the different postures.
         if (MyApplication.EltenMode) {
-            drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
-            drawableTipToesBorder = getDrawable(R.drawable.elten_tiptoes_black_border);
-            drawableCrouchingFull = getDrawable(R.drawable.elten_crouching_black_filled);
-            drawableCrouchingBorder = getDrawable(R.drawable.elten_crouching_black_border);
-            drawableKneelingFull = getDrawable(R.drawable.elten_kneeling_black_filled);
-            drawableKneelingBorder = getDrawable(R.drawable.elten_kneeling_black_border);
+            throw new IllegalArgumentException("you should not have elten mode true in uvex app");
+//            drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
+//            drawableTipToesBorder = getDrawable(R.drawable.elten_tiptoes_black_border);
+//            drawableCrouchingFull = getDrawable(R.drawable.elten_crouching_black_filled);
+//            drawableCrouchingBorder = getDrawable(R.drawable.elten_crouching_black_border);
+//            drawableKneelingFull = getDrawable(R.drawable.elten_kneeling_black_filled);
+//            drawableKneelingBorder = getDrawable(R.drawable.elten_kneeling_black_border);
         } else {
             drawableTipToesFull = getDrawable(R.drawable.tipoesfull);
             drawableTipToesBorder = getDrawable(R.drawable.tiptoesborder);
@@ -353,11 +354,12 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
 
         // checking if elten mode, to use the relevant icons.
         if (MyApplication.EltenMode){
-            //kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling));
-            kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling_red_circle));
-            //crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching));
-            crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching_red_circle));
-            tiptoesImageView.setImageDrawable(getDrawable(R.drawable.elten_tiptoes_red_circle));
+            throw new IllegalArgumentException();
+//            //kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling));
+//            kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling_red_circle));
+//            //crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching));
+//            crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching_red_circle));
+//            tiptoesImageView.setImageDrawable(getDrawable(R.drawable.elten_tiptoes_red_circle));
         } else {
             kneelingImageView.setImageDrawable(getDrawable(R.drawable.kneelingfull));
             crouchingImageView.setImageDrawable(getDrawable(R.drawable.crouchingfull));

@@ -25,6 +25,7 @@ public interface StatsCalculaterCallback {
                                int leftAngle,
                                int rightAngle,
                                int distanceMeters,
-                               int calories
+                               int calories,
+                               int vibrationIntensity
     );
 }

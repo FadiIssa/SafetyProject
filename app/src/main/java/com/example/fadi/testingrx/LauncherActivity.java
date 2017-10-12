@@ -109,28 +109,19 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
 
-        buttonSampleSession = (Button) findViewById(R.id.buttonSampleSession);
-        buttonHistory = (Button) findViewById(R.id.buttonShowHistory);
-
-        RxView.clicks(buttonSampleSession)
-                .subscribe(a->{
-                    Intent intent = new Intent(this,SessionStatsActivity.class);
-                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
-                    startActivity(intent);
-                });
-
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);
 
         //imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
 
         if (MyApplication.EltenMode) {
+            throw new IllegalArgumentException();
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
             //Drawable rtDrawable=getDrawable(R.drawable.elten_real_time);
             //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
-            rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
-            normalModeButton.setBackground(getDrawable(R.drawable.elten_normal_mode));
+//            rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
+//            normalModeButton.setBackground(getDrawable(R.drawable.elten_normal_mode));
 
 
         } else {// it is Uvex
@@ -177,7 +168,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         runOnUiThread(() -> {
             textViewScanStatusLeft.setText("stopped");
         });
-
     }
 
     private void populateIntentWithSessionData(Intent intent, SessionData sessionData){
