@@ -63,7 +63,7 @@ public class FragmentVibration extends Fragment {
         } else {
             try {
                 ((GaugeView)rootView.findViewById(R.id.gauge_view_vibration_intensity_level)).setProgress(vibrationIntensityValue);
-                ((TextView)rootView.findViewById(R.id.tv_intensity_value)).setText("No Intensity Detected");
+                ((TextView)rootView.findViewById(R.id.tv_intensity_value)).setText("Not enough Vibration Detected");
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }

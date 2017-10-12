@@ -178,7 +178,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         runOnUiThread(() -> {
             textViewScanStatusLeft.setText("stopped");
         });
-
     }
 
     private void populateIntentWithSessionData(Intent intent, SessionData sessionData){
