@@ -6,6 +6,7 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -121,6 +123,38 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
                     myDBHelper.close();
                 });
+
+        buttonLoadData = (Button) findViewById(R.id.buttonLoadSession);
+        buttonLoadData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
+
+                SQLiteDatabase db = myDBHelper.getReadableDatabase();
+                // so again, I have to write these sql statements, just to ensure the database is working fine.
+                String[] projection = {
+                        SessionContract.SessionTable._ID,
+                        SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,
+                        SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING
+                };
+
+                Cursor myCursor = db.query(
+                        SessionContract.SessionTable.TABLE_NAME,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+
+                myCursor.moveToNext();
+
+                Log.d(TAG," duration static is:"+myCursor.getInt(myCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC)));
+                myDBHelper.close();
+            }
+        });
 
 
 
