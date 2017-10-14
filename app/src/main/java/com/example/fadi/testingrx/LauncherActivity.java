@@ -297,9 +297,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menuLauncherResetMacAddresses:
-                Toast.makeText(this,"insoles addresses deleted from phone",Toast.LENGTH_LONG).show();
-                return true;
             case R.id.menuLauncherResetDB:
                 resetDataBase();
                 return true;

@@ -2,21 +2,25 @@ package com.example.fadi.testingrx;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.example.fadi.testingrx.f.posture.Postures;
+import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.polidea.rxandroidble.RxBleConnection;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -383,11 +387,29 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            getMenuInflater().inflate(R.menu.menu_live_mode, menu);
             return true;
         } catch (Exception e) {
             return super.onCreateOptionsMenu(menu);
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_live__history:
+                Intent intent = new Intent(this, SavedActivitiesBrowserActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG,"onStop is called for the MainActivity");
     }
 }
