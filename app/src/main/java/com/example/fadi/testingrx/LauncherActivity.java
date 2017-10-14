@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.Drawable;
+
+
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,10 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fadi.testingrx.data.DataProcessing;
+import com.example.fadi.testingrx.data.MockDataProcessor;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
 import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
+import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
 import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
@@ -263,6 +265,29 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         intent.putExtra(DataProcessing.VIBRATION_INTENSITY,randomVibrationIntensity);
     }
 
+    private void populateContentValuesWithSessionData(ContentValues cv, SessionData sd){
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_NUM_STEPS,String.valueOf(sd.getNumSteps()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_NUM_STAIRS,String.valueOf(sd.getNumStairs()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING,String.valueOf(sd.getDurationCrouching()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_KNEELING,String.valueOf(sd.getDurationKneeling()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_TIPTOES,String.valueOf(sd.getDurationTiptoes()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,String.valueOf(sd.getDurationStatic()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING,String.valueOf(sd.getDurationWalking()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION,String.valueOf(sd.getVibrationDuration()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_VIBRATION_INTENSITY,String.valueOf(sd.getVibrationIntensity()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_LEFT,String.valueOf(sd.getAngleLeft()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_RIGHT,String.valueOf(sd.getAngleRight()));
+
+        //cv.put(SessionContract.SessionTable.COLUMN_NAME_CALORIES,String.valueOf(sd.getCalories()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DISTANCE_METERS,String.valueOf(sd.getDistanceMeters()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL,String.valueOf(sd.getFatigueLevel()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DATETIME,String.valueOf(sd.getCurrentDateTime()));
+    }
+
     @Override
     public void scanStatusRightStopped() {
         runOnUiThread(() -> {
@@ -350,9 +375,58 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
             case R.id.menuLauncherResetMacAddresses:
                 Toast.makeText(this,"insoles addresses deleted from phone",Toast.LENGTH_LONG).show();
                 return true;
+            case R.id.menuLauncherResetDB:
+                resetDataBase();
+                return true;
+            case R.id.menuLauncherHistory:
+                Intent intent = new Intent(this, SavedActivitiesBrowserActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void resetDataBase(){
+
+        //getApplicationContext().deleteDatabase()
+        SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
+
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        //db.execSQL(SessionContract.SessionTable.SQL_DELETE_TABLE);
+        db.close();
+        myDBHelper.close();
+        //db.delete(SessionContract.SessionTable.TABLE_NAME,null,null);
+        Toast.makeText(this,"All database records deleted",Toast.LENGTH_LONG).show();
+
+        myDBHelper = new SessionDBHelper(getApplicationContext());
+
+        db = myDBHelper.getWritableDatabase();
+
+        //now we should add the 2 fake data
+        MockDataProcessor mDataProcessor = new MockDataProcessor();
+        SessionData fakeSessionData1 = mDataProcessor.getFakeSession1Data();
+        SessionData fakeSessionData2 = mDataProcessor.getFakeSession2Data();
+
+        ContentValues values = new ContentValues();
+        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING,"17");
+        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING,"18");
+        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION,"20");
+        //populateContentValuesWithSessionData(values,fakeSessionData1);
+
+        long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
+        Log.d(TAG,"after inserting a new first fake row, here is its id:"+newRowId);
+
+        values = new ContentValues();
+        populateContentValuesWithSessionData(values,fakeSessionData2);
+
+        newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
+        Log.d(TAG,"after inserting a 2nd fake new row, here is its id:"+newRowId);
+
+        db.close();
+
+        myDBHelper.close();
+
     }
 
     @Override
@@ -364,6 +438,5 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         } catch (Exception e) {
             return super.onCreateOptionsMenu(menu);
         }
-
     }
 }

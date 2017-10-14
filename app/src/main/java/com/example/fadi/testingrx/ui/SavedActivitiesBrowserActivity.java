@@ -43,6 +43,9 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
 
         initUI();
 
+        //drop old database for the sake of it
+
+
         SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
 
         SQLiteDatabase db = myDBHelper.getReadableDatabase();

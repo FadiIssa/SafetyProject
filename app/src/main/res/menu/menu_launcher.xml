@@ -6,4 +6,14 @@
         android:title="Reset insoles"
         app:showAsAction="never"
         />
+
+    <item android:id="@+id/menuLauncherResetDB"
+        android:title="Reset Database"
+        app:showAsAction="never"
+        />
+
+    <item android:id="@+id/menuLauncherHistory"
+        android:title="History"
+        app:showAsAction="never"
+        />
 </menu>
