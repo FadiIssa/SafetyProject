@@ -6,9 +6,10 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.Drawable;
+
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,19 +17,22 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fadi.testingrx.data.DataProcessing;
+import com.example.fadi.testingrx.data.MockDataProcessor;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
 import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
+import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
-import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
+
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Random;
@@ -40,20 +44,17 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     static final String LEFT_INSOLE_MAC_KEY="leftInsoleMac";
     static final String RIGHT_INSOLE_MAC_KEY="rightInsoleMac";
     public static final String SHARED_PREF_ENTRY="PairedDevices";
-
     String TAG="1Act";
 
     TextView textViewScanStatusLeft;
     TextView textViewScanStatusRight;
 
-    ImageView imageViewLogo;
     Button rtButton;
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
 
     Button buttonSaveData;
     Button buttonLoadData;
-
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -65,11 +66,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_launcher);
-
-//        if (getSupportActionBar()!=null) {// at first I had to hide it myself, but when changed styles and added the UI from the original safety app, this started to return null object.
-//            getSupportActionBar().hide();
-//        }
-
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.launcherActivity_toolbar);
         myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
@@ -92,43 +88,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     private void initUI(){
 
-        //ActionBar myActionBar=getSupportActionBar();
-        //myActionBar.setDisplayShowHomeEnabled(true);
-        //myActionBar.setDisplayShowTitleEnabled(false);
-        //myActionBar.setIcon(R.drawable.uvex_logo_launcher_bar);
-        //myActionBar.
-        //myActionBar.setLogo(R.drawable.uvex_logo_launcher_bar);
-
-        //myActionBar.setDisplayShowHomeEnabled(true);
-
-        buttonSaveData = (Button) findViewById(R.id.buttonSaveSession);
-        RxView.clicks(buttonSaveData)
-                .subscribe(a->{
-                    SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
-
-                    //now putting data in the database
-                    // Gets the data repository in write mode
-                    SQLiteDatabase db = myDBHelper.getWritableDatabase();
-                    Log.d(TAG,"after getWritableDB, this is what we got:"+db.toString());
-
-// Create a new map of values, where column names are the keys
-                    ContentValues values = new ContentValues();
-                    values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC, "15");
-                    values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING, "30");
-
-// Insert the new row, returning the primary key value of the new row
-                    long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
-                    Log.d(TAG,"after inserting a new row, here is its id:"+newRowId);
-
-                    myDBHelper.close();
-                });
-
-
-
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.
-
-        //buttonSavedActivity = (Button) findViewById(R.id.buttonSavedActivity);
 
         textViewScanStatusLeft = (TextView) findViewById(R.id.textViewScanStatusLeft);
         textViewScanStatusLeft.setText("");
@@ -138,24 +99,19 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
         normalModeButton.setEnabled(false);
 
-        buttonSampleSession = (Button) findViewById(R.id.buttonSampleSession);
-        buttonHistory = (Button) findViewById(R.id.buttonShowHistory);
-
-        RxView.clicks(buttonSampleSession)
-                .subscribe(a->{
-                    Intent intent = new Intent(this,SessionStatsActivity.class);
-                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
-                    startActivity(intent);
-                });
-
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);
 
-        //imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
 
         if (MyApplication.EltenMode) {
+            throw new IllegalArgumentException();
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
+            //Drawable rtDrawable=getDrawable(R.drawable.elten_real_time);
+            //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
+//            rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
+//            normalModeButton.setBackground(getDrawable(R.drawable.elten_normal_mode));
+
             //Drawable rtDrawable=getDrawable(R.drawable.elten_real_time);
             //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
             rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
@@ -237,6 +193,29 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         }
         // the vibration intensity is supposed to come ready from the mock object, the following line is a temporary solution until that feature is implemented in the firmware.
         intent.putExtra(DataProcessing.VIBRATION_INTENSITY,randomVibrationIntensity);
+    }
+
+    private void populateContentValuesWithSessionData(ContentValues cv, SessionData sd){
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_NUM_STEPS,String.valueOf(sd.getNumSteps()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_NUM_STAIRS,String.valueOf(sd.getNumStairs()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING,String.valueOf(sd.getDurationCrouching()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_KNEELING,String.valueOf(sd.getDurationKneeling()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_TIPTOES,String.valueOf(sd.getDurationTiptoes()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,String.valueOf(sd.getDurationStatic()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING,String.valueOf(sd.getDurationWalking()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION,String.valueOf(sd.getVibrationDuration()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_VIBRATION_INTENSITY,String.valueOf(sd.getVibrationIntensity()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_LEFT,String.valueOf(sd.getAngleLeft()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_RIGHT,String.valueOf(sd.getAngleRight()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_CALORIES,String.valueOf(sd.getCalories()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DISTANCE_METERS,String.valueOf(sd.getDistanceMeters()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL,String.valueOf(sd.getFatigueLevel()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DATETIME,String.valueOf(sd.getCurrentDateTime()));
     }
 
     @Override
@@ -323,12 +302,60 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menuLauncherResetMacAddresses:
-                Toast.makeText(this,"insoles addresses deleted from phone",Toast.LENGTH_LONG).show();
+            case R.id.menuLauncherResetDB:
+                resetDataBase();
+                return true;
+            case R.id.menuLauncherHistory:
+                Intent intent = new Intent(this, SavedActivitiesBrowserActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void resetDataBase(){
+
+        //getApplicationContext().deleteDatabase()
+        SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
+
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        db.execSQL(SessionContract.SessionTable.SQL_DELETE_TABLE);//it is dangerous, after deleting table, it seems it cannot create it again.
+        db.execSQL(SessionContract.SessionTable.SQL_CREATE_TABLE);
+        //db.delete(SessionContract.SessionTable.TABLE_NAME,null,null);
+        db.close();
+        myDBHelper.close();
+
+        Toast.makeText(this,"All database records deleted",Toast.LENGTH_LONG).show();
+
+        myDBHelper = new SessionDBHelper(getApplicationContext());
+
+        db = myDBHelper.getWritableDatabase();
+
+        //now we should add the 2 fake data
+        MockDataProcessor mDataProcessor = new MockDataProcessor();
+        SessionData fakeSessionData1 = mDataProcessor.getFakeSession1Data();
+        SessionData fakeSessionData2 = mDataProcessor.getFakeSession2Data();
+
+        ContentValues values = new ContentValues();
+//        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING,"17");
+//        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING,"18");
+//        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION,"20");
+        populateContentValuesWithSessionData(values,fakeSessionData1);
+
+        long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
+        Log.d(TAG,"after inserting a new first fake row, here is its id:"+newRowId);
+
+        values = new ContentValues();
+        populateContentValuesWithSessionData(values,fakeSessionData2);
+
+        newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
+        Log.d(TAG,"after inserting a 2nd fake new row, here is its id:"+newRowId);
+
+        db.close();
+
+        myDBHelper.close();
+
     }
 
     @Override
@@ -340,6 +367,5 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         } catch (Exception e) {
             return super.onCreateOptionsMenu(menu);
         }
-
     }
 }

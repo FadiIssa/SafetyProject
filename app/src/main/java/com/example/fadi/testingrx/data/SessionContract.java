@@ -13,7 +13,7 @@ public final class SessionContract {
     }
 
     public static final class SessionTable implements BaseColumns {
-        public static final String TABLE_NAME = "session";
+        public static final String TABLE_NAME = "session2";
         public static final String COLUMN_NAME_DURATION_STATIC = "d_static";
         public static final String COLUMN_NAME_DURATION_WALKING = "d_walking";
         public static final String COLUMN_NAME_DURATION_KNEELING = "d_kneeling";
@@ -26,7 +26,9 @@ public final class SessionContract {
         public static final String COLUMN_NAME_NUM_STAIRS = "n_stairs";
         public static final String COLUMN_NAME_DISTANCE_METERS = "distance";
         public static final String COLUMN_NAME_CALORIES = "calories";
+        public static final String COLUMN_NAME_FATUGUE_LEVEL = "fatigue";
         public static final String COLUMN_NAME_DURATION_CROUCHING = "d_crouching";
+        public static final String COLUMN_NAME_DATETIME= "date_time";
 
 
         public static final String SQL_CREATE_TABLE =
@@ -43,7 +45,9 @@ public final class SessionContract {
                         SessionTable.COLUMN_NAME_NUM_STEPS + " INTEGER," +
                         SessionTable.COLUMN_NAME_DISTANCE_METERS + " INTEGER," +
                         SessionTable.COLUMN_NAME_CALORIES + " INTEGER," +
+                        SessionTable.COLUMN_NAME_FATUGUE_LEVEL + " INTEGER," +
                         SessionTable.COLUMN_NAME_NUM_STAIRS + " INTEGER," +
+                        SessionTable.COLUMN_NAME_DATETIME + " TEXT," +
                         SessionTable.COLUMN_NAME_DURATION_CROUCHING + " INTEGER)";
 
         public static final String SQL_DELETE_TABLE =

@@ -23,9 +23,9 @@ public class SessionData {
     int vibrationDuration;
     int vibrationIntensity;
 
+    String currentDateTime;
 
-
-    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime, int vibrationIntensity){
+    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime, int vibrationIntensity, String dateTime){
         this.numSteps=nSteps;
         this.numStairs=nStairs;
         this.durationWalking=dWalking;
@@ -40,7 +40,7 @@ public class SessionData {
         this.fatigueLevel=fatigue;
         this.vibrationDuration=vibrationTime;
         this.vibrationIntensity=vibrationIntensity;
-
+        this.currentDateTime=dateTime;
     }
 
     public int getNumSteps() {
@@ -99,6 +99,10 @@ public class SessionData {
         return vibrationIntensity;
     }
 
+    public String getCurrentDateTime(){
+        return currentDateTime;
+    }
+
 
     public static class Builder {
         int numSteps;
@@ -115,6 +119,7 @@ public class SessionData {
         int fatigueLevel;
         int vibrationDuration;
         int vibrationIntensity;
+        String currentDateTime;
 
         public Builder setNumSteps(int n){
             this.numSteps = n;
@@ -179,6 +184,11 @@ public class SessionData {
             return this;
         }
 
+        public Builder setDateTime(String d){
+            this.currentDateTime=d;
+            return this;
+        }
+
         public SessionData createSessionData(){
             return new SessionData(
                     this.numSteps,
@@ -194,7 +204,8 @@ public class SessionData {
                     this.angleRight,
                     this.fatigueLevel,
                     this.vibrationDuration,
-                    this.vibrationIntensity
+                    this.vibrationIntensity,
+                    this.currentDateTime
             );
         }
     }

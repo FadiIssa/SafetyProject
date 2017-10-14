@@ -14,7 +14,7 @@ public class SessionDBHelper extends SQLiteOpenHelper {
     String TAG="SDBH";
 
     public SessionDBHelper(Context context){
-        super(context, "safety_db", null, 1);
+        super(context, "safety_db2", null, 3);
         Log.d(TAG," constructor of SessionDBHelper is called");
     }
 

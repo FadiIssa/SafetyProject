@@ -18,6 +18,11 @@ android {
 
 
     buildTypes {
+
+        debug {
+            minifyEnabled false
+        }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -32,6 +37,22 @@ android {
         //Use “exclude” to point at the specific file (or files) that Android Studio is complaining about//
         exclude 'META-INF/rxjava.properties'
     }
+
+    // for improving performance of slow gradle build times
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    dexOptions {
+        maxProcessCount 4
+        javaMaxHeapSize "4g"
+    }
+    tasks.whenTaskAdded { task ->
+        if (task.name.equals("lint")) {
+            task.enabled = false
+        }
+    }
+    //finish performance related improvements
 }
 
 dependencies {

@@ -289,7 +289,7 @@ public class ScanManager {
     //the purpose is to unsubscribe the scanning (to close scanning) after a timer is finished (in case the scanning was not finished already for finding the desired insoles).
     private void startScanTimer() {
         Observable.interval(1, TimeUnit.SECONDS)
-                .take(10)
+                .take(5)
                 .subscribe(aLong -> {
                             Log.d(TAG,"one second of scanning passed, it is:"+aLong);
                         },
