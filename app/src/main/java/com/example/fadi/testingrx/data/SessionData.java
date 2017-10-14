@@ -23,9 +23,9 @@ public class SessionData {
     int vibrationDuration;
     int vibrationIntensity;
 
-    long currentDateTime;
+    String currentDateTime;
 
-    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime, int vibrationIntensity, long dateTime){
+    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime, int vibrationIntensity, String dateTime){
         this.numSteps=nSteps;
         this.numStairs=nStairs;
         this.durationWalking=dWalking;
@@ -99,7 +99,7 @@ public class SessionData {
         return vibrationIntensity;
     }
 
-    public long getCurrentDateTime(){
+    public String getCurrentDateTime(){
         return currentDateTime;
     }
 
@@ -119,7 +119,7 @@ public class SessionData {
         int fatigueLevel;
         int vibrationDuration;
         int vibrationIntensity;
-        long currentDateTime;
+        String currentDateTime;
 
         public Builder setNumSteps(int n){
             this.numSteps = n;
@@ -184,7 +184,7 @@ public class SessionData {
             return this;
         }
 
-        public Builder setDateTime(long d){
+        public Builder setDateTime(String d){
             this.currentDateTime=d;
             return this;
         }

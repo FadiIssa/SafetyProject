@@ -16,9 +16,9 @@ public class DataManager {
         mDataProcessor = new MockDataProcessor();
     }
 
-    public SessionData getSessionData(int day, int month, int year){
-        return mDataProcessor.getSessionData(day,month,year);
-    }
+//    public SessionData getSessionData(int day, int month, int year){
+//        return mDataProcessor.getSessionData(day,month,year);
+//    }
 
     public int saveSessionData(SessionData s){
         return mDataProcessor.saveSessionData(s);

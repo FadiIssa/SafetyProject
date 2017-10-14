@@ -6,6 +6,7 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInstaller;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -393,10 +394,12 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
 
         SQLiteDatabase db = myDBHelper.getWritableDatabase();
-        //db.execSQL(SessionContract.SessionTable.SQL_DELETE_TABLE);
+        db.execSQL(SessionContract.SessionTable.SQL_DELETE_TABLE);//it is dangerous, after deleting table, it seems it cannot create it again.
+        db.execSQL(SessionContract.SessionTable.SQL_CREATE_TABLE);
+        //db.delete(SessionContract.SessionTable.TABLE_NAME,null,null);
         db.close();
         myDBHelper.close();
-        //db.delete(SessionContract.SessionTable.TABLE_NAME,null,null);
+
         Toast.makeText(this,"All database records deleted",Toast.LENGTH_LONG).show();
 
         myDBHelper = new SessionDBHelper(getApplicationContext());
@@ -409,10 +412,10 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         SessionData fakeSessionData2 = mDataProcessor.getFakeSession2Data();
 
         ContentValues values = new ContentValues();
-        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING,"17");
-        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING,"18");
-        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION,"20");
-        //populateContentValuesWithSessionData(values,fakeSessionData1);
+//        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING,"17");
+//        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING,"18");
+//        values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION,"20");
+        populateContentValuesWithSessionData(values,fakeSessionData1);
 
         long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
         Log.d(TAG,"after inserting a new first fake row, here is its id:"+newRowId);

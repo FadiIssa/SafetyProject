@@ -1,5 +1,8 @@
 package com.example.fadi.testingrx.data;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by fadi on 04/10/2017.
  */
@@ -21,7 +24,7 @@ public class MockDataProcessor implements DataProcessing {
                 .setAngleRight(6)
                 .setFatigue(8)
                 .setVibrationDuration(33)
-                .setVibrationIntensity(44)
+                .setVibrationIntensity(44)// be careful, this method does not set datetime object
                 .createSessionData();
 
         return result;
@@ -33,6 +36,8 @@ public class MockDataProcessor implements DataProcessing {
     }
 
     public SessionData getFakeSession1Data() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        Date resultdate = new Date(System.currentTimeMillis());
         SessionData result= new SessionData.Builder()
                 .setNumSteps(150)
                 .setNumStairs(20)
@@ -48,13 +53,16 @@ public class MockDataProcessor implements DataProcessing {
                 .setFatigue(8)
                 .setVibrationDuration(33)
                 .setVibrationIntensity(44)
-                .setDateTime(System.currentTimeMillis())
+                .setDateTime(sdf.format(resultdate))
                 .createSessionData();
 
         return result;
     }
 
     public SessionData getFakeSession2Data() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        Date resultdate = new Date(System.currentTimeMillis());
+
         SessionData result= new SessionData.Builder()
                 .setNumSteps(250)
                 .setNumStairs(30)
@@ -70,7 +78,7 @@ public class MockDataProcessor implements DataProcessing {
                 .setFatigue(9)
                 .setVibrationDuration(43)
                 .setVibrationIntensity(34)
-                .setDateTime(System.currentTimeMillis())
+                .setDateTime(sdf.format(resultdate))
                 .createSessionData();
 
         return result;
