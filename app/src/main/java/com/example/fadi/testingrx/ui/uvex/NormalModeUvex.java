@@ -1,6 +1,8 @@
 package com.example.fadi.testingrx.ui.uvex;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,10 @@ import android.widget.Toast;
 import com.example.fadi.testingrx.MyApplication;
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
+import com.example.fadi.testingrx.data.MockDataProcessor;
+import com.example.fadi.testingrx.data.SessionContract;
+import com.example.fadi.testingrx.data.SessionDBHelper;
+import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.StatsCalculator;
 import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
@@ -30,6 +36,8 @@ import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +47,7 @@ import rx.Subscription;
 
 public class NormalModeUvex extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback{
 
-    private static final int MINIMUM_ACTIVITY_TIME=65;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
+    private static final int MINIMUM_ACTIVITY_TIME=35;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
 
     String TAG="UvexN";
 
@@ -669,7 +677,67 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         intent.putExtra(DataProcessing.VIBRATION_DURATION,vibrationTime);
         intent.putExtra(DataProcessing.VIBRATION_INTENSITY,vibrationIntensity);
 
+        //save the same data that got received to database.
+        SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
+
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+        Date resultdate = new Date(System.currentTimeMillis());
+
+        SessionData sd= new SessionData.Builder()
+                .setNumSteps(steps)
+                .setNumStairs(stairs)
+                .setDurationCrouching(totalCrouchingTime)
+                .setDurationKneeling(totalKneelingTime)
+                .setDurationTiptoes(totalTiptoesTime)
+                .setDurationStatic(standingTime)
+                .setDurationWalking(walkingTime)
+                .setCalories(calories)
+                .setDistanceMeters(distanceMeters)
+                .setAngleLeft(leftAngle)
+                .setAngleRight(rightAngle)
+                .setFatigue(0)
+                .setVibrationDuration(vibrationTime)
+                .setVibrationIntensity(vibrationIntensity)
+                .setDateTime(sdf.format(resultdate))
+                .createSessionData();
+
+
+        ContentValues values = new ContentValues();
+
+        populateContentValuesWithSessionData(values,sd);
+
+        long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
+        Log.d(TAG,"after inserting the real activity row, here is its id:"+newRowId);
+
+        db.close();
+        myDBHelper.close();
+
         startActivity(intent);
+    }
+
+    private void populateContentValuesWithSessionData(ContentValues cv, SessionData sd){
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_NUM_STEPS,String.valueOf(sd.getNumSteps()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_NUM_STAIRS,String.valueOf(sd.getNumStairs()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING,String.valueOf(sd.getDurationCrouching()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_KNEELING,String.valueOf(sd.getDurationKneeling()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_TIPTOES,String.valueOf(sd.getDurationTiptoes()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,String.valueOf(sd.getDurationStatic()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING,String.valueOf(sd.getDurationWalking()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION,String.valueOf(sd.getVibrationDuration()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_VIBRATION_INTENSITY,String.valueOf(sd.getVibrationIntensity()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_LEFT,String.valueOf(sd.getAngleLeft()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_RIGHT,String.valueOf(sd.getAngleRight()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_CALORIES,String.valueOf(sd.getCalories()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DISTANCE_METERS,String.valueOf(sd.getDistanceMeters()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL,String.valueOf(sd.getFatigueLevel()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_DATETIME,String.valueOf(sd.getCurrentDateTime()));
     }
 
     @Override

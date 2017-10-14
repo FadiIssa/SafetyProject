@@ -10,7 +10,6 @@ import android.content.pm.PackageInstaller;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,14 +49,12 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     TextView textViewScanStatusLeft;
     TextView textViewScanStatusRight;
 
-
     Button rtButton;
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
 
     Button buttonSaveData;
     Button buttonLoadData;
-
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -69,11 +66,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_launcher);
-
-//        if (getSupportActionBar()!=null) {// at first I had to hide it myself, but when changed styles and added the UI from the original safety app, this started to return null object.
-//            getSupportActionBar().hide();
-//        }
-
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.launcherActivity_toolbar);
         myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
@@ -96,75 +88,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     private void initUI(){
 
-        //ActionBar myActionBar=getSupportActionBar();
-        //myActionBar.setDisplayShowHomeEnabled(true);
-        //myActionBar.setDisplayShowTitleEnabled(false);
-        //myActionBar.setIcon(R.drawable.uvex_logo_launcher_bar);
-        //myActionBar.
-        //myActionBar.setLogo(R.drawable.uvex_logo_launcher_bar);
-
-        //myActionBar.setDisplayShowHomeEnabled(true);
-
-        buttonSaveData = (Button) findViewById(R.id.buttonSaveSession);
-        RxView.clicks(buttonSaveData)
-                .subscribe(a->{
-                    SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
-
-                    //now putting data in the database
-                    // Gets the data repository in write mode
-                    SQLiteDatabase db = myDBHelper.getWritableDatabase();
-                    Log.d(TAG,"after getWritableDB, this is what we got:"+db.toString());
-
-// Create a new map of values, where column names are the keys
-                    ContentValues values = new ContentValues();
-                    values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC, "15");
-                    values.put(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING, "30");
-
-// Insert the new row, returning the primary key value of the new row
-                    long newRowId = db.insert(SessionContract.SessionTable.TABLE_NAME, null, values);
-                    Log.d(TAG,"after inserting a new row, here is its id:"+newRowId);
-
-                    myDBHelper.close();
-                });
-
-        buttonLoadData = (Button) findViewById(R.id.buttonLoadSession);
-        buttonLoadData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
-
-                SQLiteDatabase db = myDBHelper.getReadableDatabase();
-                // so again, I have to write these sql statements, just to ensure the database is working fine.
-                String[] projection = {
-                        SessionContract.SessionTable._ID,
-                        SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,
-                        SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING
-                };
-
-                Cursor myCursor = db.query(
-                        SessionContract.SessionTable.TABLE_NAME,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                );
-
-                myCursor.moveToNext();
-
-                Log.d(TAG," duration static is:"+myCursor.getInt(myCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC)));
-                myDBHelper.close();
-            }
-        });
-
-
-
         buttonScan = (Button) findViewById(R.id.buttonScan);
         buttonScan.setEnabled(false);//because when the activity first starts, it starts scanning automatically.
-
-        //buttonSavedActivity = (Button) findViewById(R.id.buttonSavedActivity);
 
         textViewScanStatusLeft = (TextView) findViewById(R.id.textViewScanStatusLeft);
         textViewScanStatusLeft.setText("");
@@ -177,7 +102,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         rtButton = (Button) findViewById(R.id.buttonRT);
         rtButton.setEnabled(false);
 
-        //imageViewLogo = (ImageView) findViewById(R.id.imageViewLauncherLogo);
 
         if (MyApplication.EltenMode) {
             throw new IllegalArgumentException();

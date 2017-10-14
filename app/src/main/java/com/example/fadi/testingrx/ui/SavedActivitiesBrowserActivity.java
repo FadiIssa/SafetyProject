@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -38,45 +41,21 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_saved_activities_browser);
 
         initUI();
 
-        //drop old database for the sake of it
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.saved_activities_toolbar);
+        myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        //myToolbar.setLogo(getDrawable(R.drawable.uvex_logo_launcher_bar));
+        myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
 
-
-        SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
-
-        SQLiteDatabase db = myDBHelper.getReadableDatabase();
-        // so again, I have to write these sql statements, just to ensure the database is working fine.
-        String[] projection = {
-                SessionContract.SessionTable._ID,
-                SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,
-                SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING
-        };
-
-        Cursor myCursor = db.query(
-                SessionContract.SessionTable.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        //myCursor.moveToNext();
-
-        //Log.d(TAG," duration static is:"+myCursor.getInt(myCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC)));
-
-
-        String fromColumns[]={SessionContract.SessionTable.COLUMN_NAME_DATETIME,SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING};
-        int toViews[]={R.id.item_date_time,R.id.item_walking_time};
-        mSimpleCursorAdapter = new SimpleCursorAdapter(this,R.layout.layout_saved_ctivity_item,myCursor,fromColumns,toViews,0);
-
-        mListView.setAdapter(mSimpleCursorAdapter);
-        myDBHelper.close();
+        readFromDBAndPopulateViews();
     }
 
     private void initUI(){
@@ -178,5 +157,46 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
             intent.putExtra(DataProcessing.VIBRATION_INTENSITY,vibrationIntensity);
 
             }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            return true;
+        } catch (Exception e) {
+            return super.onCreateOptionsMenu(menu);
+        }
+    }
+
+    private void readFromDBAndPopulateViews(){
+        SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
+
+        SQLiteDatabase db = myDBHelper.getReadableDatabase();
+        // so again, I have to write these sql statements, just to ensure the database is working fine.
+        String[] projection = {
+                SessionContract.SessionTable._ID,
+                SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,
+                SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING
+        };
+
+        Cursor myCursor = db.query(
+                SessionContract.SessionTable.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        String fromColumns[]={SessionContract.SessionTable.COLUMN_NAME_DATETIME,SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING};
+        int toViews[]={R.id.item_date_time,R.id.item_walking_time};
+        mSimpleCursorAdapter = new SimpleCursorAdapter(this,R.layout.layout_saved_ctivity_item,myCursor,fromColumns,toViews,0);
+
+        mListView.setAdapter(mSimpleCursorAdapter);
+        db.close();
+        myDBHelper.close();
     }
 }
