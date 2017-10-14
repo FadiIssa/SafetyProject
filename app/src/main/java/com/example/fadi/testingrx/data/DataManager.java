@@ -23,8 +23,4 @@ public class DataManager {
     public int saveSessionData(SessionData s){
         return mDataProcessor.saveSessionData(s);
     }
-
-    public int saveSessionData(SessionData s){
-        return mDataProcessor.saveSessionData(s);
-    }
 }

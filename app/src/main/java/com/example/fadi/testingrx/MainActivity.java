@@ -314,22 +314,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     private void initUI() {
 
         // prepare the drawables that will represent the different postures.
-        if (MyApplication.EltenMode) {
-            throw new IllegalArgumentException("you should not have elten mode true in uvex app");
-//            drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
-//            drawableTipToesBorder = getDrawable(R.drawable.elten_tiptoes_black_border);
-//            drawableCrouchingFull = getDrawable(R.drawable.elten_crouching_black_filled);
-//            drawableCrouchingBorder = getDrawable(R.drawable.elten_crouching_black_border);
-//            drawableKneelingFull = getDrawable(R.drawable.elten_kneeling_black_filled);
-//            drawableKneelingBorder = getDrawable(R.drawable.elten_kneeling_black_border);
-        } else {
-            drawableTipToesFull = getDrawable(R.drawable.tipoesfull);
-            drawableTipToesBorder = getDrawable(R.drawable.tiptoesborder);
-            drawableCrouchingFull = getDrawable(R.drawable.crouchingfull);
-            drawableCrouchingBorder = getDrawable(R.drawable.crouchingborder);
-            drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
-            drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
-        }
+
         if (MyApplication.EltenMode) {
             drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
             drawableTipToesBorder = getDrawable(R.drawable.elten_tiptoes_black_border);

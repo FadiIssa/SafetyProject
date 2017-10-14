@@ -53,9 +53,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
 
-    Button buttonSaveData;
-    Button buttonLoadData;
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -104,20 +101,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
 
         if (MyApplication.EltenMode) {
-            throw new IllegalArgumentException();
-            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
-            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
-            //Drawable rtDrawable=getDrawable(R.drawable.elten_real_time);
-            //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
-//            rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
-//            normalModeButton.setBackground(getDrawable(R.drawable.elten_normal_mode));
-
-            //Drawable rtDrawable=getDrawable(R.drawable.elten_real_time);
-            //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
             rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
             normalModeButton.setBackground(getDrawable(R.drawable.elten_normal_mode));
-
-
         } else {// it is Uvex
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
             rtButton.setBackground(getDrawable(R.drawable.realtime_icon0));
@@ -148,13 +133,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     normalModeButton.setEnabled(false);
                     buttonScan.setEnabled(false);
                 });
-
-//        RxView.clicks(buttonSavedActivity)
-//                .subscribe(a->{
-//                    Intent intent = new Intent(this, SessionStatsActivity.class);
-//                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
-//                    startActivity(intent);
-//                });
     }
 
     @Override
