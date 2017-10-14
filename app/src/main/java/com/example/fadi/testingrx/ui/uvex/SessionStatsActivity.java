@@ -15,12 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
+import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 
 import java.util.Random;
 
@@ -200,7 +202,7 @@ public class SessionStatsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            getMenuInflater().inflate(R.menu.menu_session_stats, menu);
             //menu.findItem(R.id.menuLauncherResetMacAddresses).setVisible(false);
             return true;
         } catch (Exception e) {
@@ -219,6 +221,18 @@ public class SessionStatsActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG,"onDestroy is called");
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_session_stats_history:
+                Intent intent = new Intent(this, SavedActivitiesBrowserActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 

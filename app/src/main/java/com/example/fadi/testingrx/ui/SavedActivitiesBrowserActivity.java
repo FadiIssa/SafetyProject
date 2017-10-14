@@ -1,5 +1,6 @@
 package com.example.fadi.testingrx.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,18 +12,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
+import com.example.fadi.testingrx.data.MockDataProcessor;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
 
+import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 
 
@@ -162,7 +167,7 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            getMenuInflater().inflate(R.menu.menu_saved_activities_browser, menu);
             return true;
         } catch (Exception e) {
             return super.onCreateOptionsMenu(menu);
@@ -191,12 +196,13 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
                 null
         );
 
-        String fromColumns[]={SessionContract.SessionTable.COLUMN_NAME_DATETIME,SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING};
-        int toViews[]={R.id.item_date_time,R.id.item_walking_time};
+        String fromColumns[]={SessionContract.SessionTable.COLUMN_NAME_DATETIME};
+        int toViews[]={R.id.item_date_time};
         mSimpleCursorAdapter = new SimpleCursorAdapter(this,R.layout.layout_saved_ctivity_item,myCursor,fromColumns,toViews,0);
 
         mListView.setAdapter(mSimpleCursorAdapter);
         db.close();
         myDBHelper.close();
     }
+
 }

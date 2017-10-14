@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import com.example.fadi.testingrx.f.StatsCalculator;
 import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
+import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -47,7 +49,7 @@ import rx.Subscription;
 
 public class NormalModeUvex extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback{
 
-    private static final int MINIMUM_ACTIVITY_TIME=35;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
+    private static final int MINIMUM_ACTIVITY_TIME=40;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
 
     String TAG="UvexN";
 
@@ -646,7 +648,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            getMenuInflater().inflate(R.menu.menu_normal_mode, menu);
             return true;
         } catch (Exception e) {
             return super.onCreateOptionsMenu(menu);
@@ -743,18 +745,30 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MyApplication.getBleManager().closeAllConnections();
+        //MyApplication.getBleManager().closeAllConnections();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        MyApplication.getBleManager().closeAllConnections();
+        //MyApplication.getBleManager().closeAllConnections();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.getBleManager().resumeAllConnections();
+        //MyApplication.getBleManager().resumeAllConnections();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_normal_mode_history:
+                Intent intent = new Intent(this, SavedActivitiesBrowserActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
