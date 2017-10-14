@@ -20,7 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +32,7 @@ import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
 import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
-import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
+
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Random;
@@ -49,7 +49,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     TextView textViewScanStatusLeft;
     TextView textViewScanStatusRight;
 
-    ImageView imageViewLogo;
+
     Button rtButton;
     Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
@@ -281,7 +281,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_LEFT,String.valueOf(sd.getAngleLeft()));
         cv.put(SessionContract.SessionTable.COLUMN_NAME_ANGLE_RIGHT,String.valueOf(sd.getAngleRight()));
 
-        //cv.put(SessionContract.SessionTable.COLUMN_NAME_CALORIES,String.valueOf(sd.getCalories()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_CALORIES,String.valueOf(sd.getCalories()));
         cv.put(SessionContract.SessionTable.COLUMN_NAME_DISTANCE_METERS,String.valueOf(sd.getDistanceMeters()));
         cv.put(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL,String.valueOf(sd.getFatigueLevel()));
 

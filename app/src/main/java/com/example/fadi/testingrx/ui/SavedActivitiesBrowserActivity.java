@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.SystemClock;
+
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.ExpandedMenuView;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,10 +19,9 @@ import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
-import com.example.fadi.testingrx.data.SessionData;
+
 import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 
-import java.util.Random;
 
 /**
  * Created by fadi on 13/10/2017.
@@ -72,8 +71,8 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
         //Log.d(TAG," duration static is:"+myCursor.getInt(myCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC)));
 
 
-        String fromColumns[]={SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC,SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING};
-        int toViews[]={R.id.item_static_duration,R.id.item_duration_crouching};
+        String fromColumns[]={SessionContract.SessionTable.COLUMN_NAME_DATETIME,SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING};
+        int toViews[]={R.id.item_date_time,R.id.item_walking_time};
         mSimpleCursorAdapter = new SimpleCursorAdapter(this,R.layout.layout_saved_ctivity_item,myCursor,fromColumns,toViews,0);
 
         mListView.setAdapter(mSimpleCursorAdapter);
@@ -86,7 +85,7 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ((TextView)view.findViewById(R.id.item_static_duration)).setText("fadi");
+                //((TextView)view.findViewById(R.id.item_static_duration)).setText("fadi");
                 Log.d(TAG,"i:"+i+",  l:"+l);
                 //guerying the database for the specific row id
                 SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
@@ -122,25 +121,61 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
     private void populateIntentWithSessionDataFromCursor(Intent intent, Cursor mCursor){
         if (mCursor.moveToNext()){
 
-//            int numSteps=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_NUM_STEPS));
-//            Log.d(TAG,"populate: nSteps="+numSteps);
-//            intent.putExtra(DataProcessing.NUM_STEPS,numSteps);
+            int numSteps=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_NUM_STEPS));
+            Log.d(TAG,"populate: nSteps="+numSteps);
+            intent.putExtra(DataProcessing.NUM_STEPS,numSteps);
 
-            //intent.putExtra(DataProcessing.NUM_STAIRS,sessionData.getNumStairs());
+            int numStairs=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_NUM_STAIRS));
+            Log.d(TAG,"populate: nStairs="+numStairs);
+            intent.putExtra(DataProcessing.NUM_STAIRS,numStairs);
+
             int durationCrouching=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_CROUCHING));
+            Log.d(TAG,"populate: dCrouching="+durationCrouching);
             intent.putExtra(DataProcessing.DURATION_CROUCHING,durationCrouching);
 
-//            intent.putExtra(DataProcessing.DURATION_KNEELING,sessionData.getDurationKneeling());
-//            intent.putExtra(DataProcessing.DURATION_TIPTOES,sessionData.getDurationTiptoes());
-//            intent.putExtra(DataProcessing.DURATION_WALKING,sessionData.getDurationWalking());
-//            intent.putExtra(DataProcessing.DURATION_STATIC,sessionData.getDurationStatic());
-//            intent.putExtra(DataProcessing.CALORIES,sessionData.getCalories());
-//            intent.putExtra(DataProcessing.DISTANCE_METERS,sessionData.getDistanceMeters());
-//            intent.putExtra(DataProcessing.ANGLE_LEFT,sessionData.getAngleLeft());
-//            intent.putExtra(DataProcessing.ANGLE_RIGHT,sessionData.getAngleRight());
-//            intent.putExtra(DataProcessing.FATIGUE,sessionData.getFatigueLevel());
-//            intent.putExtra(DataProcessing.VIBRATION_DURATION,sessionData.getVibrationDuration());
-//            intent.putExtra(DataProcessing.VIBRATION_INTENSITY,randomVibrationIntensity);
+            int durationKneeling=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_KNEELING));
+            Log.d(TAG,"populate: dKneeling="+durationKneeling);
+            intent.putExtra(DataProcessing.DURATION_KNEELING,durationKneeling);
+
+            int durationTiptoes=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_TIPTOES));
+            Log.d(TAG,"populate: dTiptpes="+durationTiptoes);
+            intent.putExtra(DataProcessing.DURATION_TIPTOES,durationTiptoes);
+
+            int durationWalking=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_WALKING));
+            Log.d(TAG,"populate: dWalking="+durationWalking);
+            intent.putExtra(DataProcessing.DURATION_WALKING,durationWalking);
+
+            int durationStatic=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_STATIC));
+            Log.d(TAG,"populate: dStatic="+durationStatic);
+            intent.putExtra(DataProcessing.DURATION_STATIC,durationStatic);
+
+            int calories=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_CALORIES));
+            Log.d(TAG,"populate: calories="+calories);
+            intent.putExtra(DataProcessing.CALORIES,calories);
+
+            int distanceMeters=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DISTANCE_METERS));
+            Log.d(TAG,"populate: distance="+distanceMeters);
+            intent.putExtra(DataProcessing.DISTANCE_METERS,distanceMeters);
+
+            int angleLeft=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_ANGLE_LEFT));
+            Log.d(TAG,"populate: angleLeft="+angleLeft);
+            intent.putExtra(DataProcessing.ANGLE_LEFT,angleLeft);
+
+            int angleRight=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_ANGLE_RIGHT));
+            Log.d(TAG,"populate: angleRight="+angleRight);
+            intent.putExtra(DataProcessing.ANGLE_RIGHT,angleRight);
+
+            int fatigue= mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL));
+            Log.d(TAG,"populate: fatigue="+fatigue);
+            intent.putExtra(DataProcessing.FATIGUE,fatigue);
+
+            int durationVibration=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_DURATION_VIBRATION));
+            Log.d(TAG,"populate: durationVibration="+durationVibration);
+            intent.putExtra(DataProcessing.VIBRATION_DURATION,durationVibration);
+
+            int vibrationIntensity=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_VIBRATION_INTENSITY));
+            Log.d(TAG,"populate: vibrationIntensity="+vibrationIntensity);
+            intent.putExtra(DataProcessing.VIBRATION_INTENSITY,vibrationIntensity);
 
             }
     }

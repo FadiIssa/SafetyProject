@@ -91,6 +91,7 @@ public class StatsCalculator {
 
         // calculating pronation supination angle of left insole
         angleLeft = (bytes[9] & 0xFF) | ((bytes[10]) << 8);
+        angleLeft = angleLeft/10;
         Log.d(TAG, " angle of left is:" + angleLeft);
 
         // calculating total walking time of left insole
@@ -131,6 +132,7 @@ public class StatsCalculator {
 
         // calculating pronation supination angle of Right insole
         angleRight = (bytes[9] & 0xFF) | ((bytes[10]) << 8);
+        angleRight= angleRight/10;
         Log.d(TAG, " angle of Right is:" + angleRight);
 
         // calculating total walking time of Right insole
