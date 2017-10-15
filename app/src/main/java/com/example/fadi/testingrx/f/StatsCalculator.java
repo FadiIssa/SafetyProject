@@ -106,6 +106,7 @@ public class StatsCalculator {
         firstByteVibrationLeft = bytes[15];
 
         firstHalfLeftReceived = true;
+        Log.d(TAG,"firstHalfLeft is received");
     }
 
     public void processSecondHalfLeft(byte[] bytes){
@@ -114,6 +115,7 @@ public class StatsCalculator {
         vibrationTimeLeft = (firstByteVibrationLeft&0xFF)|((secondByteVibrationLeft) <<8);
 
         secondHalfLeftReceived = true;
+        Log.d(TAG,"secondHalfLeft is received");
         notifyCallerIfReady();
     }
 
@@ -147,6 +149,7 @@ public class StatsCalculator {
         firstByteVibrationRight = bytes[15];
 
         firstHalfRightReceived = true;
+        Log.d(TAG,"firstHalfRight is received");
     }
 
     public void processSecondHalfRight(byte[] bytes){
@@ -155,6 +158,7 @@ public class StatsCalculator {
         vibrationTimeRight = (firstByteVibrationRight&0xFF)|((secondByteVibrationRight) <<8);
 
         secondHalfRightReceived = true;
+        Log.d(TAG,"secondHalfRigh is received");
 
         notifyCallerIfReady();
 
