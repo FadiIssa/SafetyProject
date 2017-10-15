@@ -56,7 +56,7 @@
 
 
             android:layout_marginTop="20dp"
-            android:src="@drawable/uvex_angles"
+            android:src="@drawable/uvex_shoes_small"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_pronation_supination"
