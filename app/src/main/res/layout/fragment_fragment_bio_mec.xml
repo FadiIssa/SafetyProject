@@ -125,7 +125,7 @@
 
 
             android:layout_marginTop="20dp"
-            android:src="@drawable/strike_pattern_elten"
+            android:src="@drawable/uvex_feet"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_strike_pattern"
