@@ -501,10 +501,10 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         drawableRightConnecting = getDrawable(R.drawable.ic_connecting_right);
 
         drawableTimer0 = getDrawable(R.drawable.ic_timer0);
-        drawableTimer1 = getDrawable(R.drawable.ic_timer1);
-        drawableTimer2 = getDrawable(R.drawable.ic_timer2);
-        drawableTimer3 = getDrawable(R.drawable.ic_timer3);
-        drawableTimer4 = getDrawable(R.drawable.ic_timer4);
+        drawableTimer1 = getDrawable(R.drawable.uvex_timer_1);
+        drawableTimer2 = getDrawable(R.drawable.uvex_timer_2);
+        drawableTimer3 = getDrawable(R.drawable.uvex_timer_3);
+        drawableTimer4 = getDrawable(R.drawable.uvex_timer_4);
 
         drawableConnectionStopped = getDrawable(R.drawable.elten_connection_stopped);
 
