@@ -665,7 +665,8 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         Intent intent=new Intent(this,SessionStatsActivity.class);
 
         intent.putExtra(DataProcessing.NUM_STEPS,steps);
-        intent.putExtra(DataProcessing.NUM_STAIRS,stairs);
+        //intent.putExtra(DataProcessing.NUM_STAIRS,stairs);
+        intent.putExtra(DataProcessing.NUM_STAIRS,0);// remove this line and uncomment the above line to get the real count of the stairs.
         intent.putExtra(DataProcessing.DURATION_CROUCHING,totalCrouchingTime);
         intent.putExtra(DataProcessing.DURATION_KNEELING,totalKneelingTime);
         intent.putExtra(DataProcessing.DURATION_TIPTOES,totalTiptoesTime);
@@ -689,7 +690,8 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
 
         SessionData sd= new SessionData.Builder()
                 .setNumSteps(steps)
-                .setNumStairs(stairs)
+                //.setNumStairs(stairs)
+                .setNumStairs(0)//remove this line and uncomment the above line to get the real number of stairs.
                 .setDurationCrouching(totalCrouchingTime)
                 .setDurationKneeling(totalKneelingTime)
                 .setDurationTiptoes(totalTiptoesTime)
