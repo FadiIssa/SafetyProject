@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
             drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
         }
         if (MyApplication.EltenMode) {
-            drawableUnknown = getDrawable(R.drawable.elten_logo_red_big );
+            drawableUnknown = getDrawable(R.drawable.zt_logo_big );
         }else {
             drawableUnknown = getDrawable(R.drawable.unknownposition);
         }
@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
         if (MyApplication.EltenMode) {
-            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
+            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.zt_logo_big));
         } else {
             currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
         }

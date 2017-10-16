@@ -60,6 +60,7 @@ public class SessionStatsActivity extends AppCompatActivity {
     int fatigue;
     int vibrationDuration;
     int vibrationIntensity;
+    int slip;
 
     SessionDBHelper myDBHelper;
 
@@ -94,6 +95,7 @@ public class SessionStatsActivity extends AppCompatActivity {
         this.vibrationDuration=receivedIntent.getIntExtra(DataProcessing.VIBRATION_DURATION,-1);
 
         this.vibrationIntensity=receivedIntent.getIntExtra(DataProcessing.VIBRATION_INTENSITY,-2);
+        this.slip=receivedIntent.getIntExtra(DataProcessing.SLIP,0);
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
@@ -129,6 +131,11 @@ public class SessionStatsActivity extends AppCompatActivity {
         tab = ((TabLayout) findViewById(R.id.tab_layout)).getTabAt(4);
         if (tab != null) {
             tab.setIcon(R.drawable.icon_tab_posture);
+        }
+
+        tab = ((TabLayout) findViewById(R.id.tab_layout)).getTabAt(5);
+        if (tab != null) {
+            tab.setIcon(R.drawable.icon_tab_slip);
         }
     }
 
@@ -188,6 +195,12 @@ public class SessionStatsActivity extends AppCompatActivity {
                     bundle5.putInt(DataProcessing.DURATION_STATIC,durationStatic);
                     result5.setArguments(bundle5);
                     return result5;
+                case 5:
+                    Fragment result6 = new FragmentSlip();
+                    Bundle bundle6= new Bundle();
+                    bundle6.putInt(DataProcessing.SLIP,slip);
+                    result6.setArguments(bundle6);
+                    return result6;
                 default:
                     return new Fragment2();
 
@@ -197,7 +210,7 @@ public class SessionStatsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 6;
         }
     }
 

@@ -24,6 +24,7 @@ public class MockDataProcessor implements DataProcessing {
                 .setAngleRight(6)
                 .setFatigue(8)
                 .setVibrationDuration(33)
+                .setSlip(2)
                 .setVibrationIntensity(44)// be careful, this method does not set datetime object
                 .createSessionData();
 
@@ -54,6 +55,7 @@ public class MockDataProcessor implements DataProcessing {
                 .setVibrationDuration(33)
                 .setVibrationIntensity(44)
                 .setDateTime(sdf.format(resultdate))
+                .setSlip(2)
                 .createSessionData();
 
         return result;
@@ -78,6 +80,7 @@ public class MockDataProcessor implements DataProcessing {
                 .setFatigue(3)
                 .setVibrationDuration(74)
                 .setVibrationIntensity(34)
+                .setSlip(1)
                 .setDateTime(sdf.format(resultdate))
                 .createSessionData();
 

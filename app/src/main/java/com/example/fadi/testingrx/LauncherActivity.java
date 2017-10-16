@@ -194,6 +194,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         cv.put(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL,String.valueOf(sd.getFatigueLevel()));
 
         cv.put(SessionContract.SessionTable.COLUMN_NAME_DATETIME,String.valueOf(sd.getCurrentDateTime()));
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_SLIP,String.valueOf(sd.getSlip()));
+        Log.d(TAG,"slip received from session data is:"+sd.getSlip());
     }
 
     @Override

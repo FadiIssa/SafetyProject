@@ -46,6 +46,8 @@ public class StatsCalculator {
 
     int vibrationIntensity;
 
+    int slip;
+
     byte firstByteVibrationLeft;
     byte firstByteVibrationRight;
 
@@ -230,6 +232,8 @@ public class StatsCalculator {
                     String.valueOf(caloriesInt)+" Kcal"
                     );
 
+            slip=0;
+
             caller.updateStatsOnUIValues(
                     (standingTimeLeft+standingTimeRight)/2,
                     numberOfStairsLeft+numberOfStairsRight,
@@ -240,7 +244,8 @@ public class StatsCalculator {
                     angleRight,
                     distance,
                     caloriesInt,
-                    vibrationIntensity
+                    vibrationIntensity,
+                    slip
             );
 
         }

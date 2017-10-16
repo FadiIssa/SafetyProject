@@ -656,7 +656,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     }
 
     @Override
-    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories, int vibrationIntensity) {
+    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories, int vibrationIntensity, int slip) {
 
         //release any connection, to allow reconnecting when restarting the app for example.
         //MyApplication.getBleManager().closeAllConnections();//maybe I should not cancel all subscriptions, since going back to previous activities will not enable reconnecting automatically, the retryConnection will be disabled, to solve this, handle the reconnection and unsubscribing in onStop, onResume callbacks of the activity lifecycle.
@@ -679,6 +679,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         intent.putExtra(DataProcessing.FATIGUE,0);//needs to be calculated
         intent.putExtra(DataProcessing.VIBRATION_DURATION,vibrationTime);
         intent.putExtra(DataProcessing.VIBRATION_INTENSITY,vibrationIntensity);
+        intent.putExtra(DataProcessing.SLIP, slip);
 
         //save the same data that got received to database.
         SessionDBHelper myDBHelper = new SessionDBHelper(getApplicationContext());
@@ -705,6 +706,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
                 .setVibrationDuration(vibrationTime)
                 .setVibrationIntensity(vibrationIntensity)
                 .setDateTime(sdf.format(resultdate))
+                .setSlip(slip)
                 .createSessionData();
 
 
@@ -742,6 +744,8 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
         cv.put(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL,String.valueOf(sd.getFatigueLevel()));
 
         cv.put(SessionContract.SessionTable.COLUMN_NAME_DATETIME,String.valueOf(sd.getCurrentDateTime()));
+
+        cv.put(SessionContract.SessionTable.COLUMN_NAME_SLIP,String.valueOf(sd.getSlip()));
     }
 
     @Override

@@ -21,6 +21,7 @@ public interface DataProcessing {
     static final String VIBRATION_DURATION="vibration_duration";
     static final String VIBRATION_INTENSITY="vibration_intensity";
     static final String DATE_TIME="date_time";
+    static final String SLIP="slip";
 
     SessionData getSessionData(int day, int month, int year);
 

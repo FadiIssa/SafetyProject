@@ -25,7 +25,9 @@ public class SessionData {
 
     String currentDateTime;
 
-    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime, int vibrationIntensity, String dateTime){
+    int slip;
+
+    private SessionData(int nSteps, int nStairs, int dWalking, int dStatic, int dCrouching, int dKneeling, int dTiptoes, int nCalories, int distance, int angleLeft, int angleRight, int fatigue, int vibrationTime, int vibrationIntensity, String dateTime, int slip){
         this.numSteps=nSteps;
         this.numStairs=nStairs;
         this.durationWalking=dWalking;
@@ -41,6 +43,7 @@ public class SessionData {
         this.vibrationDuration=vibrationTime;
         this.vibrationIntensity=vibrationIntensity;
         this.currentDateTime=dateTime;
+        this.slip=slip;
     }
 
     public int getNumSteps() {
@@ -103,6 +106,8 @@ public class SessionData {
         return currentDateTime;
     }
 
+    public int getSlip() {return slip;}
+
 
     public static class Builder {
         int numSteps;
@@ -120,6 +125,7 @@ public class SessionData {
         int vibrationDuration;
         int vibrationIntensity;
         String currentDateTime;
+        int slip;
 
         public Builder setNumSteps(int n){
             this.numSteps = n;
@@ -189,6 +195,11 @@ public class SessionData {
             return this;
         }
 
+        public Builder setSlip(int s){
+            this.slip=s;
+            return this;
+        }
+
         public SessionData createSessionData(){
             return new SessionData(
                     this.numSteps,
@@ -205,7 +216,8 @@ public class SessionData {
                     this.fatigueLevel,
                     this.vibrationDuration,
                     this.vibrationIntensity,
-                    this.currentDateTime
+                    this.currentDateTime,
+                    this.slip
             );
         }
     }

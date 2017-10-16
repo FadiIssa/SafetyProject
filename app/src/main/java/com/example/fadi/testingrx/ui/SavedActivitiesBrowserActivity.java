@@ -161,6 +161,10 @@ public class SavedActivitiesBrowserActivity extends AppCompatActivity {
             Log.d(TAG,"populate: vibrationIntensity="+vibrationIntensity);
             intent.putExtra(DataProcessing.VIBRATION_INTENSITY,vibrationIntensity);
 
+            int slipTimes=mCursor.getInt(mCursor.getColumnIndex(SessionContract.SessionTable.COLUMN_NAME_SLIP));
+            Log.d(TAG,"populate: slip times="+slipTimes);
+            intent.putExtra(DataProcessing.SLIP,slipTimes);
+
             }
     }
 

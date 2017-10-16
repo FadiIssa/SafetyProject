@@ -607,7 +607,7 @@ public class ActivityNormalModeElten extends AppCompatActivity implements StatsC
     }
 
     @Override
-    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories, int vibIntensity) {
+    public void updateStatsOnUIValues(int standingTime, int stairs, int steps, int walkingTime, int vibrationTime, int leftAngle, int rightAngle, int distanceMeters, int calories, int vibIntensity, int slip) {
 
         //release any connection, to allow reconnecting when restarting the app for example.
         //MyApplication.getBleManager().closeAllConnections();//maybe I should not cancel all subscriptions, since going back to previous activities will not enable reconnecting automatically, the retryConnection will be disabled, to solve this, handle the reconnection and unsubscribing in onStop, onResume callbacks of the activity lifecycle.
