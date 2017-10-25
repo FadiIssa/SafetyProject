@@ -76,7 +76,8 @@ public class PostureTracker {
             currentPosture=Postures.KNEELING;
             Log.d("RXTesting","position:"+position);
         }
-        else if (latestRZ>400 && latestRZ<700 && latestLZ>400 && latestLZ<700 && latestRY>600 && latestLY>600) {
+        else //if (latestRZ>400 && latestRZ<700 && latestLZ>400 && latestLZ<700 && latestRY>600 && latestLY>600) {
+            if (latestRZ>350 && latestRZ<900 && latestLZ>350 && latestLZ<900 && latestRY>400 && latestLY>400) {
                  position=Postures.TIPTOES;
                 currentPosture=Postures.TIPTOES;
                 Log.d("RXTesting","position:"+position);
