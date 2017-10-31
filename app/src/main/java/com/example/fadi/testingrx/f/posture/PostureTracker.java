@@ -65,8 +65,10 @@ public class PostureTracker {
 
         Log.d("RXTesting","processLatestAccelometerReading(): latest LX:"+latestLX+" LY:"+latestLY+" LZ:"+latestLZ+" RX:"+latestRX+" RY:"+latestRY+" RZ:"+latestRZ);
         if (
-                (latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300)
-            ||  (latestLZ<300 && latestRZ>800 && latestRZ<1100 && latestLY>700 && latestRY<300 && latestRY>-300)
+                //(latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300)
+                (latestRZ<450 && latestLZ>800 && latestLZ<1100 && latestRY>550 && latestLY<300 && latestLY>-300)
+            ||  //(latestLZ<300 && latestRZ>800 && latestRZ<1100 && latestLY>700 && latestRY<300 && latestRY>-300)
+                        (latestLZ<450 && latestRZ>800 && latestRZ<1100 && latestLY>550 && latestRY<300 && latestRY>-300)
                 ){
             position=Postures.CROUCHING;
             currentPosture=Postures.CROUCHING;
@@ -77,7 +79,7 @@ public class PostureTracker {
             Log.d("RXTesting","position:"+position);
         }
         else //if (latestRZ>400 && latestRZ<700 && latestLZ>400 && latestLZ<700 && latestRY>600 && latestLY>600) {
-            if (latestRZ>350 && latestRZ<900 && latestLZ>350 && latestLZ<900 && latestRY>400 && latestLY>400) {
+            if (latestRZ>350 && latestRZ<900 && latestLZ>350 && latestLZ<900 && latestRY>450 && latestLY>450) {
                  position=Postures.TIPTOES;
                 currentPosture=Postures.TIPTOES;
                 Log.d("RXTesting","position:"+position);

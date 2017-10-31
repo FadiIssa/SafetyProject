@@ -27,6 +27,7 @@ import rx.schedulers.Schedulers;
 public class ScanManager {
 
     String TAG="ScanMgr";
+    final int MAXIMUM_SCAN_TIME=5;
 
     RxBleClient rxBleClient;// it will be passed to it, ideally, it should ask for it locally from the Application.
     // should be called from the bleManager, try to pass an inner class that implements a functional interface, in order to notify the ble manager about the finishing of the scanning.
@@ -289,7 +290,7 @@ public class ScanManager {
     //the purpose is to unsubscribe the scanning (to close scanning) after a timer is finished (in case the scanning was not finished already for finding the desired insoles).
     private void startScanTimer() {
         Observable.interval(1, TimeUnit.SECONDS)
-                .take(5)
+                .take(MAXIMUM_SCAN_TIME)
                 .subscribe(aLong -> {
                             Log.d(TAG,"one second of scanning passed, it is:"+aLong);
                         },
