@@ -12,6 +12,7 @@ import com.polidea.rxandroidble.utils.ConnectionSharingAdapter;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Observer;
@@ -133,6 +134,7 @@ public class RTConnectionManager {
                 rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_ACCELEROMETER))
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .sample(1000, TimeUnit.MILLISECONDS)
                         .subscribe(myLeftAccelometerNotifyObserver);
             }
         };
@@ -168,6 +170,7 @@ public class RTConnectionManager {
 
                 rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_ACCELEROMETER))
                         .observeOn(AndroidSchedulers.mainThread())
+                        .sample(1000, TimeUnit.MILLISECONDS)
                         .subscribe(myRightAccelometerNotifyObserver);
             }
         };
