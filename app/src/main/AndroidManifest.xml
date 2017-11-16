@@ -17,48 +17,46 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LauncherActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_launcher"
+            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
         <activity
             android:name=".NormalModeActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_normal_mode"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.onboarding.Login" />
-        <activity android:name=".ui.onboarding.ProfileActivity"/>
-        <activity android:name=".ui.uvex.NormalModeUvex"
-            android:screenOrientation="portrait"
+        <activity android:name=".ui.onboarding.ProfileActivity" />
+        <activity
+            android:name=".ui.uvex.NormalModeUvex"
             android:label="@string/title_activity_normal_mode"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
-        </activity>
-        <activity android:name=".ui.uvex.SessionStatsActivity"
             android:screenOrientation="portrait"
-            >
-
-        </activity>
-
-        <activity android:name=".ui.SavedActivitiesBrowserActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ui.uvex.SessionStatsActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.SavedActivitiesBrowserActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.ManDownActivity"
+            android:label="@string/title_activity_man_down"
             android:screenOrientation="portrait"
-            >
-
+            android:theme="@style/AppTheme">
 
         </activity>
-
     </application>
 
 </manifest>

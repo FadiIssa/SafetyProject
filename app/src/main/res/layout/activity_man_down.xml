@@ -1,0 +1,146 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@android:style/Theme.Black"
+    android:background="@color/fWhite"
+    tools:context="com.example.fadi.testingrx.ui.ManDownActivity"
+    >
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_mandown_activity"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintHorizontal_bias="0.0" />
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarMandownLabel"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_height="40dp"
+        app:title="ManDown"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_mandown_activity"
+        >
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <ProgressBar
+        android:id="@+id/progressBarMandown"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:max="500"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarMandownLabel"
+        tools:layout_editor_absoluteY="248dp" />
+
+    <TextView
+        android:id="@+id/tv_mandown_counter"
+        android:layout_alignLeft="@id/progressBarMandown" android:layout_alignTop="@id/progressBarMandown"
+        android:layout_alignRight="@id/progressBarMandown" android:layout_alignBottom="@id/progressBarMandown"
+        app:layout_constraintStart_toStartOf="@id/progressBarMandown"
+        app:layout_constraintEnd_toEndOf="@id/progressBarMandown"
+        app:layout_constraintTop_toTopOf="@id/progressBarMandown"
+        app:layout_constraintBottom_toBottomOf="@id/progressBarMandown"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="32dp"
+        android:text=""
+        android:background="@android:color/transparent" >
+
+    </TextView>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayoutNeedHelpNow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:clickable="true"
+        app:layout_constraintTop_toBottomOf="@id/progressBarMandown"
+        app:layout_constraintBottom_toTopOf="@id/constraintLayoutIAMOK"
+        tools:context="com.example.fadi.testingrx.ui.ManDownActivity"
+        >
+
+        <TextView
+            android:id="@+id/needHelpPart1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap if you "
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/needHelpPart1"
+            android:text="need help now"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="32dp"
+            android:text="SOS"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayoutIAMOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        >
+
+        <TextView
+            android:id="@+id/noNeedForHelpPart1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap if you "
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/noNeedForHelpPart1"
+            android:text="need help now"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="32dp"
+            android:text="OK"
+            android:textColor="@android:color/holo_green_light"
+            android:textStyle="bold"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.constraint.ConstraintLayout>
+
+

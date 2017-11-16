@@ -9,4 +9,5 @@ public class Postures {
     public static int KNEELING=2;
     public static int TIPTOES=3;
     public static int UNKNOWN=4;
+    public static int FALLDOWN=5;
 }
