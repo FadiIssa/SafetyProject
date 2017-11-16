@@ -69,6 +69,9 @@ dependencies {
     compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
 
+    // for the ring chart
+    compile 'com.txusballesteros:FitChart:1.0'
+
     // from Original Safety app
     // Firebase
     compile "com.google.firebase:firebase-appindexing:$rootProject.googlePlayServices"

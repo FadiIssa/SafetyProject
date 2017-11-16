@@ -84,8 +84,15 @@ public class PostureTracker {
                 currentPosture=Postures.TIPTOES;
                 Log.d("RXTesting","position:"+position);
         } else {
-            position=Postures.UNKNOWN;
-            currentPosture=Postures.UNKNOWN;
+            if (latestRZ<200 && latestLZ<200 && latestRY<-800 && latestLY<-800){
+                position=Postures.FALLDOWN;
+                currentPosture=Postures.FALLDOWN;
+                Log.d("RXTesting", "position:"+position);
+            }
+            else {
+                position = Postures.UNKNOWN;
+                currentPosture = Postures.UNKNOWN;
+            }
         }
 
         processCounters();

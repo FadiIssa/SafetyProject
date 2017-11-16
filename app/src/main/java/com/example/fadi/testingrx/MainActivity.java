@@ -20,6 +20,7 @@ import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.example.fadi.testingrx.f.posture.Postures;
+import com.example.fadi.testingrx.ui.ManDownActivity;
 import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.polidea.rxandroidble.RxBleConnection;
 
@@ -52,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     ImageView kneelingImageView;
     ImageView crouchingImageView;
 
+
+    boolean manDownStarted;
+
     TextView counterCurrentPostureTextView;
     TextView counterCrouchingTextView;
     TextView counterKneelingTextView;
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     Drawable drawableTipToesBorder;
     Drawable drawableCrouchingBorder;
     Drawable drawableKneelingBorder;
+    Drawable drawableFallDown;
     Drawable drawableUnknown;
 
     //Subscription leftInsoleIndicationSubscription;
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
 
+        manDownStarted=false;
         Toolbar myToolbar = (Toolbar) findViewById(R.id.mainActivity_toolbar);
         myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
         //myToolbar.setLogo(getDrawable(R.drawable.uvex_logo_launcher_bar));
@@ -226,7 +232,15 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
                     currentPostureImageView.setImageDrawable(currentPositionCounter>=4? drawableCrouchingFull:drawableCrouchingBorder);
                 } else if (i== Postures.KNEELING){
                     currentPostureImageView.setImageDrawable(currentPositionCounter>=4? drawableKneelingFull:drawableKneelingBorder);
-                } else if (i== Postures.UNKNOWN){
+                } else if (i==Postures.FALLDOWN){
+                    currentPostureImageView.setImageDrawable(drawableFallDown);
+                    if (!manDownStarted) {
+                        Intent intent = new Intent(getApplicationContext(), ManDownActivity.class);
+                        startActivity(intent);
+                        manDownStarted=true;
+                    }
+                }
+                else if (i== Postures.UNKNOWN){
                     currentPostureImageView.setImageDrawable(drawableUnknown);
                 }
 
@@ -315,6 +329,13 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
 
         // prepare the drawables that will represent the different postures.
         if (MyApplication.EltenMode) {
+            drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
+            drawableTipToesBorder = getDrawable(R.drawable.elten_tiptoes_black_border);
+            drawableCrouchingFull = getDrawable(R.drawable.elten_crouching_black_filled);
+            drawableCrouchingBorder = getDrawable(R.drawable.elten_crouching_black_border);
+            drawableKneelingFull = getDrawable(R.drawable.elten_kneeling_black_filled);
+            drawableKneelingBorder = getDrawable(R.drawable.elten_kneeling_black_border);
+            drawableFallDown = getDrawable(R.drawable.ic_fall_border);
             throw new IllegalArgumentException("you should not have elten mode true in uvex app");
 //            drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
 //            drawableTipToesBorder = getDrawable(R.drawable.elten_tiptoes_black_border);
@@ -329,7 +350,9 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
             drawableCrouchingBorder = getDrawable(R.drawable.crouchingborder);
             drawableKneelingFull = getDrawable(R.drawable.kneelingfull);
             drawableKneelingBorder = getDrawable(R.drawable.kneelingborder);
+            drawableFallDown = getDrawable(R.drawable.ic_fall_border);
         }
+
         if (MyApplication.EltenMode) {
             drawableUnknown = getDrawable(R.drawable.elten_logo_red_big );
         }else {
@@ -411,5 +434,11 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     protected void onStop() {
         super.onStop();
         Log.d(TAG,"onStop is called for the MainActivity");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        manDownStarted=false;
     }
 }

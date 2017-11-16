@@ -6,8 +6,6 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInstaller;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import android.os.SystemClock;
@@ -17,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -41,20 +38,19 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class LauncherActivity extends AppCompatActivity implements ScanStatusCallback{
-    static final String LEFT_INSOLE_MAC_KEY="leftInsoleMac";
-    static final String RIGHT_INSOLE_MAC_KEY="rightInsoleMac";
-    public static final String SHARED_PREF_ENTRY="PairedDevices";
+    private static final String KEY_LEFT_INSOLE_MAC="leftInsoleMac";
+    private static final String KEY_RIGHT_INSOLE_MAC ="rightInsoleMac";
+
+    static final String SHARED_PREF_ENTRY="PairedDevices";
+
     String TAG="1Act";
 
     TextView textViewScanStatusLeft;
     TextView textViewScanStatusRight;
 
-    Button rtButton;
-    Button normalModeButton;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
+    Button buttonRealTime;
+    Button buttonNormalMode;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
     Button buttonScan;
-
-    Button buttonSaveData;
-    Button buttonLoadData;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -96,37 +92,30 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         textViewScanStatusRight = (TextView) findViewById(R.id.textViewScanStatusRight);
         textViewScanStatusRight.setText("");
 
-        normalModeButton = (Button) findViewById(R.id.buttonNormalMode);
-        normalModeButton.setEnabled(false);
+        buttonNormalMode = (Button) findViewById(R.id.buttonNormalMode);
+        buttonNormalMode.setEnabled(false);
 
-        rtButton = (Button) findViewById(R.id.buttonRT);
-        rtButton.setEnabled(false);
+        buttonRealTime = (Button) findViewById(R.id.buttonRT);
+        buttonRealTime.setEnabled(false);
 
 
         if (MyApplication.EltenMode) {
-            throw new IllegalArgumentException();
-            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo));
-            //imageViewLogo.setImageDrawable(getDrawable(R.drawable.elten_logo_red));
-            //Drawable rtDrawable=getDrawable(R.drawable.elten_real_time);
-            //rtDrawable.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
-//            rtButton.setBackground(getDrawable(R.drawable.elten_real_time));
-//            normalModeButton.setBackground(getDrawable(R.drawable.elten_normal_mode));
-
-
+            buttonRealTime.setBackground(getDrawable(R.drawable.elten_real_time));
+            buttonNormalMode.setBackground(getDrawable(R.drawable.elten_normal_mode));
         } else {// it is Uvex
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
-            rtButton.setBackground(getDrawable(R.drawable.realtime_icon0));
-            normalModeButton.setBackground(getDrawable(R.drawable.normalmode_icon));
+            buttonRealTime.setBackground(getDrawable(R.drawable.realtime_icon0));
+            buttonNormalMode.setBackground(getDrawable(R.drawable.normalmode_icon));
         }
 
-        RxView.clicks(rtButton)
+        RxView.clicks(buttonRealTime)
                 .subscribe(a-> {
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                     finish();//for demo mode
                 });
 
-        RxView.clicks(normalModeButton)
+        RxView.clicks(buttonNormalMode)
                 .subscribe(a->{
                     //Intent intent = new Intent(this, NormalModeActivity.class);
                     //Intent intent = new Intent(this, Login.class);
@@ -139,17 +128,10 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         RxView.clicks(buttonScan)
                 .subscribe(a->{
                     scan();
-                    rtButton.setEnabled(false);
-                    normalModeButton.setEnabled(false);
+                    buttonRealTime.setEnabled(false);
+                    buttonNormalMode.setEnabled(false);
                     buttonScan.setEnabled(false);
                 });
-
-//        RxView.clicks(buttonSavedActivity)
-//                .subscribe(a->{
-//                    Intent intent = new Intent(this, SessionStatsActivity.class);
-//                    populateIntentWithSessionData(intent,MyApplication.getDataManager().getSessionData(1,1,1));
-//                    startActivity(intent);
-//                });
     }
 
     @Override
@@ -252,14 +234,14 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     public void scanStatusFinished(String leftInsoleMac, String rightInsoleMac) {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREF_ENTRY, Context.MODE_PRIVATE);
         Log.d(TAG,"writing to shared preferences, left mac is:"+leftInsoleMac+" right mac is:"+rightInsoleMac);
-        prefs.edit().putString(LEFT_INSOLE_MAC_KEY,leftInsoleMac).putString(RIGHT_INSOLE_MAC_KEY,rightInsoleMac).commit();
+        prefs.edit().putString(KEY_LEFT_INSOLE_MAC,leftInsoleMac).putString(KEY_RIGHT_INSOLE_MAC,rightInsoleMac).commit();
         MyApplication.getBleManager().prepareBleDevices();
         runOnUiThread(() -> {
             buttonScan.setEnabled(true);
             textViewScanStatusLeft.setText("detected successfully");// this is wrong, we dont know yet if it was saved or not.
             textViewScanStatusRight.setText("detected successfully");
-            normalModeButton.setEnabled(true);
-            rtButton.setEnabled(true);
+            buttonNormalMode.setEnabled(true);
+            buttonRealTime.setEnabled(true);
         });
     }
 
@@ -268,8 +250,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         runOnUiThread(() -> {
             buttonScan.setEnabled(true);
-            normalModeButton.setEnabled(false);
-            rtButton.setEnabled(false);
+            buttonNormalMode.setEnabled(false);
+            buttonRealTime.setEnabled(false);
         });
     }
 
