@@ -31,7 +31,7 @@ public class ManDownActivity extends AppCompatActivity {
     ConstraintLayout constraintLayoutSOSNow;
     ConstraintLayout constraintLayoutIAmOk;
 
-    Toolbar toolbarManDown;
+    Toolbar toolbarManDownLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,14 @@ public class ManDownActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
+
+        toolbarManDownLabel = (Toolbar) findViewById(R.id.toolbarMandownLabel);
+        //toolbarManDownLabel.setNavigationIcon(getDrawable(R.drawable.ic_man_down));
+
+
+
+        //toolbarManDownLabel.setTitle("MANDOWN");
+
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarMandown);
         //progressBar.setMin(0);

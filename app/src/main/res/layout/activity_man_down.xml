@@ -27,14 +27,48 @@
 
 
     <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbarMandownLabel"
-        android:layout_margin="5dp"
+        
         android:layout_width="match_parent"
-        android:background="@color/colorAccent"
+        android:background="@color/black"
         android:layout_height="40dp"
-        app:title="ManDown"
         app:layout_constraintTop_toBottomOf="@id/toolbar_mandown_activity"
         >
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="24dp"
+                android:textColor="@color/colorPrimary"
+                android:text="MANDOWN"
+                />
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_man_down"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_bell"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+        </android.support.constraint.ConstraintLayout>
+
+
 
     </android.support.v7.widget.Toolbar>
 
@@ -120,23 +154,20 @@
             android:id="@+id/noNeedForHelpPart1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tap if you "
+            android:text="Hello"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/noNeedForHelpPart1"
-            android:text="need help now"
+            android:text="Tap if you are OK"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="32dp"
-            android:text="OK"
-            android:textColor="@android:color/holo_green_light"
-            android:textStyle="bold"
+            android:src="@drawable/ic_ok"
             />
     </android.support.constraint.ConstraintLayout>
 
