@@ -100,8 +100,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
 
         if (MyApplication.EltenMode) {
-            buttonRealTime.setBackground(getDrawable(R.drawable.elten_real_time));
-            buttonNormalMode.setBackground(getDrawable(R.drawable.elten_normal_mode));
+            //buttonRealTime.setBackground(getDrawable(R.drawable.elten_real_time));
+            //buttonNormalMode.setBackground(getDrawable(R.drawable.elten_normal_mode));
         } else {// it is Uvex
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
             buttonRealTime.setBackground(getDrawable(R.drawable.realtime_icon0));
@@ -193,8 +193,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         cv.put(SessionContract.SessionTable.COLUMN_NAME_FATUGUE_LEVEL,String.valueOf(sd.getFatigueLevel()));
 
         cv.put(SessionContract.SessionTable.COLUMN_NAME_DATETIME,String.valueOf(sd.getCurrentDateTime()));
-        cv.put(SessionContract.SessionTable.COLUMN_NAME_SLIP,String.valueOf(sd.getSlip()));
-        Log.d(TAG,"slip received from session data is:"+sd.getSlip());
+        //cv.put(SessionContract.SessionTable.COLUMN_NAME_SLIP,String.valueOf(sd.getSlip()));
+        //Log.d(TAG,"slip received from session data is:"+sd.getSlip());
     }
 
     @Override

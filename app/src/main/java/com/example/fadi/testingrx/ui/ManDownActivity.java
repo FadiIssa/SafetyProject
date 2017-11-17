@@ -76,7 +76,7 @@ public class ManDownActivity extends AppCompatActivity {
                             //values.add(new FitChartValue(aLong,R.color.colorPrimaryDark));
                             //fitChart.setValues(values);
                     progressBar.incrementProgressBy(1);
-                    textViewMandownCounter.setText(String.valueOf(30-aLong));
+                    textViewMandownCounter.setText(String.valueOf(30-aLong-1));
 
                         },
                         t -> {
@@ -118,7 +118,7 @@ public class ManDownActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            getMenuInflater().inflate(R.menu.menu_launcher, menu);
+            getMenuInflater().inflate(R.menu.menu_session_stats, menu);
             //menu.findItem(R.id.menuLauncherResetMacAddresses).setVisible(false);
             return true;
         } catch (Exception e) {

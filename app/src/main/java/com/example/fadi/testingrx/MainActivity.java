@@ -330,13 +330,13 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
         // prepare the drawables that will represent the different postures.
 
         if (MyApplication.EltenMode) {
-            drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
+            /*drawableTipToesFull = getDrawable(R.drawable.elten_tiptoes_black_filled);
             drawableTipToesBorder = getDrawable(R.drawable.elten_tiptoes_black_border);
             drawableCrouchingFull = getDrawable(R.drawable.elten_crouching_black_filled);
             drawableCrouchingBorder = getDrawable(R.drawable.elten_crouching_black_border);
             drawableKneelingFull = getDrawable(R.drawable.elten_kneeling_black_filled);
             drawableKneelingBorder = getDrawable(R.drawable.elten_kneeling_black_border);
-            drawableFallDown = getDrawable(R.drawable.ic_fall_border);
+            drawableFallDown = getDrawable(R.drawable.ic_fall_border);*/
         } else {
             drawableTipToesFull = getDrawable(R.drawable.tipoesfull);
             drawableTipToesBorder = getDrawable(R.drawable.tiptoesborder);
@@ -348,9 +348,9 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
         }
 
         if (MyApplication.EltenMode) {
-            drawableUnknown = getDrawable(R.drawable.zh_logo_big_black);
+            //drawableUnknown = getDrawable(R.drawable.zh_logo_big_black);
         }else {
-            drawableUnknown = getDrawable(R.drawable.unknownposition);
+            drawableUnknown = getDrawable(R.drawable.logo_magnum);
         }
 
         textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatus);
@@ -363,9 +363,9 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
         if (MyApplication.EltenMode) {
-            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.zh_logo_big_black));
+            //currentPostureImageView.setImageDrawable(getDrawable(R.drawable.zh_logo_big_black));
         } else {
-            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.unknownposition));
+            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.logo_magnum));
         }
 
         kneelingImageView = (ImageView) findViewById(R.id.kneelingImageView);
@@ -376,10 +376,10 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
         // checking if elten mode, to use the relevant icons.
         if (MyApplication.EltenMode){
             //kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling));
-            kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling_red_circle));
+            //kneelingImageView.setImageDrawable(getDrawable(R.drawable.elten_kneeling_red_circle));
             //crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching));
-            crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching_red_circle));
-            tiptoesImageView.setImageDrawable(getDrawable(R.drawable.elten_tiptoes_red_circle));
+            //crouchingImageView.setImageDrawable(getDrawable(R.drawable.elten_crouching_red_circle));
+            //tiptoesImageView.setImageDrawable(getDrawable(R.drawable.elten_tiptoes_red_circle));
         } else {
             kneelingImageView.setImageDrawable(getDrawable(R.drawable.kneelingfull));
             crouchingImageView.setImageDrawable(getDrawable(R.drawable.crouchingfull));
