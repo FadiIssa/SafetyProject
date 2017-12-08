@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class StatsCalculator {
 
-    String TAG="Stats";
+    String TAG="StatsCalc";
 
     boolean sessionStarted;
 

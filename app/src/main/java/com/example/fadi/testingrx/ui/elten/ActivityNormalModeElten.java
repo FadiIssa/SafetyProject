@@ -40,7 +40,7 @@ public class ActivityNormalModeElten extends AppCompatActivity implements StatsC
 
     private static final int MINIMUM_ACTIVITY_TIME=65;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
 
-    String TAG="UvexN";
+    String TAG="EltenN";
 
     boolean isLeftInsoleConnected;
     boolean isRightInsoleConnected;

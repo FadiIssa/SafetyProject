@@ -50,6 +50,10 @@
         <activity
             android:name=".ui.SavedActivitiesBrowserActivity"
             android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".AiRealTimeActivity"
+            android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".ui.ManDownActivity"
             android:label="@string/title_activity_man_down"
