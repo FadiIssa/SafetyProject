@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     Drawable drawableUnknown;
 
     //Subscription leftInsoleIndicationSubscription;
-    String TAG="RxTesting";
+    String TAG="mainAct";
 
     // this is to ensure font changes happen in this activity.
     @Override

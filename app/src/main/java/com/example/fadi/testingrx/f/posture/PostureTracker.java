@@ -10,7 +10,7 @@ import com.example.fadi.testingrx.MainActivity;
 
 public class PostureTracker {
 
-    int latestLX;
+    int latestLX;//latest left accelerometer value on X axis
     int latestLY;
     int latestLZ;
     int latestRX;
@@ -28,7 +28,9 @@ public class PostureTracker {
 
     CommunicationCallback caller;
 
-    boolean isPaused;
+    String TAG="PostTrac";
+
+    boolean isPostureTrackingPaused;
 
     public PostureTracker(CommunicationCallback father){
         caller=father;
@@ -45,25 +47,25 @@ public class PostureTracker {
         counterKneeling=0;
         counterTiptoes=0;
 
-        isPaused=true;//at first, the timer should be considered as 0 , so no counting
+        isPostureTrackingPaused=true;//at first, the timer should be considered as 0 , so no counting
     }
 
     public void processLatestAccelometerReadings(){
 
         int position;
 
-        if (isPaused)
+        if (isPostureTrackingPaused)
         {
             position=Postures.UNKNOWN;
             currentPosture=Postures.UNKNOWN;
             processCounters();
-            Log.d("RXTesting"," postureTracker is paused");
+            Log.d("TAG"," postureTracker is paused");
             caller.updatePositionCallBack(position, counterCurrentPosition, counterCrouching, counterKneeling, counterTiptoes);
             return;
         }
 
 
-        Log.d("RXTesting","processLatestAccelometerReading(): latest LX:"+latestLX+" LY:"+latestLY+" LZ:"+latestLZ+" RX:"+latestRX+" RY:"+latestRY+" RZ:"+latestRZ);
+        Log.d("TAG","processLatestAccelometerReading(): latest LX:"+latestLX+" LY:"+latestLY+" LZ:"+latestLZ+" RX:"+latestRX+" RY:"+latestRY+" RZ:"+latestRZ);
         if (
                 //(latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300)
                 (latestRZ<450 && latestLZ>800 && latestLZ<1100 && latestRY>550 && latestLY<300 && latestLY>-300)
@@ -72,17 +74,17 @@ public class PostureTracker {
                 ){
             position=Postures.CROUCHING;
             currentPosture=Postures.CROUCHING;
-            Log.d("RXTesting","position:"+position);
+            Log.d("TAG","position:"+position);
         } else if (latestRZ<300 && latestLZ<300 && latestRY>600 && latestLY>600){
             position=Postures.KNEELING;
             currentPosture=Postures.KNEELING;
-            Log.d("RXTesting","position:"+position);
+            Log.d("TAG","position:"+position);
         }
         else //if (latestRZ>400 && latestRZ<700 && latestLZ>400 && latestLZ<700 && latestRY>600 && latestLY>600) {
             if (latestRZ>350 && latestRZ<900 && latestLZ>350 && latestLZ<900 && latestRY>450 && latestLY>450) {
                  position=Postures.TIPTOES;
                 currentPosture=Postures.TIPTOES;
-                Log.d("RXTesting","position:"+position);
+                Log.d("TAG","position:"+position);
         } else {
                 if (
                         (latestRZ<200 && latestLZ<200 && latestRY<-800 && latestLY<-800)
@@ -91,7 +93,7 @@ public class PostureTracker {
                 {
                 position=Postures.FALLDOWN;
                 currentPosture=Postures.FALLDOWN;
-                Log.d("RXTesting", "position:"+position);
+                Log.d("TAG", "position:"+position);
             }
             else {
                 position = Postures.UNKNOWN;
@@ -101,14 +103,14 @@ public class PostureTracker {
 
         processCounters();
 
-        Log.d("RXTesting","final position:"+position);
+        Log.d("TAG","final position:"+position);
 
         caller.updatePositionCallBack(position, counterCurrentPosition, counterCrouching, counterKneeling, counterTiptoes);
     }
 
     //this method will be called after each detection of a posture, its purpose is to maintain a reliable readings of the counter varialbes at any time, these values will be sent to update the UI whenever there is a change from this side.
     private void processCounters(){
-        if (isPaused){
+        if (isPostureTrackingPaused){
             return;
         }
 
@@ -166,11 +168,11 @@ public class PostureTracker {
 
     // this could be in case the connection with one insole is lost.
     public void pauseCounting(){
-        isPaused=true;
+        isPostureTrackingPaused=true;
     }
 
     public void resumeCounting(){
-        isPaused=false;
+        isPostureTrackingPaused=false;
     }
 
     // this will be called from the normal activity mode, to allow starting and stopping several times, without counters accumulating.

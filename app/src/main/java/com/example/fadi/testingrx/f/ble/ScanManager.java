@@ -27,7 +27,7 @@ import rx.schedulers.Schedulers;
 public class ScanManager {
 
     String TAG="ScanMgr";
-    final int MAXIMUM_SCAN_TIME=7;
+    final int MAXIMUM_SCAN_TIME=9;
 
     RxBleClient rxBleClient;// it will be passed to it, ideally, it should ask for it locally from the Application.
     // should be called from the bleManager, try to pass an inner class that implements a functional interface, in order to notify the ble manager about the finishing of the scanning.
