@@ -173,4 +173,10 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         super.onResume();
         Log.d(TAG,"onStop is called for the aiRT");
     }
+
+    @Override
+    public void notifyLatestSensorReadings(int lx,int ly, int lz, int rx, int ry, int rz) {
+        Log.d(TAG,String.format("latestSensorReadings are: lx:%d ly:%d lz:%d rx:%d ry:%d rz:%d",lx,ly,lz,rx,ry,rz));
+
+    }
 }

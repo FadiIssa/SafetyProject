@@ -1,5 +1,7 @@
 package com.example.fadi.testingrx.f.posture;
 
+import android.util.Log;
+
 /**
  * Created by fadi on 13/09/2017.
  * the purpose of this functional interface is to handle the results
@@ -10,7 +12,7 @@ package com.example.fadi.testingrx.f.posture;
 
 // this call back will also play the role of notifying if a connection is lost. to be shown to the user in both the Mainactivity and the normalActivity classes.
 public interface CommunicationCallback {
-    public void updatePositionCallBack(final int i, final int currentPosCounter, final int crouchingCounter, final int kneelingCounter, final int tiptoesCounter);
+    void updatePositionCallBack(final int i, final int currentPosCounter, final int crouchingCounter, final int kneelingCounter, final int tiptoesCounter);
 
     void notifyLeftConnectionDisconnected();
     void notifyRightConnectionDisconnected();
@@ -26,6 +28,10 @@ public interface CommunicationCallback {
 
     void notifyLeftBattery(int value);
     void notifyRightBattery(int value);
+
+    default void notifyLatestSensorReadings(int lx,int ly, int lz, int rx, int ry, int rz){
+        Log.e("error"," this is a default method, it is better that your class provide its own implementation.");
+    };
 }
 
 
