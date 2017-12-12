@@ -59,13 +59,14 @@ public class PostureTracker {
             position=Postures.UNKNOWN;
             currentPosture=Postures.UNKNOWN;
             processCounters();
-            Log.d("TAG"," postureTracker is paused");
+            Log.d(TAG," postureTracker is paused");
             caller.updatePositionCallBack(position, counterCurrentPosition, counterCrouching, counterKneeling, counterTiptoes);
             return;
         }
 
 
-        Log.d("TAG","processLatestAccelometerReading(): latest LX:"+latestLX+" LY:"+latestLY+" LZ:"+latestLZ+" RX:"+latestRX+" RY:"+latestRY+" RZ:"+latestRZ);
+        Log.d(TAG,"processLatestAccelometerReading(): latest LX:"+latestLX+" LY:"+latestLY+" LZ:"+latestLZ+" RX:"+latestRX+" RY:"+latestRY+" RZ:"+latestRZ);
+        caller.notifyLatestSensorReadings(latestLX, latestLY, latestLZ, latestRX, latestRY, latestRZ);
         if (
                 //(latestRZ<300 && latestLZ>800 && latestLZ<1100 && latestRY>700 && latestLY<300 && latestLY>-300)
                 (latestRZ<450 && latestLZ>800 && latestLZ<1100 && latestRY>550 && latestLY<300 && latestLY>-300)

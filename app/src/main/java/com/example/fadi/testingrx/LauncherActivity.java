@@ -110,8 +110,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         RxView.clicks(buttonRealTime)
                 .subscribe(a-> {
-                    Intent intent = new Intent(this, MainActivity.class);//temporarily, to test the ai approach.
-                    //Intent intent = new Intent(this, AiRealTimeActivity.class);
+                    //Intent intent = new Intent(this, MainActivity.class);//temporarily, to test the ai approach.
+                    Intent intent = new Intent(this, AiRealTimeActivity.class);
                     startActivity(intent);
                     finish();//for demo mode
                 });
