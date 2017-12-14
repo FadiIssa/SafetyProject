@@ -1,7 +1,6 @@
 package com.example.fadi.testingrx;
 
 import android.content.Context;
-import android.content.Intent;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,19 +8,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 
+import android.view.View;
 import android.view.WindowManager;
 
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.fadi.testingrx.f.ble.Insoles;
+import com.example.fadi.testingrx.f.ai.AiPostureManager;
+
+import com.example.fadi.testingrx.f.ai.SensorsReading;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
-import com.example.fadi.testingrx.f.posture.Postures;
-import com.example.fadi.testingrx.ui.ManDownActivity;
-import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
+
 import com.polidea.rxandroidble.RxBleConnection;
 
-import java.util.UUID;
+
 
 import rx.Observable;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -46,6 +48,21 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     String TAG="AiRT";
 
+    AiPostureManager aiPostureManager;
+
+    Button buttonAddSample;
+
+    EditText editTextPostureName;
+
+    int latestLX;
+    int latestLY;
+    int latestLZ;
+    int latestRX;
+    int latestRY;
+    int latestRZ;
+    SensorsReading latestSensorsReading;
+
+
     // this is to ensure font changes happen in this activity.
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -67,6 +84,8 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         mPostureTracker = new PostureTracker(this);
 
         MyApplication.getBleManager().connectRealTime(mPostureTracker);
+
+        aiPostureManager = new AiPostureManager();
     }
 
 
@@ -142,6 +161,20 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         textViewAILeftBatteryValue = (TextView) findViewById(R.id.textViewAILeftBatteryValue);
         textViewAIRightBatteryValue = (TextView) findViewById(R.id.textViewAIRightBatteryValue);
 
+        buttonAddSample= (Button) findViewById(R.id.buttonAddSample);
+
+        buttonAddSample.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                latestSensorsReading = new SensorsReading(latestLX,latestLY,latestLZ,latestRX,latestRY,latestRZ);
+                String postureName= editTextPostureName.getText().toString();
+
+                aiPostureManager.addPostureSample(latestSensorsReading,postureName);
+            }
+        });
+
+        editTextPostureName = (EditText) findViewById(R.id.editTextPostureName);
+
     }
 
     @Override
@@ -178,5 +211,15 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     public void notifyLatestSensorReadings(int lx,int ly, int lz, int rx, int ry, int rz) {
         Log.d(TAG,String.format("latestSensorReadings are: lx:%d ly:%d lz:%d rx:%d ry:%d rz:%d",lx,ly,lz,rx,ry,rz));
 
+        latestLX=lx;
+        latestLY=ly;
+        latestLZ=lz;
+
+        latestRX=rx;
+        latestRY=ry;
+        latestRZ=rz;
+
+        String currentPostureName=aiPostureManager.getPostureName(new SensorsReading(latestLX,latestLY,latestLZ,latestRX,latestRY,latestRZ));
+        Log.d(TAG,"current posture name is:"+currentPostureName);
     }
 }
