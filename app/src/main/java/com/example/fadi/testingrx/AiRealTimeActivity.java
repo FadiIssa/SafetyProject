@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.fadi.testingrx.f.ai.AiPostureManager;
 
@@ -45,6 +46,8 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     TextView textViewAILeftBatteryValue;
     TextView textViewAIRightBatteryValue;
+
+    TextView textViewCurrentPosture;
 
     String TAG="AiRT";
 
@@ -170,10 +173,13 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                 String postureName= editTextPostureName.getText().toString();
 
                 aiPostureManager.addPostureSample(latestSensorsReading,postureName);
+                Toast.makeText(getApplicationContext(),"a new sample added to training data",Toast.LENGTH_LONG).show();
             }
         });
 
         editTextPostureName = (EditText) findViewById(R.id.editTextPostureName);
+
+        textViewCurrentPosture = (TextView) findViewById(R.id.textViewCurrentPosture);
 
     }
 
@@ -221,5 +227,14 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
         String currentPostureName=aiPostureManager.getPostureName(new SensorsReading(latestLX,latestLY,latestLZ,latestRX,latestRY,latestRZ));
         Log.d(TAG,"current posture name is:"+currentPostureName);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewCurrentPosture.setText(currentPostureName);
+            }
+        });
+
+
     }
 }
