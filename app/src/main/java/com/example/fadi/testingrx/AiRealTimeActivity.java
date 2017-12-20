@@ -2,6 +2,7 @@ package com.example.fadi.testingrx;
 
 import android.content.Context;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +27,10 @@ import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.polidea.rxandroidble.RxBleConnection;
 
 
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import rx.Observable;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -48,6 +53,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     TextView textViewAIRightBatteryValue;
 
     TextView textViewCurrentPosture;
+    TextView textViewTrainingLabel;
 
     String TAG="AiRT";
 
@@ -64,6 +70,10 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     int latestRY;
     int latestRZ;
     SensorsReading latestSensorsReading;
+
+    ImageView imageViewBrain;
+
+    Disposable timerDisposable;
 
 
     // this is to ensure font changes happen in this activity.
@@ -164,6 +174,9 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         textViewAILeftBatteryValue = (TextView) findViewById(R.id.textViewAILeftBatteryValue);
         textViewAIRightBatteryValue = (TextView) findViewById(R.id.textViewAIRightBatteryValue);
 
+        textViewTrainingLabel = (TextView) findViewById(R.id.textViewTrainingLabel);
+        textViewTrainingLabel.setVisibility(View.GONE);
+
         buttonAddSample= (Button) findViewById(R.id.buttonAddSample);
 
         buttonAddSample.setOnClickListener(new View.OnClickListener() {
@@ -174,12 +187,36 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
                 aiPostureManager.addPostureSample(latestSensorsReading,postureName);
                 Toast.makeText(getApplicationContext(),"a new sample added to training data",Toast.LENGTH_LONG).show();
+
+                timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .take(2)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> {
+                                    Log.d(TAG,"one second passed, it is:"+aLong);
+                                    imageViewBrain.setVisibility(View.VISIBLE);
+                                    textViewTrainingLabel.setVisibility(View.VISIBLE);
+
+
+                                },
+                                t -> {
+                                    Log.e(TAG, "error from TimerObserver:" + t.toString());
+                                },
+                                () -> {
+                                    Log.e(TAG, " scan timer Observer received onCompleted()");
+                                    imageViewBrain.setVisibility(View.GONE);
+                                    textViewTrainingLabel.setVisibility(View.GONE);
+                                });
             }
         });
 
         editTextPostureName = (EditText) findViewById(R.id.editTextPostureName);
 
         textViewCurrentPosture = (TextView) findViewById(R.id.textViewCurrentPosture);
+
+        imageViewBrain = (ImageView) findViewById(R.id.imageViewBrain);
+        imageViewBrain.setImageDrawable(getResources().getDrawable(R.drawable.brain));
+        imageViewBrain.setVisibility(View.GONE);
 
     }
 
