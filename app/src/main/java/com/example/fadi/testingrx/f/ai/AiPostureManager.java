@@ -30,7 +30,7 @@ public class AiPostureManager {
 
     public String getPostureName(SensorsReading sr){
         if (postureClassifier==null){// alternatively , we can initiate the postureClassifer from the constructor
-            return "not available";
+            return "No posture available";
         }
         return postureClassifier.getPostureName(sr);
     }
