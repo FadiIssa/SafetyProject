@@ -611,8 +611,8 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
     public void updateStatsOnUIString(final String standigTime, final String nStairs, final String nSteps, final String walkingTime, final String vibrationTime, final String leftAngle, final String rightAngle, final String distance, final String calories ){
         runOnUiThread(() -> {
             textViewStanding.setText(standigTime);
-            //textViewStairs.setText(nStairs);
-            textViewStairs.setText("0");//this is temporar, I should revert back to the previous line once the firmware detects stairs correctly.
+            textViewStairs.setText(nStairs);
+            //textViewStairs.setText("0");//this is temporar, I should revert back to the previous line once the firmware detects stairs correctly.
             textViewSteps.setText(nSteps);
             textViewWalking.setText(walkingTime);
             textViewVibration.setText(vibrationTime);
