@@ -50,6 +50,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     Button buttonRealTime;
     Button buttonNormalMode;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
+    Button buttonAIMode;
     Button buttonScan;
 
     @Override
@@ -98,6 +99,10 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         buttonRealTime = (Button) findViewById(R.id.buttonRT);
         buttonRealTime.setEnabled(false);
 
+        buttonAIMode = (Button) findViewById(R.id.buttonAIMode);
+        buttonAIMode.setEnabled(false);
+        buttonAIMode.setBackground(getDrawable(R.drawable.elten_real_time));
+
 
         if (MyApplication.EltenMode) {
             //buttonRealTime.setBackground(getDrawable(R.drawable.elten_real_time));
@@ -110,8 +115,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         RxView.clicks(buttonRealTime)
                 .subscribe(a-> {
-                    //Intent intent = new Intent(this, MainActivity.class);//temporarily, to test the ai approach.
-                    Intent intent = new Intent(this, AiRealTimeActivity.class);
+                    Intent intent = new Intent(this, MainActivity.class);//temporarily, to test the ai approach.
+                    //Intent intent = new Intent(this, AiRealTimeActivity.class);
                     startActivity(intent);
                     finish();//for demo mode
                 });
@@ -125,12 +130,22 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     finish();// for demo mode
                 });
 
+        RxView.clicks(buttonAIMode)
+                .subscribe(
+                        a->{
+                            Intent intent= new Intent (this,AiRealTimeActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                );
+
         // the user can make a scan if the previous scan timed out without finding any insoles for example.
         RxView.clicks(buttonScan)
                 .subscribe(a->{
                     scan();
                     buttonRealTime.setEnabled(false);
                     buttonNormalMode.setEnabled(false);
+                    buttonAIMode.setEnabled(false);
                     buttonScan.setEnabled(false);
                 });
     }
@@ -243,6 +258,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
             textViewScanStatusRight.setText("detected successfully");
             buttonNormalMode.setEnabled(true);
             buttonRealTime.setEnabled(true);
+            buttonAIMode.setEnabled(true);
         });
     }
 
@@ -253,6 +269,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
             buttonScan.setEnabled(true);
             buttonNormalMode.setEnabled(false);
             buttonRealTime.setEnabled(false);
+            buttonAIMode.setEnabled(false);
         });
     }
 
