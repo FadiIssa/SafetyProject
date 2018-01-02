@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fadi.testingrx.LauncherActivity;
 import com.example.fadi.testingrx.MyApplication;
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
@@ -37,6 +38,8 @@ import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -105,6 +108,9 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     Observable<Long> timerObservable;
     Subscription timerSubscription;
     Observer<Long> timerObserver;
+
+    TextView textViewLeftMac;
+    TextView textViewRightMac;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -491,6 +497,13 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     }
 
     private void initUI(){
+
+        //setting the mac addresses received from previous step
+        textViewLeftMac = (TextView) findViewById(R.id.textViewLeftMac);
+        textViewLeftMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_LEFT_INSOLE_MAC));
+
+        textViewRightMac = (TextView) findViewById(R.id.textViewRightMac);
+        textViewRightMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_RIGHT_INSOLE_MAC));
 
         isActivityStarted=false;
 

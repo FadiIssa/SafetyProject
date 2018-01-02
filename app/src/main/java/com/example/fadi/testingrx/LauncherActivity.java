@@ -38,8 +38,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class LauncherActivity extends AppCompatActivity implements ScanStatusCallback{
-    private static final String KEY_LEFT_INSOLE_MAC="leftInsoleMac";
-    private static final String KEY_RIGHT_INSOLE_MAC ="rightInsoleMac";
+    public static final String KEY_LEFT_INSOLE_MAC="leftInsoleMac";
+    public static final String KEY_RIGHT_INSOLE_MAC ="rightInsoleMac";
 
     static final String SHARED_PREF_ENTRY="PairedDevices";
 
@@ -53,6 +53,9 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     Button buttonAIMode;
     Button buttonScan;
 
+    String latestDetectedLeftMac;
+    String latestDetectedRightMac;
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -61,9 +64,20 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG,"Launcher activity onCreate is called");
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setContentView(R.layout.activity_launcher);
 
+        setupToolbar();
+
+        initUI();
+
+        scan();
+    }
+
+    private void setupToolbar(){
         Toolbar myToolbar = (Toolbar) findViewById(R.id.launcherActivity_toolbar);
         myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
         //myToolbar.setLogo(getDrawable(R.drawable.uvex_logo_launcher_bar));
@@ -75,12 +89,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         //getSupportActionBar();
 
         //getSupportActionBar().setLogo(R.drawable.elten_logo);
-
-        Log.d(TAG,"Launcher activity onCreate is called");
-
-        initUI();
-
-        scan();
     }
 
     private void initUI(){
@@ -126,6 +134,9 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     //Intent intent = new Intent(this, NormalModeActivity.class);
                     //Intent intent = new Intent(this, Login.class);
                     Intent intent = new Intent(this, NormalModeUvex.class);
+                    intent.putExtra(KEY_LEFT_INSOLE_MAC,latestDetectedLeftMac);
+                    intent.putExtra(KEY_RIGHT_INSOLE_MAC,latestDetectedRightMac);
+
                     startActivity(intent);
                     finish();// for demo mode
                 });
@@ -155,37 +166,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         runOnUiThread(() -> {
             textViewScanStatusLeft.setText("stopped");
         });
-    }
-
-    private void populateIntentWithSessionData(Intent intent, SessionData sessionData){
-        intent.putExtra(DataProcessing.NUM_STEPS,sessionData.getNumSteps());
-        intent.putExtra(DataProcessing.NUM_STAIRS,sessionData.getNumStairs());
-        intent.putExtra(DataProcessing.DURATION_CROUCHING,sessionData.getDurationCrouching());
-        intent.putExtra(DataProcessing.DURATION_KNEELING,sessionData.getDurationKneeling());
-        intent.putExtra(DataProcessing.DURATION_TIPTOES,sessionData.getDurationTiptoes());
-        intent.putExtra(DataProcessing.DURATION_WALKING,sessionData.getDurationWalking());
-        intent.putExtra(DataProcessing.DURATION_STATIC,sessionData.getDurationStatic());
-        intent.putExtra(DataProcessing.CALORIES,sessionData.getCalories());
-        intent.putExtra(DataProcessing.DISTANCE_METERS,sessionData.getDistanceMeters());
-        intent.putExtra(DataProcessing.ANGLE_LEFT,sessionData.getAngleLeft());
-        intent.putExtra(DataProcessing.ANGLE_RIGHT,sessionData.getAngleRight());
-        intent.putExtra(DataProcessing.FATIGUE,sessionData.getFatigueLevel());
-        intent.putExtra(DataProcessing.VIBRATION_DURATION,sessionData.getVibrationDuration());
-
-        Random myRandom= new Random(SystemClock.currentThreadTimeMillis());
-        int randomVibrationIntensity;
-        if (sessionData.getVibrationDuration()>=10) {
-            randomVibrationIntensity = myRandom.nextInt(50);
-        } else if (sessionData.getVibrationDuration()>=2){
-            randomVibrationIntensity = myRandom.nextInt(30);
-        } else {
-            randomVibrationIntensity=1;
-        }
-        if (randomVibrationIntensity<0){
-            randomVibrationIntensity*=-1;
-        }
-        // the vibration intensity is supposed to come ready from the mock object, the following line is a temporary solution until that feature is implemented in the firmware.
-        intent.putExtra(DataProcessing.VIBRATION_INTENSITY,randomVibrationIntensity);
     }
 
     private void populateContentValuesWithSessionData(ContentValues cv, SessionData sd){
@@ -250,10 +230,16 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     @Override
     public void scanStatusFinished(String leftInsoleMac, String rightInsoleMac) {
+
+        latestDetectedLeftMac=leftInsoleMac;
+        latestDetectedRightMac=rightInsoleMac;
+
         SharedPreferences prefs = getSharedPreferences(SHARED_PREF_ENTRY, Context.MODE_PRIVATE);
         Log.d(TAG,"writing to shared preferences, left mac is:"+leftInsoleMac+" right mac is:"+rightInsoleMac);
         prefs.edit().putString(KEY_LEFT_INSOLE_MAC,leftInsoleMac).putString(KEY_RIGHT_INSOLE_MAC,rightInsoleMac).commit();
+
         MyApplication.getBleManager().prepareBleDevices();
+
         runOnUiThread(() -> {
             buttonScan.setEnabled(true);
             textViewScanStatusLeft.setText("detected successfully");// this is wrong, we dont know yet if it was saved or not.
