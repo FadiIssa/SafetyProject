@@ -161,7 +161,6 @@ public class StatsCalculator {
         Log.d(TAG,"secondHalfRigh is received");
 
         notifyCallerIfReady();
-
     }
 
     private void notifyCallerIfReady(){
@@ -198,9 +197,6 @@ public class StatsCalculator {
 
             vibrationIntensity = randomVibrationIntensity;
             Log.d(TAG,"vibrationIntensity is:"+vibrationIntensity);
-
-
-
 
             String leftAngleString=String.valueOf(angleLeft);
             String rightAngleString=String.valueOf(angleRight);
@@ -242,7 +238,6 @@ public class StatsCalculator {
                     caloriesInt,
                     vibrationIntensity
             );
-
         }
     }
 
@@ -251,8 +246,5 @@ public class StatsCalculator {
         int timeInMinutes=(seconds%3600)/60;
         int timeInSeconds=(seconds%3600)%60;
         return (String.valueOf(timeInHours)+":"+String.valueOf(timeInMinutes)+":"+String.valueOf(timeInSeconds));
-
-
     }
-
 }
