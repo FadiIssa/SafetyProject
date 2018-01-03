@@ -75,6 +75,9 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     Disposable timerDisposable;
 
+    TextView textViewLeftMac;
+    TextView textViewRightMac;
+
 
     // this is to ensure font changes happen in this activity.
     @Override
@@ -165,6 +168,12 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
 
     private void initUI() {
+
+        textViewLeftMac = (TextView) findViewById(R.id.textViewAILeftMac);
+        textViewLeftMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_LEFT_INSOLE_MAC));
+
+        textViewRightMac = (TextView) findViewById(R.id.textViewAIRightMac);
+        textViewRightMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_RIGHT_INSOLE_MAC));
 
         textViewAILeftConnectionStatus = (TextView) findViewById(R.id.textViewAILeftConnectionStatus);
         textViewAILeftConnectionStatus.setText("Communicating");
