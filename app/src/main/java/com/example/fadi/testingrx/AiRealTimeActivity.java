@@ -2,6 +2,7 @@ package com.example.fadi.testingrx;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import com.example.fadi.testingrx.f.ai.SensorsReading;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 
+import com.example.fadi.testingrx.ui.AddAIPostureActivity;
 import com.polidea.rxandroidble.RxBleConnection;
 
 
@@ -54,6 +56,8 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     TextView textViewCurrentPosture;
     TextView textViewTrainingLabel;
+
+    public static final int REQUEST_CODE_GET_POSTURE_NAME_AND_ICON=12;
 
     String TAG="AiRT";
 
@@ -192,30 +196,11 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
             @Override
             public void onClick(View v) {
                 latestSensorsReading = new SensorsReading(latestLX,latestLY,latestLZ,latestRX,latestRY,latestRZ);
-                String postureName= editTextPostureName.getText().toString();
 
-                aiPostureManager.addPostureSample(latestSensorsReading,postureName);
-                Toast.makeText(getApplicationContext(),"a new sample added to training data",Toast.LENGTH_LONG).show();
+                //now start another activity to get the name of posture
+                Intent getPostureNameIntent = new Intent (getApplication().getApplicationContext(), AddAIPostureActivity.class);
 
-                timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
-                        .subscribeOn(AndroidSchedulers.mainThread())
-                        .take(2)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(aLong -> {
-                                    Log.d(TAG,"one second passed, it is:"+aLong);
-                                    imageViewBrain.setVisibility(View.VISIBLE);
-                                    textViewTrainingLabel.setVisibility(View.VISIBLE);
-
-
-                                },
-                                t -> {
-                                    Log.e(TAG, "error from TimerObserver:" + t.toString());
-                                },
-                                () -> {
-                                    Log.e(TAG, " scan timer Observer received onCompleted()");
-                                    imageViewBrain.setVisibility(View.GONE);
-                                    textViewTrainingLabel.setVisibility(View.GONE);
-                                });
+                startActivityForResult(getPostureNameIntent,REQUEST_CODE_GET_POSTURE_NAME_AND_ICON);//once the result comes, it will be handled in onActivityResult method
             }
         });
 
@@ -280,7 +265,44 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                 textViewCurrentPosture.setText(currentPostureName);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode==1){
+            addTrainingSample(data.getStringExtra("posture_name"));
+        }
+
+        if (resultCode==0){
+            Log.d(TAG,"result code is 0, means user choose cancel");
+        }
+    }
+
+    private void addTrainingSample(String pName){
+        //String postureName= editTextPostureName.getText().toString();
+
+        aiPostureManager.addPostureSample(latestSensorsReading,pName);
+        Toast.makeText(getApplicationContext(),"a new sample added to training data",Toast.LENGTH_LONG).show();
+
+        timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .take(2)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                            Log.d(TAG,"one second passed, it is:"+aLong);
+                            imageViewBrain.setVisibility(View.VISIBLE);
+                            textViewTrainingLabel.setVisibility(View.VISIBLE);
 
 
+                        },
+                        t -> {
+                            Log.e(TAG, "error from TimerObserver:" + t.toString());
+                        },
+                        () -> {
+                            Log.e(TAG, " scan timer Observer received onCompleted()");
+                            imageViewBrain.setVisibility(View.GONE);
+                            textViewTrainingLabel.setVisibility(View.GONE);
+                        });
     }
 }

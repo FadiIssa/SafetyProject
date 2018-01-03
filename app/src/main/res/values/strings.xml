@@ -57,5 +57,6 @@
     <string name="name_cushioning">- Cushioning measurement -</string>
     <string name="fragment_cushioning.shoes_cushioning">Shoes cushioning</string>
     <string name="title_activity_man_down">ManDownActivity</string>
+    <string name="title_activity_add_aiposture">AddAIPostureActivity</string>
 
 </resources>
