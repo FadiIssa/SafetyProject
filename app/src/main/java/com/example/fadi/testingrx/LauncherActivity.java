@@ -109,8 +109,10 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
         buttonAIMode = (Button) findViewById(R.id.buttonAIMode);
         buttonAIMode.setEnabled(false);
-        buttonAIMode.setBackground(getDrawable(R.drawable.elten_real_time));
+        buttonAIMode.setBackground(getDrawable(R.drawable.ic_ai_mode));
 
+        buttonRealTime.setBackground(getDrawable(R.drawable.ic_realtime_mode));
+        buttonNormalMode.setBackground(getDrawable(R.drawable.ic_normal_mode));
 
         if (MyApplication.EltenMode) {
             //buttonRealTime.setBackground(getDrawable(R.drawable.elten_real_time));
