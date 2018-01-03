@@ -125,6 +125,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 .subscribe(a-> {
                     Intent intent = new Intent(this, MainActivity.class);//temporarily, to test the ai approach.
                     //Intent intent = new Intent(this, AiRealTimeActivity.class);
+                    intent.putExtra(KEY_LEFT_INSOLE_MAC,latestDetectedLeftMac);
+                    intent.putExtra(KEY_RIGHT_INSOLE_MAC,latestDetectedRightMac);
                     startActivity(intent);
                     finish();//for demo mode
                 });
@@ -145,6 +147,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 .subscribe(
                         a->{
                             Intent intent= new Intent (this,AiRealTimeActivity.class);
+                            intent.putExtra(KEY_LEFT_INSOLE_MAC,latestDetectedLeftMac);
+                            intent.putExtra(KEY_RIGHT_INSOLE_MAC,latestDetectedRightMac);
                             startActivity(intent);
                             finish();
                         }

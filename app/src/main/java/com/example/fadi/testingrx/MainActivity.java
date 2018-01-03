@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
     //Subscription leftInsoleIndicationSubscription;
     String TAG="mainAct";
 
+    TextView textViewLeftMac;
+    TextView textViewRightMac;
+
     // this is to ensure font changes happen in this activity.
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -326,6 +329,12 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
 
 
     private void initUI() {
+
+        textViewLeftMac = (TextView) findViewById(R.id.textViewRTLeftMac);
+        textViewLeftMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_LEFT_INSOLE_MAC));
+
+        textViewRightMac = (TextView) findViewById(R.id.textViewRTRightMac);
+        textViewRightMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_RIGHT_INSOLE_MAC));
 
         // prepare the drawables that will represent the different postures.
 
