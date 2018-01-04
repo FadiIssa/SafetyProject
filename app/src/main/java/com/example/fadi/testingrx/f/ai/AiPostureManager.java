@@ -35,5 +35,10 @@ public class AiPostureManager {
         return postureClassifier.getPostureName(sr);
     }
 
+    public void resetPostures(){
+        postureSamplesList.clear();
+        postureClassifier = null;
+    }
+
 
 }

@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:text="enter posture name"
+        android:text="Enter a name for you posture"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,30 +30,22 @@
         android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:text="posture name"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/buttonOK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="OK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
@@ -62,7 +54,8 @@
         android:layout_height="100dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:padding="10dp"
+
+        android:background="@color/white"
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
@@ -73,7 +66,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginEnd="32dp"
-        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageButton1"
         app:srcCompat="@drawable/alerter_ic_face" />
@@ -84,8 +78,9 @@
         android:layout_height="100dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="@+id/imageButton1"
-        android:padding="10dp"
+        android:background="@color/white"
         app:srcCompat="@drawable/alerter_ic_face" />
 
     <ImageButton
@@ -94,7 +89,8 @@
         android:layout_height="100dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton1"
         app:srcCompat="@drawable/alerter_ic_face" />
@@ -106,7 +102,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:text="choose an icon"
+        android:text="Choose an icon to represent your posture"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPostureName" />
@@ -120,6 +117,8 @@
         app:layout_constraintEnd_toStartOf="@+id/imageButton6"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/white"
+        android:scaleType="fitCenter"
         app:layout_constraintStart_toEndOf="@+id/imageButton4"
         app:layout_constraintTop_toTopOf="@+id/imageButton4"
         app:srcCompat="@drawable/alerter_ic_face" />
@@ -130,6 +129,8 @@
         android:layout_height="100dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="fitCenter"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="@+id/imageButton4"
         app:srcCompat="@drawable/alerter_ic_face" />
 </android.support.constraint.ConstraintLayout>
