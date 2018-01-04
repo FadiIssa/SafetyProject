@@ -29,6 +29,7 @@ import com.example.fadi.testingrx.ui.AddAIPostureActivity;
 import com.polidea.rxandroidble.RxBleConnection;
 
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -57,6 +58,8 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     TextView textViewCurrentPosture;
     TextView textViewTrainingLabel;
 
+    ImageView imageViewCurrentPosture;
+
     public static final int REQUEST_CODE_GET_POSTURE_NAME_AND_ICON=12;
 
     String TAG="AiRT";
@@ -82,6 +85,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     TextView textViewLeftMac;
     TextView textViewRightMac;
 
+    HashMap<String,Integer> postureIcons = new HashMap<>();
 
     // this is to ensure font changes happen in this activity.
     @Override
@@ -212,6 +216,8 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         imageViewBrain.setImageDrawable(getResources().getDrawable(R.drawable.brain));
         imageViewBrain.setVisibility(View.GONE);
 
+        imageViewCurrentPosture = findViewById(R.id.imageViewCurrentPosture);
+
     }
 
     @Override
@@ -263,6 +269,36 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
             @Override
             public void run() {
                 textViewCurrentPosture.setText(currentPostureName);
+
+                if (postureIcons.get(currentPostureName)==null)
+                    return;
+
+                int iconOrder=postureIcons.get(currentPostureName);
+                switch (iconOrder){
+                    case 1:
+                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_1));
+                        break;
+                    case 2:
+                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_2));
+                        break;
+                    case 3:
+                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_3));
+                        break;
+                    case 4:
+                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_4));
+                        break;
+                    case 5:
+                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_5));
+                        break;
+                    case 6:
+                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_6));
+                        break;
+                    default:
+                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_6));
+                        Log.e(TAG,"there should be no posture icon that is not between 1 and 6");
+                        break;//maybe the break is not needed here
+                }
+
             }
         });
     }
@@ -271,7 +307,10 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode==1){
-            addTrainingSample(data.getStringExtra("posture_name"));
+            textViewCurrentPosture.setVisibility(View.GONE);
+            String postureName=data.getStringExtra("posture_name");
+            addTrainingSample(postureName);
+            postureIcons.put(postureName,data.getIntExtra("posture_icon",6));
         }
 
         if (resultCode==0){
@@ -287,8 +326,9 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
         timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .take(2)
+                .take(3)
                 .observeOn(AndroidSchedulers.mainThread())
+
                 .subscribe(aLong -> {
                             Log.d(TAG,"one second passed, it is:"+aLong);
                             imageViewBrain.setVisibility(View.VISIBLE);
@@ -303,6 +343,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                             Log.e(TAG, " scan timer Observer received onCompleted()");
                             imageViewBrain.setVisibility(View.GONE);
                             textViewTrainingLabel.setVisibility(View.GONE);
+                            textViewCurrentPosture.setVisibility(View.VISIBLE);
                         });
     }
 }
