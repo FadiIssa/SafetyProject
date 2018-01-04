@@ -2,17 +2,14 @@ package com.example.fadi.testingrx.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.example.fadi.testingrx.AiRealTimeActivity;
 import com.example.fadi.testingrx.R;
 
 public class AddAIPostureActivity extends AppCompatActivity {
@@ -32,6 +29,14 @@ public class AddAIPostureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_add_aiposture);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.ai_add_posture_toolbar);
+        myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
 
         initUI();
     }
@@ -112,6 +117,16 @@ public class AddAIPostureActivity extends AppCompatActivity {
             setResult(1,intentResult);//1 is for success
             finish();
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        try {
+            getMenuInflater().inflate(R.menu.menu_ai_mode, menu);
+            return true;
+        } catch (Exception e) {
+            return super.onCreateOptionsMenu(menu);
+        }
     }
 
 }

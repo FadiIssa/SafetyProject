@@ -65,8 +65,8 @@ public class ScanManager {
         leftInsoleMacAddress="";
         rightInsoleMacAddress="";
 
-        bestLeftInsoleRSSI=-100;
-        bestRightInsoleRSSI=-100;
+        bestLeftInsoleRSSI=-120;
+        bestRightInsoleRSSI=-120;
 
         if (scanSubscription!=null){
             if (!scanSubscription.isUnsubscribed()) {
@@ -110,11 +110,11 @@ public class ScanManager {
                 Log.d(TAG,"scan for discovery onNext "+scanResult.toString());
 
                 if (scanResult.getBleDevice().getName().equals("ZTSafetyL")){
-                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
+                    Log.d(TAG,"signal strength for left "+scanResult.getBleDevice().getMacAddress()+" is:"+scanResult.getRssi());
                     int currentDetectedLeftRSSI=scanResult.getRssi();
 
                     if (currentDetectedLeftRSSI>bestLeftInsoleRSSI){
-                        leftInsoleMacAddress=scanResult.getBleDevice().getMacAddress();;
+                        leftInsoleMacAddress=scanResult.getBleDevice().getMacAddress();
                         bestLeftInsoleRSSI=currentDetectedLeftRSSI;
                     }
 
@@ -123,11 +123,11 @@ public class ScanManager {
                 }
 
                 if (scanResult.getBleDevice().getName().equals("ZTSafetyR")){
-                    Log.d(TAG,"signal strength is:"+scanResult.getRssi());
+                    Log.d(TAG,"signal strength for right "+ scanResult.getBleDevice().getMacAddress()+" is:"+scanResult.getRssi());
                     int currentDetectedRightRSSI=scanResult.getRssi();
 
                     if (currentDetectedRightRSSI>bestRightInsoleRSSI){
-                        rightInsoleMacAddress=scanResult.getBleDevice().getMacAddress();;
+                        rightInsoleMacAddress=scanResult.getBleDevice().getMacAddress();
                         bestRightInsoleRSSI=currentDetectedRightRSSI;
                     }
                     isRightInsoleDetectedNearby=true;
