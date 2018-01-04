@@ -3,13 +3,16 @@ package com.example.fadi.testingrx;
 import android.content.Context;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -26,6 +29,7 @@ import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 
 import com.example.fadi.testingrx.ui.AddAIPostureActivity;
+import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.polidea.rxandroidble.RxBleConnection;
 
 
@@ -87,6 +91,13 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     HashMap<String,Integer> postureIcons = new HashMap<>();
 
+    Drawable drawable_posture_1;
+    Drawable drawable_posture_2;
+    Drawable drawable_posture_3;
+    Drawable drawable_posture_4;
+    Drawable drawable_posture_5;
+    Drawable drawable_posture_6;
+
     // this is to ensure font changes happen in this activity.
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -99,6 +110,13 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_ai_real_time);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.ai_activity_toolbar);
+        myToolbar.setOverflowIcon(getDrawable(R.drawable.icon_settings));
+        myToolbar.setNavigationIcon(getDrawable(R.drawable.menu_icon));
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.action_bar_title,null));
 
         Log.d(TAG,"ai real time activity onCreate is called");
 
@@ -231,7 +249,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
-            getMenuInflater().inflate(R.menu.menu_live_mode, menu);
+            getMenuInflater().inflate(R.menu.menu_ai_mode, menu);
             return true;
         } catch (Exception e) {
             return super.onCreateOptionsMenu(menu);
@@ -276,29 +294,56 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                 int iconOrder=postureIcons.get(currentPostureName);
                 switch (iconOrder){
                     case 1:
-                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_1));
+                        if (drawable_posture_1==null)
+                        {
+                            drawable_posture_1 = getDrawable(R.drawable.ic_posture_1);
+                        }
+                        imageViewCurrentPosture.setImageDrawable(drawable_posture_1);
                         break;
                     case 2:
-                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_2));
+                        if (drawable_posture_2==null)
+                        {
+                            drawable_posture_2 = getDrawable(R.drawable.ic_posture_2);
+                        }
+                        imageViewCurrentPosture.setImageDrawable(drawable_posture_2);
                         break;
                     case 3:
-                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_3));
+                        if (drawable_posture_3==null)
+                        {
+                            drawable_posture_3 = getDrawable(R.drawable.ic_posture_3);
+                        }
+                        imageViewCurrentPosture.setImageDrawable(drawable_posture_3);
                         break;
                     case 4:
-                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_4));
+                        if (drawable_posture_4==null)
+                        {
+                            drawable_posture_4 = getDrawable(R.drawable.ic_posture_4);
+                        }
+                        imageViewCurrentPosture.setImageDrawable(drawable_posture_4);
                         break;
                     case 5:
-                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_5));
+                        if (drawable_posture_5==null)
+                        {
+                            drawable_posture_5 = getDrawable(R.drawable.ic_posture_5);
+                        }
+                        imageViewCurrentPosture.setImageDrawable(drawable_posture_5);
                         break;
                     case 6:
-                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_6));
+                        if (drawable_posture_6==null)
+                        {
+                            drawable_posture_6 = getDrawable(R.drawable.ic_posture_6);
+                        }
+                        imageViewCurrentPosture.setImageDrawable(drawable_posture_6);
                         break;
                     default:
-                        imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_6));
+                        if (drawable_posture_6==null)
+                        {
+                            drawable_posture_6 = getDrawable(R.drawable.ic_posture_6);
+                        }
+                        imageViewCurrentPosture.setImageDrawable(drawable_posture_6);
                         Log.e(TAG,"there should be no posture icon that is not between 1 and 6");
                         break;//maybe the break is not needed here
                 }
-
             }
         });
     }
@@ -345,5 +390,21 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                             textViewTrainingLabel.setVisibility(View.GONE);
                             textViewCurrentPosture.setVisibility(View.VISIBLE);
                         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_ai_reset:
+                resetPostures();
+                imageViewCurrentPosture.setImageDrawable(getDrawable(R.drawable.ic_posture_6));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void resetPostures(){
+        aiPostureManager.resetPostures();
     }
 }

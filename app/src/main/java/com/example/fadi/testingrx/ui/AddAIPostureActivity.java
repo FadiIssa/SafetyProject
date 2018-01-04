@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,7 +17,6 @@ import com.example.fadi.testingrx.R;
 
 public class AddAIPostureActivity extends AppCompatActivity {
 
-    Button buttonOK;
     Button buttonCancel;
     EditText editTextPostureName;
 
@@ -30,23 +30,15 @@ public class AddAIPostureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_add_aiposture);
 
         initUI();
     }
 
     private void initUI(){
-        buttonOK = findViewById(R.id.buttonOK);
         buttonCancel = findViewById(R.id.buttonCancel);
         editTextPostureName = findViewById(R.id.editTextPostureName);
-
-        buttonOK.setOnClickListener(a->{
-            Intent intentResult = new Intent();
-            String postureName=editTextPostureName.getText().toString();
-            intentResult.putExtra("posture_name",postureName);
-            setResult(1,intentResult);//1 is for success
-            finish();
-        });
 
         buttonCancel.setOnClickListener(a->{
             Intent intentResult = new Intent();
