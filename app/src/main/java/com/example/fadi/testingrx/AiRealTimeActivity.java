@@ -4,7 +4,6 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -19,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +29,6 @@ import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 
 import com.example.fadi.testingrx.ui.AddAIPostureActivity;
-import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.polidea.rxandroidble.RxBleConnection;
 
 
@@ -61,6 +60,8 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     TextView textViewCurrentPosture;
     TextView textViewTrainingLabel;
+    TextView textViewCurrentPostureLabel;
+    ProgressBar progressBarAnalyzing;
 
     ImageView imageViewCurrentPosture;
 
@@ -198,6 +199,10 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         textViewLeftMac = (TextView) findViewById(R.id.textViewAILeftMac);
         textViewLeftMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_LEFT_INSOLE_MAC));
 
+        progressBarAnalyzing = findViewById(R.id.progressBarAnalyzing);
+
+        textViewCurrentPostureLabel = findViewById(R.id.textViewCurrentPostureLabel);
+
         textViewRightMac = (TextView) findViewById(R.id.textViewAIRightMac);
         textViewRightMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_RIGHT_INSOLE_MAC));
 
@@ -231,7 +236,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         textViewCurrentPosture = (TextView) findViewById(R.id.textViewCurrentPosture);
 
         imageViewBrain = (ImageView) findViewById(R.id.imageViewBrain);
-        imageViewBrain.setImageDrawable(getResources().getDrawable(R.drawable.brain));
+        imageViewBrain.setImageDrawable(getResources().getDrawable(R.drawable.ic_learning_status));
         imageViewBrain.setVisibility(View.GONE);
 
         imageViewCurrentPosture = findViewById(R.id.imageViewCurrentPosture);
@@ -366,20 +371,20 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     private void addTrainingSample(String pName){
         //String postureName= editTextPostureName.getText().toString();
 
+        startLearningAnimation();
         aiPostureManager.addPostureSample(latestSensorsReading,pName);
         Toast.makeText(getApplicationContext(),"a new sample added to training data",Toast.LENGTH_LONG).show();
 
+        imageViewBrain.setVisibility(View.VISIBLE);
+        textViewTrainingLabel.setVisibility(View.VISIBLE);
+
         timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .take(3)
+                .take(4)
                 .observeOn(AndroidSchedulers.mainThread())
 
                 .subscribe(aLong -> {
                             Log.d(TAG,"one second passed, it is:"+aLong);
-                            imageViewBrain.setVisibility(View.VISIBLE);
-                            textViewTrainingLabel.setVisibility(View.VISIBLE);
-
-
                         },
                         t -> {
                             Log.e(TAG, "error from TimerObserver:" + t.toString());
@@ -388,7 +393,8 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                             Log.e(TAG, " scan timer Observer received onCompleted()");
                             imageViewBrain.setVisibility(View.GONE);
                             textViewTrainingLabel.setVisibility(View.GONE);
-                            textViewCurrentPosture.setVisibility(View.VISIBLE);
+                            //textViewCurrentPosture.setVisibility(View.VISIBLE);
+                            finishLearningAnimation();
                         });
     }
 
@@ -406,5 +412,19 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     private void resetPostures(){
         aiPostureManager.resetPostures();
+    }
+
+    private void startLearningAnimation(){
+        imageViewCurrentPosture.setVisibility(View.GONE);
+        textViewCurrentPosture.setVisibility(View.GONE);
+        textViewCurrentPostureLabel.setVisibility(View.GONE);
+        progressBarAnalyzing.setVisibility(View.GONE);
+    }
+
+    private void finishLearningAnimation(){
+        imageViewCurrentPosture.setVisibility(View.VISIBLE);
+        textViewCurrentPosture.setVisibility(View.VISIBLE);
+        textViewCurrentPostureLabel.setVisibility(View.VISIBLE);
+        progressBarAnalyzing.setVisibility(View.VISIBLE);
     }
 }
