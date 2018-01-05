@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fadi.testingrx.audio.Speaker;
 import com.example.fadi.testingrx.f.ai.AiPostureManager;
 
 import com.example.fadi.testingrx.f.ai.SensorsReading;
@@ -33,6 +34,7 @@ import com.polidea.rxandroidble.RxBleConnection;
 
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -64,6 +66,11 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     ProgressBar progressBarAnalyzing;
 
     ImageView imageViewCurrentPosture;
+
+    Speaker mSpeaker;
+
+    boolean leftInsoleConnected;
+    boolean rightInsoleConnected;
 
     public static final int REQUEST_CODE_GET_POSTURE_NAME_AND_ICON=12;
 
@@ -99,6 +106,11 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     Drawable drawable_posture_5;
     Drawable drawable_posture_6;
 
+    Random mRandom;
+
+    boolean postureChangedFromLastTime;//it will be used to determine whether to speak about the new posture in speaker or not.
+    String latestPostureName;//it will hold the name of the laters posture, to be used to determine whether to speak the posture name or not.
+
     // this is to ensure font changes happen in this activity.
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -129,9 +141,17 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         MyApplication.getBleManager().connectRealTime(mPostureTracker);
 
         aiPostureManager = new AiPostureManager();
+        mSpeaker = Speaker.getInstance(getApplicationContext());
+        mSpeaker.speak("Welcome to S cube A I system");
+
+        leftInsoleConnected=false;
+        rightInsoleConnected=false;
+
+        postureChangedFromLastTime=false;
+        latestPostureName="fake";//just any name to be different from default posture name
+
+        mRandom = new Random(3);
     }
-
-
 
     //this will be called from the posture detection class, to let MainActivity updates the views it has to reflect the real postures.
     @Override
@@ -143,34 +163,60 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     @Override
     public void notifyLeftConnectionDisconnected() {
-        runOnUiThread(() -> {textViewAILeftConnectionStatus.setText("Disconnected");});
+        runOnUiThread(() -> {
+            leftInsoleConnected=false;
+            textViewAILeftConnectionStatus.setText("Disconnected");
+            buttonAddSample.setVisibility(View.GONE);
+        });
     }
 
     @Override
     public void notifyRightConnectionDisconnected() {
-        runOnUiThread(() -> {textViewAIRightConnectionStatus.setText("Disconnected");});
+        runOnUiThread(() -> {
+            rightInsoleConnected=false;
+            textViewAIRightConnectionStatus.setText("Disconnected");});
     }
 
     @Override
     public void notifyLeftConnectionIsConnecting() {
+        leftInsoleConnected=false;
         runOnUiThread(() -> {textViewAILeftConnectionStatus.setText("Connecting..");
             textViewAILeftBatteryValue.setText("?");});
     }
 
     @Override
     public void notifyRightConnectionIsConnecting() {
-        runOnUiThread(() -> {textViewAIRightConnectionStatus.setText("Connecting..");
-            textViewAIRightBatteryValue.setText("?");});
+        rightInsoleConnected=false;
+        runOnUiThread(() -> {
+            textViewAIRightConnectionStatus.setText("Connecting..");
+            textViewAIRightBatteryValue.setText("?");
+        });
     }
 
     @Override
     public void notifyLeftConnectionConnected() {
-        runOnUiThread(() -> {textViewAILeftConnectionStatus.setText("Connected");});
+        leftInsoleConnected=true;
+
+        runOnUiThread(() -> {
+            textViewAILeftConnectionStatus.setText("Connected");
+            if (rightInsoleConnected && leftInsoleConnected){
+                buttonAddSample.setVisibility(View.VISIBLE);
+                mSpeaker.speak("I am ready to learn.");
+            }
+        });
     }
 
     @Override
     public void notifyRightConnectionConnected() {
-        runOnUiThread(() -> {textViewAIRightConnectionStatus.setText("Connected");});
+        rightInsoleConnected=true;
+
+        runOnUiThread(() -> {
+            textViewAIRightConnectionStatus.setText("Connected");
+            if (rightInsoleConnected && leftInsoleConnected){
+                buttonAddSample.setVisibility(View.VISIBLE);
+                mSpeaker.speak("I am ready to learn.");
+            }
+        });
     }
 
     @Override
@@ -270,7 +316,6 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG,"onStop is called for the aiRT");
     }
 
     @Override
@@ -287,6 +332,18 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
         String currentPostureName=aiPostureManager.getPostureName(new SensorsReading(latestLX,latestLY,latestLZ,latestRX,latestRY,latestRZ));
         Log.d(TAG,"current posture name is:"+currentPostureName);
+        if (currentPostureName.equalsIgnoreCase("no posture available") || (buttonAddSample.getVisibility()==View.GONE)){
+            ;//ignoe
+        }
+        else {
+            if (currentPostureName.equalsIgnoreCase(latestPostureName)){
+                postureChangedFromLastTime=false;//do nothing
+            } else {
+                postureChangedFromLastTime=true;
+                latestPostureName=currentPostureName;
+                speakPosture(currentPostureName);
+            }
+        }
 
         runOnUiThread(new Runnable() {
             @Override
@@ -412,19 +469,44 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     private void resetPostures(){
         aiPostureManager.resetPostures();
+        latestPostureName="fake";
+        postureChangedFromLastTime=false;
     }
 
     private void startLearningAnimation(){
+        buttonAddSample.setVisibility(View.GONE);
         imageViewCurrentPosture.setVisibility(View.GONE);
         textViewCurrentPosture.setVisibility(View.GONE);
         textViewCurrentPostureLabel.setVisibility(View.GONE);
         progressBarAnalyzing.setVisibility(View.GONE);
+        mSpeaker.speak("I am learning");
     }
 
     private void finishLearningAnimation(){
+        buttonAddSample.setVisibility(View.VISIBLE);
         imageViewCurrentPosture.setVisibility(View.VISIBLE);
         textViewCurrentPosture.setVisibility(View.VISIBLE);
         textViewCurrentPostureLabel.setVisibility(View.VISIBLE);
         progressBarAnalyzing.setVisibility(View.VISIBLE);
+        mSpeaker.speak("your posture is now saved. Now you can add another posture.");
+    }
+
+    private void speakPosture(String postureName){
+        int i = mRandom.nextInt(3);
+
+        switch (i){
+            case 0:
+                mSpeaker.speakPosture("you are in " + postureName + " posture.");
+                break;
+            case 1:
+                mSpeaker.speakPosture("your posture is "+ postureName);
+                break;
+            case 2:
+                mSpeaker.speakPosture(postureName);
+                break;
+            default:
+                mSpeaker.speakPosture(postureName + " posture");
+                break;
+        }
     }
 }
