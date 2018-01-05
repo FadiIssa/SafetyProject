@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fadi.testingrx.audio.Speaker;
 import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.data.MockDataProcessor;
 import com.example.fadi.testingrx.data.SessionContract;
@@ -71,6 +72,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         setContentView(R.layout.activity_launcher);
 
         setupToolbar();
+
+        Speaker.PrepareSpeaker(getApplicationContext());
 
         initUI();
 
