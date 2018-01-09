@@ -275,6 +275,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
                 //now start another activity to get the name of posture
                 Intent getPostureNameIntent = new Intent (getApplication().getApplicationContext(), AddAIPostureActivity.class);
+                mSpeaker.speak("I am learning");
 
                 startActivityForResult(getPostureNameIntent,REQUEST_CODE_GET_POSTURE_NAME_AND_ICON);//once the result comes, it will be handled in onActivityResult method
             }
@@ -501,7 +502,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         textViewCurrentPosture.setVisibility(View.VISIBLE);
         textViewCurrentPostureLabel.setVisibility(View.VISIBLE);
         progressBarAnalyzing.setVisibility(View.VISIBLE);
-        mSpeaker.speak("your posture is now saved. Now you can add another posture.");
+        mSpeaker.speak("your posture is saved. Now you can add another posture.");
     }
 
     private void speakPosture(String postureName){
