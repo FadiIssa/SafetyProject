@@ -16,6 +16,8 @@ public class Speaker {
     String TAG = "Audio";
     boolean isAudioInitializationOK;
 
+    boolean speakerIsMuted;
+
     private Speaker(Context ctx){
         initializeSpeaker(ctx);
     }
@@ -36,6 +38,7 @@ public class Speaker {
 
     // this method is called from the constructor, usually the constructor should be called only one time per the life cycle of an app, no need to create new Speaker for every new running activity. app context should be passed on from the caller
     private void initializeSpeaker(Context mContext) {
+        speakerIsMuted=false;
         mTTS = new TextToSpeech(mContext, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 isAudioInitializationOK = true;
@@ -57,8 +60,27 @@ public class Speaker {
     }
 
     public void speak(String text){
+
+        if (speakerIsMuted) {
+            return;
+        }
+
         mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
     }
 
-    public void speakPosture(String text) {mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);}
+    public void speakPosture(String text) {
+
+        if (speakerIsMuted) {
+            return;
+        }
+
+        mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);}
+
+    public void muteSpeaker(){
+        speakerIsMuted=true;
+    }
+
+    public void unmuteSpeaker(){
+        speakerIsMuted=false;
+    }
 }
