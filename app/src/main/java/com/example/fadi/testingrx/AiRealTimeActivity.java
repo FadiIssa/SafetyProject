@@ -110,7 +110,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
 
     boolean postureChangedFromLastTime;//it will be used to determine whether to speak about the new posture in speaker or not.
     String latestPostureName;//it will hold the name of the laters posture, to be used to determine whether to speak the posture name or not.
-
+    int lastPostureDuration;
     // this is to ensure font changes happen in this activity.
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -148,9 +148,12 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         rightInsoleConnected=false;
 
         postureChangedFromLastTime=false;
+        lastPostureDuration=0;
         latestPostureName="fake";//just any name to be different from default posture name
 
         mRandom = new Random(3);
+
+
     }
 
     //this will be called from the posture detection class, to let MainActivity updates the views it has to reflect the real postures.
@@ -311,11 +314,15 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     protected void onStop() {
         super.onStop();
         Log.d(TAG,"onStop is called for the aiRT");
+        mSpeaker.muteSpeaker();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mSpeaker!=null){
+            mSpeaker.unmuteSpeaker();
+        }
     }
 
     @Override
@@ -338,10 +345,15 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         else {
             if (currentPostureName.equalsIgnoreCase(latestPostureName)){
                 postureChangedFromLastTime=false;//do nothing
+                lastPostureDuration++;
+                if (lastPostureDuration==4){
+                    speakPosture(currentPostureName);
+                }
             } else {
                 postureChangedFromLastTime=true;
+                lastPostureDuration=0;
                 latestPostureName=currentPostureName;
-                speakPosture(currentPostureName);
+                //speakPosture(currentPostureName);
             }
         }
 
@@ -471,6 +483,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         aiPostureManager.resetPostures();
         latestPostureName="fake";
         postureChangedFromLastTime=false;
+        lastPostureDuration=0;
     }
 
     private void startLearningAnimation(){
@@ -509,4 +522,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                 break;
         }
     }
+
+
+
 }

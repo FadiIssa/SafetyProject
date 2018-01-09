@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
 
 
     boolean manDownStarted;
+    int manDownTimeCounter;//in seconds
 
     TextView counterCurrentPostureTextView;
     TextView counterCrouchingTextView;
@@ -228,6 +229,14 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (manDownStarted){
+                    manDownTimeCounter++;
+                    if (manDownTimeCounter==4){
+                        Intent intent = new Intent(getApplicationContext(), ManDownActivity.class);
+                        startActivity(intent);
+                    }
+                    return;//ignore all other processings
+                }
                 int currentPositionCounter=currentPosCounter/2;
                 if (i== Postures.TIPTOES){
                     currentPostureImageView.setImageDrawable(currentPositionCounter>=4? drawableTipToesFull:drawableTipToesBorder);
@@ -237,10 +246,10 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
                     currentPostureImageView.setImageDrawable(currentPositionCounter>=4? drawableKneelingFull:drawableKneelingBorder);
                 } else if (i==Postures.FALLDOWN){
                     currentPostureImageView.setImageDrawable(drawableFallDown);
+
                     if (!manDownStarted) {
-                        Intent intent = new Intent(getApplicationContext(), ManDownActivity.class);
-                        startActivity(intent);
                         manDownStarted=true;
+                        manDownTimeCounter=1;
                     }
                 }
                 else if (i== Postures.UNKNOWN){
