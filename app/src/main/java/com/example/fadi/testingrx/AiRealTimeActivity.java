@@ -273,11 +273,41 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
             public void onClick(View v) {
                 latestSensorsReading = new SensorsReading(latestLX,latestLY,latestLZ,latestRX,latestRY,latestRZ);
 
+                startLearningAnimation();
+
+                timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .take(4)
+                        .observeOn(AndroidSchedulers.mainThread())
+
+                        .subscribe(aLong -> {
+                                    Log.d(TAG,"one second passed, it is:"+aLong);
+                                },
+                                t -> {
+                                    Log.e(TAG, "error from TimerObserver:" + t.toString());
+                                },
+                                () -> {
+                                    Log.e(TAG, " scan timer Observer received onCompleted()");
+                                    imageViewBrain.setVisibility(View.GONE);
+                                    textViewTrainingLabel.setVisibility(View.GONE);
+                                    //textViewCurrentPosture.setVisibility(View.VISIBLE);
+
+                                    //now start another activity to get the name of posture
+                                    Intent getPostureNameIntent = new Intent (getApplication().getApplicationContext(), AddAIPostureActivity.class);
+                                    //mSpeaker.speak("I am learning");
+
+                                    startActivityForResult(getPostureNameIntent,REQUEST_CODE_GET_POSTURE_NAME_AND_ICON);//once the result comes, it will be handled in onActivityResult method
+
+                                    finishLearningAnimation();
+                                });
+
+                /*
                 //now start another activity to get the name of posture
                 Intent getPostureNameIntent = new Intent (getApplication().getApplicationContext(), AddAIPostureActivity.class);
-                mSpeaker.speak("I am learning");
+                //mSpeaker.speak("I am learning");
 
                 startActivityForResult(getPostureNameIntent,REQUEST_CODE_GET_POSTURE_NAME_AND_ICON);//once the result comes, it will be handled in onActivityResult method
+                */
             }
         });
 
@@ -431,6 +461,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
             String postureName=data.getStringExtra("posture_name");
             addTrainingSample(postureName);
             postureIcons.put(postureName,data.getIntExtra("posture_icon",6));
+            mSpeaker.speak("your posture is saved. Now you can add another posture.");
         }
 
         if (resultCode==0){
@@ -439,16 +470,15 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     }
 
     private void addTrainingSample(String pName){
-        //String postureName= editTextPostureName.getText().toString();
 
-        startLearningAnimation();
+        //startLearningAnimation();
         aiPostureManager.addPostureSample(latestSensorsReading,pName);
         Toast.makeText(getApplicationContext(),"a new sample added to training data",Toast.LENGTH_LONG).show();
 
-        imageViewBrain.setVisibility(View.VISIBLE);
-        textViewTrainingLabel.setVisibility(View.VISIBLE);
+        /*imageViewBrain.setVisibility(View.VISIBLE);
+        textViewTrainingLabel.setVisibility(View.VISIBLE);*/
 
-        timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
+        /*timerDisposable= io.reactivex.Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .take(4)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -465,7 +495,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                             textViewTrainingLabel.setVisibility(View.GONE);
                             //textViewCurrentPosture.setVisibility(View.VISIBLE);
                             finishLearningAnimation();
-                        });
+                        });*/
     }
 
     @Override
@@ -493,6 +523,10 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         textViewCurrentPosture.setVisibility(View.GONE);
         textViewCurrentPostureLabel.setVisibility(View.GONE);
         progressBarAnalyzing.setVisibility(View.GONE);
+
+        imageViewBrain.setVisibility(View.VISIBLE);
+        textViewTrainingLabel.setVisibility(View.VISIBLE);
+
         mSpeaker.speak("I am learning");
     }
 
@@ -502,7 +536,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
         textViewCurrentPosture.setVisibility(View.VISIBLE);
         textViewCurrentPostureLabel.setVisibility(View.VISIBLE);
         progressBarAnalyzing.setVisibility(View.VISIBLE);
-        mSpeaker.speak("your posture is saved. Now you can add another posture.");
+        //mSpeaker.speak("your posture is saved. Now you can add another posture.");
     }
 
     private void speakPosture(String postureName){
