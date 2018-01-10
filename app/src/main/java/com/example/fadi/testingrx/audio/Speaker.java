@@ -65,7 +65,7 @@ public class Speaker {
             return;
         }
 
-        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);
     }
 
     public void speakPosture(String text) {
