@@ -461,6 +461,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
             String postureName=data.getStringExtra("posture_name");
             addTrainingSample(postureName);
             postureIcons.put(postureName,data.getIntExtra("posture_icon",6));
+            mSpeaker.unmuteSpeaker();
             mSpeaker.speak("your posture is saved. Now you can add another posture.");
         }
 
