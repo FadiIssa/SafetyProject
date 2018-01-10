@@ -290,7 +290,7 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                                     Log.e(TAG, " scan timer Observer received onCompleted()");
                                     imageViewBrain.setVisibility(View.GONE);
                                     textViewTrainingLabel.setVisibility(View.GONE);
-                                    //textViewCurrentPosture.setVisibility(View.VISIBLE);
+                                    textViewCurrentPosture.setVisibility(View.VISIBLE);
 
                                     //now start another activity to get the name of posture
                                     Intent getPostureNameIntent = new Intent (getApplication().getApplicationContext(), AddAIPostureActivity.class);
@@ -457,7 +457,6 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode==1){
-            textViewCurrentPosture.setVisibility(View.GONE);
             String postureName=data.getStringExtra("posture_name");
             addTrainingSample(postureName);
             postureIcons.put(postureName,data.getIntExtra("posture_icon",6));
@@ -558,7 +557,5 @@ public class AiRealTimeActivity  extends AppCompatActivity implements Communicat
                 break;
         }
     }
-
-
 
 }
