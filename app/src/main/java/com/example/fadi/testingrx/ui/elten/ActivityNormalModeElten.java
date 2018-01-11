@@ -90,7 +90,7 @@ public class ActivityNormalModeElten extends AppCompatActivity implements StatsC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_uvex_normal);
+        setContentView(R.layout.activity_normal_new);
 
         mStatsCalculator = new StatsCalculator(this);
 
