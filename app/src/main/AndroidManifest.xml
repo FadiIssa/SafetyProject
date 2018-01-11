@@ -40,7 +40,7 @@
         <activity android:name=".ui.onboarding.Login" />
         <activity android:name=".ui.onboarding.ProfileActivity" />
         <activity
-            android:name=".ui.uvex.NormalModeUvex"
+            android:name=".ui.NormalModeActivityNew"
             android:label="@string/title_activity_normal_mode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -1,15 +1,9 @@
-package com.example.fadi.testingrx.ui.uvex;
+package com.example.fadi.testingrx.ui;
 
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +20,6 @@ import com.example.fadi.testingrx.LauncherActivity;
 import com.example.fadi.testingrx.MyApplication;
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
-import com.example.fadi.testingrx.data.MockDataProcessor;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
 import com.example.fadi.testingrx.data.SessionData;
@@ -36,10 +29,9 @@ import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
 import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
 import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
+import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,9 +42,34 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 
-public class NormalModeUvex extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback{
+public class NormalModeActivityNew extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback{
 
     private static final int MINIMUM_ACTIVITY_TIME=40;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
+
+    // UI items
+    //for connection status
+    ImageView imageViewLeftConnectionStatus;
+    Drawable drawableLeftConnecting;
+    Drawable drawableLeftConnected;
+
+    ImageView imageViewRightConnectionStatus;
+    Drawable drawableRightConnecting;
+    Drawable drawableRightConnected;
+
+    Drawable drawableConnectionStopped;
+
+    // safety normal activity starting and stopping, by normal I mean the one that does not need real time connection.
+    Button buttonStartActivityUvex;
+    Button buttonStopActivityUvex;
+
+    TextView textViewTimer;
+    ImageView imageViewTimer;
+
+    Drawable drawableTimer0;
+    Drawable drawableTimer1;
+    Drawable drawableTimer2;
+    Drawable drawableTimer3;
+    Drawable drawableTimer4;
 
     String TAG="UvexN";
 
@@ -67,29 +84,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
 
     boolean isActivityStarted;//this will be used to enable/disable the startActivity button.
 
-    //TextView textViewLeftConnectionStatus;
-    ImageView imageViewLeftConnectionStatus;
-    Drawable drawableLeftConnecting;
-    Drawable drawableLeftConnected;
 
-    //TextView textViewRightConnectionStatus;
-    ImageView imageViewRightConnectionStatus;
-    Drawable drawableRightConnecting;
-    Drawable drawableRightConnected;
-
-    Drawable drawableConnectionStopped;
-
-    Button buttonStartActivityUvex;
-    Button buttonStopActivityUvex;
-
-    TextView textViewTimer;
-    ImageView imageViewTimer;
-
-    Drawable drawableTimer0;
-    Drawable drawableTimer1;
-    Drawable drawableTimer2;
-    Drawable drawableTimer3;
-    Drawable drawableTimer4;
 
     Subscription leftInsoleIndicationSubscription;
     Subscription rightInsoleIndicationSubscription;
@@ -116,7 +111,7 @@ public class NormalModeUvex extends AppCompatActivity implements StatsCalculater
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_uvex_normal);
+        setContentView(R.layout.activity_normal_new);
 
         mStatsCalculator = new StatsCalculator(this);
 

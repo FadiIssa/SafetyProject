@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,18 +21,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fadi.testingrx.audio.Speaker;
-import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.data.MockDataProcessor;
 import com.example.fadi.testingrx.data.SessionContract;
 import com.example.fadi.testingrx.data.SessionDBHelper;
 import com.example.fadi.testingrx.data.SessionData;
 import com.example.fadi.testingrx.f.ble.ScanStatusCallback;
 import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
-import com.example.fadi.testingrx.ui.uvex.NormalModeUvex;
+import com.example.fadi.testingrx.ui.NormalModeActivityNew;
 
 import com.jakewharton.rxbinding2.view.RxView;
-
-import java.util.Random;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -140,7 +136,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                 .subscribe(a->{
                     //Intent intent = new Intent(this, NormalModeActivity.class);
                     //Intent intent = new Intent(this, Login.class);
-                    Intent intent = new Intent(this, NormalModeUvex.class);
+                    Intent intent = new Intent(this, NormalModeActivityNew.class);
                     intent.putExtra(KEY_LEFT_INSOLE_MAC,latestDetectedLeftMac);
                     intent.putExtra(KEY_RIGHT_INSOLE_MAC,latestDetectedRightMac);
 

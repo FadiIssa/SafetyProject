@@ -36,17 +36,6 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
     Button buttonStartActivity;
     Button buttonStopActivity;
 
-    boolean isLeftInsoleConnected;
-    boolean isRightInsoleConnected;
-
-    boolean leftStartActivityCommandSentSuccessfully;
-    boolean rightStartActivityCommandSentSuccessfully;
-
-    boolean leftStopActivityCommandSentSuccessfully;
-    boolean rightStopActivityCommandSentSuccessfully;
-
-    boolean isActivityStarted;//this will be used to enable/disable the startActivity button.
-
     ImageView imageViewCrouching;
     ImageView imageViewKneeling;
     ImageView imageViewTiptoes;
@@ -56,8 +45,6 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
     ImageView imageViewSteps;
     ImageView imageViewVibration;
     ImageView imageViewWalking;
-
-    //ImageView imageViewLogo;// it was removed, the logo is shown now on the action bar
 
     ImageView imageViewcalories;
     ImageView imageViewDistance;
@@ -85,6 +72,22 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
     TextView textViewTimer;
 
+    boolean isLeftInsoleConnected;
+    boolean isRightInsoleConnected;
+
+    boolean leftStartActivityCommandSentSuccessfully;
+    boolean rightStartActivityCommandSentSuccessfully;
+
+    boolean leftStopActivityCommandSentSuccessfully;
+    boolean rightStopActivityCommandSentSuccessfully;
+
+    boolean isActivityStarted;//this will be used to enable/disable the startActivity button.
+
+
+
+
+
+
     Subscription leftInsoleIndicationSubscription;
     Subscription rightInsoleIndicationSubscription;
 
@@ -107,7 +110,7 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_normal_mode);
+        setContentView(R.layout.activity_normal_mode_old);
 
         mStatsCalculator = new StatsCalculator(this);
 
