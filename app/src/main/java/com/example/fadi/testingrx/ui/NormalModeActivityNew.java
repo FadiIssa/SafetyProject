@@ -420,6 +420,7 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
                                     if (leftIndicationDataWellReceived&&rightIndicationDataWellReceived) {
                                         isActivityStarted = false;
                                         runOnUiThread(() -> {
+                                            resetTimer();
                                             buttonStopNormalActivity.setEnabled(false);
                                             buttonStartNormalActivity.setEnabled(true);
                                         });
@@ -450,8 +451,10 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
         byte[] stopCommandArray= {0x02};
         if (isRightInsoleConnected()){
             if (rightInsoleIndicationSubscription!=null){
-                if (!rightInsoleIndicationSubscription.isUnsubscribed())
+                if (!rightInsoleIndicationSubscription.isUnsubscribed()) {
+                    Log.d(TAG,"rightInsoleIndicationSubscription was alive, I will unsubscribe it");
                     rightInsoleIndicationSubscription.unsubscribe();
+                }
             }
             // from here I should start the indication subscription, to read the whole data after the activity finishes.
             Log.d(TAG," subscribing to indication for right insole");
@@ -473,21 +476,22 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
                                 }
                                 if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==128) ) {
-                                    mStatsCalculator.processSecondHalfRight(bytes);
+                                    Log.d(TAG,"received right indication data from second part of first chunk");
+                                    rightIndicationDataWellReceived=true;
 
                                     if (leftIndicationDataWellReceived&&rightIndicationDataWellReceived) {
                                         isActivityStarted = false;
                                         runOnUiThread(() -> {
                                             buttonStopNormalActivity.setEnabled(false);
                                             buttonStartNormalActivity.setEnabled(true);
+                                            resetTimer();
                                         });
                                     }
                                     else {
                                         Log.d(TAG,"even though both insoles successfully received stop command, the indication data is not successfully received on both insoles yet");
                                     }
 
-                                    rightIndicationDataWellReceived=true;
-
+                                    mStatsCalculator.processSecondHalfRight(bytes);
                                 }
                             },
                             throwable -> {Log.d(TAG,"RightInsoleIndicationObserver reader onError "+throwable.toString());});
@@ -630,7 +634,6 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
             public void onCompleted() {
             }
         };
-
     }
 
     private void startTimer(){
@@ -712,8 +715,8 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
         SessionData sd= new SessionData.Builder()
                 .setNumSteps(steps)
-                //.setNumStairs(stairs)
-                .setNumStairs(0)//remove this line and uncomment the above line to get the real number of stairs.
+                .setNumStairs(stairs)
+                //.setNumStairs(0)//remove this line and uncomment the above line to get save the real number of stairs in the database.
                 .setDurationCrouching(totalCrouchingTime)
                 .setDurationKneeling(totalKneelingTime)
                 .setDurationTiptoes(totalTiptoesTime)
