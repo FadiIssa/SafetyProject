@@ -36,7 +36,7 @@ import rx.Subscription;
  * Created by fadi on 09/10/2017.
  */
 
-public class ActivityNormalModeElten extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback {
+public class ActivityNormalModeEltenOld extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback {
 
     private static final int MINIMUM_ACTIVITY_TIME=65;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
 

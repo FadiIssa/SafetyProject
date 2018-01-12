@@ -165,6 +165,7 @@ public class StatsCalculator {
 
     private void notifyCallerIfReady(){
         if (secondHalfLeftReceived && secondHalfRightReceived) {
+            Log.d(TAG, "both second halfes on both insoles were received, start the preparation of data to show the results.");
             // notify caller with all the necessary statistics data
             String standingString= convertSecond((standingTimeLeft+standingTimeRight)/2);
             String stairsString=String.valueOf(numberOfStairsLeft+numberOfStairsRight);
@@ -238,6 +239,8 @@ public class StatsCalculator {
                     caloriesInt,
                     vibrationIntensity
             );
+        } else {
+            Log.d(TAG,"still not both parts of chunks on both insoles are received");
         }
     }
 

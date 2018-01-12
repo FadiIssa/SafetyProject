@@ -27,8 +27,6 @@ import com.example.fadi.testingrx.f.StatsCalculator;
 import com.example.fadi.testingrx.f.ble.Insoles;
 import com.example.fadi.testingrx.f.posture.CommunicationCallback;
 import com.example.fadi.testingrx.f.posture.PostureTracker;
-import com.example.fadi.testingrx.ui.SavedActivitiesBrowserActivity;
-import com.example.fadi.testingrx.ui.StatsCalculaterCallback;
 import com.example.fadi.testingrx.ui.uvex.SessionStatsActivity;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.polidea.rxandroidble.RxBleConnection;
@@ -44,7 +42,7 @@ import rx.Subscription;
 
 public class NormalModeActivityNew extends AppCompatActivity implements StatsCalculaterCallback,CommunicationCallback{
 
-    private static final int MINIMUM_ACTIVITY_TIME=40;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
+    private static final int MINIMUM_ACTIVITY_TIME=45;//this value is determined in the firmware, I just have to update it here to reflect it, usually it should be 5 minutes, in order not to save huge data fro the whole day.
 
     // UI items
     //for connection status
@@ -58,10 +56,14 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
     Drawable drawableConnectionStopped;
 
-    // safety normal activity starting and stopping, by normal I mean the one that does not need real time connection.
-    Button buttonStartActivityUvex;
-    Button buttonStopActivityUvex;
+    TextView textViewLeftMac;
+    TextView textViewRightMac;
 
+    // safety normal activity starting and stopping, by normal I mean the one that does not need real time connection.
+    Button buttonStartNormalActivity;
+    Button buttonStopNormalActivity;
+
+    // timer
     TextView textViewTimer;
     ImageView imageViewTimer;
 
@@ -71,7 +73,7 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     Drawable drawableTimer3;
     Drawable drawableTimer4;
 
-    String TAG="UvexN";
+    String TAG="NMode";
 
     boolean isLeftInsoleConnected;
     boolean isRightInsoleConnected;
@@ -82,9 +84,10 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     boolean leftStopActivityCommandSentSuccessfully;
     boolean rightStopActivityCommandSentSuccessfully;
 
+    boolean leftIndicationDataWellReceived;
+    boolean rightIndicationDataWellReceived;
+
     boolean isActivityStarted;//this will be used to enable/disable the startActivity button.
-
-
 
     Subscription leftInsoleIndicationSubscription;
     Subscription rightInsoleIndicationSubscription;
@@ -103,9 +106,6 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     Observable<Long> timerObservable;
     Subscription timerSubscription;
     Observer<Long> timerObserver;
-
-    TextView textViewLeftMac;
-    TextView textViewRightMac;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,10 +221,10 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
     private void onWriteSuccess( boolean isLeftInsole){
         if (isLeftInsole) {
-            Log.d(TAG, "successful write operation to left insole");
+            Log.d(TAG, "successful write operation of start activity to left insole");
             leftStartActivityCommandSentSuccessfully=true;
         } else {
-            Log.d(TAG, "successful write operation to right insole");
+            Log.d(TAG, "successful write operation of start activity to right insole");
             rightStartActivityCommandSentSuccessfully=true;
         }
 
@@ -234,7 +234,7 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
             startTimer();
             isActivityStarted=true;
             runOnUiThread(() -> {
-                buttonStartActivityUvex.setEnabled(false);
+                buttonStartNormalActivity.setEnabled(false);
             });
         }
     }
@@ -248,14 +248,15 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
             rightStopActivityCommandSentSuccessfully=true;
         }
 
+        Log.d(TAG,"now checking if stop activity command was sent successfully to both insoles");
         if (leftStopActivityCommandSentSuccessfully&&rightStopActivityCommandSentSuccessfully){
             leftStartActivityCommandSentSuccessfully=false;
             rightStartActivityCommandSentSuccessfully=false;
-            isActivityStarted=false;
-            runOnUiThread(() -> {
-                buttonStopActivityUvex.setEnabled(false);
-                buttonStartActivityUvex.setEnabled(true);
-            });
+            // here I am assuming that if the write command was sent successfully, it means the indication data was received successfully, but this is not the case.
+
+        }
+        else {
+            Log.d(TAG,"it seems the stop command was not sent successfully to both insoles yet");
         }
     }
 
@@ -265,45 +266,24 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
     @Override
     public void updatePositionCallBack(int i, int currentPosCounter, int crouchingCounter, int kneelingCounter, int tiptoesCounter) {
-        Log.d(TAG, "received position in MainActivity call back is:"+i);
+        //Log.d(TAG, "received position in MainActivity call back is:"+i);
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                int currentPositionCounter=currentPosCounter/2;
-
-
-                //setting the counter of current posture
-                int currentPositionCounterHours= currentPositionCounter/3600;
-                int currentPositionCounterMinutes= (currentPositionCounter%3600)/60;
-                int currentPositionCounterSeconds= (currentPositionCounter%3600)%60;
-
-
-                //counterCurrentPostureTextView.setText(String.valueOf(currentPositionCounterHours)+":"+String.valueOf(currentPositionCounterMinutes)+":"+String.valueOf(currentPositionCounterSeconds));
 
                 int crouchingPositionCounter=crouchingCounter/2;
                 totalCrouchingTime=crouchingPositionCounter;
-                Log.d(TAG,"total crouching time:"+totalCrouchingTime);
-                int crouchingPostureCounterHours=crouchingPositionCounter/3600;
-                int crouchingPostureCounterMinutes=(crouchingPositionCounter%3600)/60;
-                int crouchingPostureCounterSeconds=(crouchingPositionCounter%3600)%60;
-                //counterCrouchingTextView.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
+                //Log.d(TAG,"total crouching time:"+totalCrouchingTime);
 
                 int kneelingPositionCounter=kneelingCounter/2;
                 totalKneelingTime= kneelingPositionCounter;
-                Log.d(TAG,"total kneeling time:"+totalKneelingTime);
-                int kneelingPostureCounterHours=kneelingPositionCounter/3600;
-                int kneelingPostureCounterMinutes=(kneelingPositionCounter%3600)/60;
-                int kneelingPostureCounterSeconds=(kneelingPositionCounter%3600)%60;
-                //counterKneelingTextView.setText(String.valueOf(kneelingPostureCounterHours)+":"+String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
+                //Log.d(TAG,"total kneeling time:"+totalKneelingTime);
 
                 int tiptoesPositionCounter=tiptoesCounter/2;
                 totalTiptoesTime=tiptoesPositionCounter;
-                Log.d(TAG,"total tiptoes time:"+totalTiptoesTime);
-                int tiptoesPostureCounterHours=tiptoesPositionCounter/3600;
-                int tiptoesPostureCounterMinutes=(tiptoesPositionCounter%3600)/60;
-                int tiptoesPostureCounterSeconds=(tiptoesPositionCounter%3600)%60;
-                //counterTiptoesTextView.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
+                //Log.d(TAG,"total tiptoes time:"+totalTiptoesTime);
+
             }
         });
     }
@@ -311,17 +291,14 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     @Override
     public void notifyLeftConnectionDisconnected() {
         runOnUiThread(() -> {
-            //textViewLeftConnectionStatus.setText("Disconnected");
             imageViewLeftConnectionStatus.setImageDrawable(drawableConnectionStopped);//I am using the same as connecting, maybe this should be changed.
         });
-
             isLeftInsoleConnected=false;
     }
 
     @Override
     public void notifyRightConnectionDisconnected() {
         runOnUiThread(() -> {
-            //textViewRightConnectionStatus.setText("Disconnected");
             imageViewRightConnectionStatus.setImageDrawable(drawableConnectionStopped);
         });
         isRightInsoleConnected=false;
@@ -330,7 +307,6 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     @Override
     public void notifyLeftConnectionIsConnecting() {
         runOnUiThread(() -> {
-            //textViewLeftConnectionStatus.setText("Connecting..");
             imageViewLeftConnectionStatus.setImageDrawable(drawableLeftConnecting);
         });
         isLeftInsoleConnected=false;
@@ -339,7 +315,6 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     @Override
     public void notifyRightConnectionIsConnecting() {
         runOnUiThread(() -> {
-            //textViewRightConnectionStatus.setText("Connecting..");
             imageViewRightConnectionStatus.setImageDrawable(drawableRightConnecting);
         });
         isRightInsoleConnected=false;
@@ -348,7 +323,6 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     @Override
     public void notifyLeftConnectionConnected() {
         runOnUiThread(() -> {
-            //textViewLeftConnectionStatus.setText("Connected");
             imageViewLeftConnectionStatus.setImageDrawable(drawableLeftConnected);
             });
         isLeftInsoleConnected=true;
@@ -358,7 +332,6 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     @Override
     public void notifyRightConnectionConnected() {
         runOnUiThread(() -> {
-        //    textViewRightConnectionStatus.setText("Connected");
             imageViewRightConnectionStatus.setImageDrawable(drawableRightConnected);
         });
         isRightInsoleConnected = true;
@@ -384,29 +357,39 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
     }
 
-    private void stopSafetyActivity(){
+    private boolean areBothInsolesConnected(){
+        return (isLeftInsoleConnected()&&isRightInsoleConnected());
+    }
 
-
-
-        //check that both insoles are connected now
-        if (!(isLeftInsoleConnected()&&isRightInsoleConnected())) {
-            Toast.makeText(this,"ensure both insoles are connected",Toast.LENGTH_LONG).show();
-            return;
-        }
-
+    private void resetTimer(){
+        //if timer is running, then stop it
         if (timerSubscription!=null) {
             if (!timerSubscription.isUnsubscribed()) {
                 timerSubscription.unsubscribe();
                 runOnUiThread(() -> {textViewTimer.setText("0:0:0");});
             }
         }
+        else {
+            Log.d(TAG," timer is already unsubscibed,and it is null");
+        }
+    }
 
-        //check if the activity is not already started
+    //it should be called before sending the received data to new activity,
+    // so once the user comes back, he can start receiving new indicationo data
+    // for new activities
+    private void resetIndicationFlags(){
+       leftIndicationDataWellReceived=false;
+       rightIndicationDataWellReceived=false;
+    }
+
+    private void stopActivityOnLeftInsole(){
+        Log.d(TAG,"starting stopping activity on left insole, it will mean subscribe to indication, and write a stop command on the relevant characteristic.");
         byte[] stopCommandArray= {0x02};
         //send command to stop the activity
         if (isLeftInsoleConnected()){
             if (leftInsoleIndicationSubscription!=null){
                 if (!leftInsoleIndicationSubscription.isUnsubscribed())
+                    Log.d(TAG,"leftInsoleIndicationSubscription was alive, I will unsubscribe it");
                     leftInsoleIndicationSubscription.unsubscribe();
             }
             // from here I should start the indication subscription, to read the whole data after the activity finishes.
@@ -426,31 +409,45 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
                                 }
 
                                 if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==0) ) {
+                                    Log.d(TAG,"received indication data from first part of first chunk");
                                     mStatsCalculator.processFirstHalfLeft(bytes);
+
                                 }
                                 if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==128) ) {
+                                    Log.d(TAG,"received left indication data from second part of first chunk");
+
+                                    leftIndicationDataWellReceived=true;//we consider that if we receive the first half of the first chunk, then we are sure we will receive the rest, so we consider that left data is well received.
+                                    if (leftIndicationDataWellReceived&&rightIndicationDataWellReceived) {
+                                        isActivityStarted = false;
+                                        runOnUiThread(() -> {
+                                            buttonStopNormalActivity.setEnabled(false);
+                                            buttonStartNormalActivity.setEnabled(true);
+                                        });
+                                    }
+                                    else {
+                                        Log.d(TAG,"even though both insoles successfully received stop command, the indication data is not successfully received on both insoles yet");
+                                    }
+
                                     mStatsCalculator.processSecondHalfLeft(bytes);
                                 }
                             },
                             throwable -> {Log.d(TAG,"LeftInsoleIndicationObserver reader onError "+throwable.toString());});
 
+            Log.d(TAG, "writing a stop command characteristic to left insole");
+
             leftInsoleConnectionObservable
                     .flatMap(rxBleConnection -> rxBleConnection.writeCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_COMMAND),stopCommandArray))
                     .subscribe(bytes -> onStopActivityWriteSuccess(true),(e)->onWriteError(e));
 
-            Log.d(TAG, "activity stopped, writing to command characteristic of left insole");
-
-            //here I should start the indication thig.
-
-//            leftInsoleConnectionObservable
-//                    .flatMap(rxBleConnection -> rxBleConnection.setupIndication(UUID.fromString(Insoles.CHARACTERISTIC_CHUNK)))
-//                    .subscribe(myLeftInsoleIndicationObserver);
 
         }
         else{
-            Log.d(TAG,"could not stop activity, no connection with left insole.");
+            Log.d(TAG,"could not stop activity on left insole, check your connection.");
         }
+    }
 
+    private void stopActivityOnRightInsole(){
+        byte[] stopCommandArray= {0x02};
         if (isRightInsoleConnected()){
             if (rightInsoleIndicationSubscription!=null){
                 if (!rightInsoleIndicationSubscription.isUnsubscribed())
@@ -473,9 +470,24 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
                                 }
                                 if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==0) ) {
                                     mStatsCalculator.processFirstHalfRight(bytes);
+
                                 }
                                 if ( ((bytes[0]&0xFF)==0) && ((bytes[1]&0xFF)==128) ) {
                                     mStatsCalculator.processSecondHalfRight(bytes);
+
+                                    if (leftIndicationDataWellReceived&&rightIndicationDataWellReceived) {
+                                        isActivityStarted = false;
+                                        runOnUiThread(() -> {
+                                            buttonStopNormalActivity.setEnabled(false);
+                                            buttonStartNormalActivity.setEnabled(true);
+                                        });
+                                    }
+                                    else {
+                                        Log.d(TAG,"even though both insoles successfully received stop command, the indication data is not successfully received on both insoles yet");
+                                    }
+
+                                    rightIndicationDataWellReceived=true;
+
                                 }
                             },
                             throwable -> {Log.d(TAG,"RightInsoleIndicationObserver reader onError "+throwable.toString());});
@@ -487,7 +499,32 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
             Log.d(TAG, "activity stopped, writing to command characteristic of right insole");
         }
         else{
-            Log.d(TAG,"could not stop activity, no connection with right insole.");
+            Log.d(TAG,"could not stop activity on right insole, check your connection.");
+        }
+    }
+
+    private void stopSafetyActivity(){
+
+        //check that both insoles are connected now
+        if (!areBothInsolesConnected()) {
+            Toast.makeText(this,"ensure both insoles are connected",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        //check if the activity is not already started
+        // to do..
+
+        if (!leftStopActivityCommandSentSuccessfully) {
+            stopActivityOnLeftInsole();
+        }
+
+        if (!rightStopActivityCommandSentSuccessfully) {
+            stopActivityOnRightInsole();
+        }
+
+        if (leftStopActivityCommandSentSuccessfully&&rightStopActivityCommandSentSuccessfully){
+            //actually, before resetting the timer, we should check if we received both indication data from both insoles
+            resetTimer();
         }
     }
 
@@ -528,20 +565,18 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
         imageViewTimer.setImageDrawable(drawableTimer0);
 
-        buttonStartActivityUvex = (Button) findViewById(R.id.buttonStartActivityUvexNormal);
-        buttonStartActivityUvex.setEnabled(false);
+        buttonStartNormalActivity = (Button) findViewById(R.id.buttonStartActivityUvexNormal);
+        buttonStartNormalActivity.setEnabled(false);
 
-        RxView.clicks(buttonStartActivityUvex)
-                // .map(a->buttonStartActivity.getText().toString().equals("Start"))
+        RxView.clicks(buttonStartNormalActivity)
                 .subscribe(a-> {
                     startSafetyActivity();
-                    //startTimer();// the timer should only be started if the commands were sent successfuly.
                 });
 
-        buttonStopActivityUvex = (Button) findViewById(R.id.buttonStopActivityUvexNormal);
+        buttonStopNormalActivity = (Button) findViewById(R.id.buttonStopActivityUvexNormal);
         disableStopActivityButton();
 
-        RxView.clicks(buttonStopActivityUvex)
+        RxView.clicks(buttonStopNormalActivity)
                 .subscribe(a->{
                     stopSafetyActivity();
                 });
@@ -577,10 +612,10 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
                             break;
                     }
                     if (value>MINIMUM_ACTIVITY_TIME){
-                        buttonStopActivityUvex.setEnabled(true);
+                        buttonStopNormalActivity.setEnabled(true);
                     }
                     else {
-                        buttonStopActivityUvex.setEnabled(false);
+                        buttonStopNormalActivity.setEnabled(false);
                     }
 
                 });
@@ -611,46 +646,24 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
     @Override
     public void updateStatsOnUIString(final String standigTime, final String nStairs, final String nSteps, final String walkingTime, final String vibrationTime, final String leftAngle, final String rightAngle, final String distance, final String calories ){
-        runOnUiThread(() -> {
-
-            //now set the posture times
-            Log.d(TAG,"total crouching time:"+totalCrouchingTime);
-            //totalCrouchingTime=0;//remove this line after the demo, this is only for stability reasons, since the connectivity is not finalized yet.
-            int crouchingPostureCounterHours=totalCrouchingTime/3600;
-            int crouchingPostureCounterMinutes=(totalCrouchingTime%3600)/60;
-            int crouchingPostureCounterSeconds=(totalCrouchingTime%3600)%60;
-            //textViewCrouching.setText(String.valueOf(crouchingPostureCounterHours)+":"+String.valueOf(crouchingPostureCounterMinutes)+":"+String.valueOf(crouchingPostureCounterSeconds));
-
-            //totalKneelingTime=0;//remove this line urgently after the demo.
-            int kneelingPostureCounterHours=totalKneelingTime/3600;
-            int kneelingPostureCounterMinutes=(totalKneelingTime%3600)/60;
-            int kneelingPostureCounterSeconds=(totalKneelingTime%3600)%60;
-            //textViewKneeling.setText(String.valueOf(kneelingPostureCounterHours)+":"+String.valueOf(kneelingPostureCounterMinutes)+":"+String.valueOf(kneelingPostureCounterSeconds));
-
-            //totalTiptoesTime=0;//remove this line urgently after the demo.
-            int tiptoesPostureCounterHours=totalTiptoesTime/3600;
-            int tiptoesPostureCounterMinutes=(totalTiptoesTime%3600)/60;
-            int tiptoesPostureCounterSeconds=(totalTiptoesTime%3600)%60;
-            //textViewTiptoes.setText(String.valueOf(tiptoesPostureCounterHours)+":"+String.valueOf(tiptoesPostureCounterMinutes)+":"+String.valueOf(tiptoesPostureCounterSeconds));
-
-        });
+        // do nothing, it is here to meet interface implementation, but in normal mode this method will play no role, another method will paly the required role
     }
 
     private void processEnablingStartSafetyActivityButton(){
         Log.d(TAG,"processEnablingStartButton, left connection is:"+isLeftInsoleConnected+" right connection is:"+isRightInsoleConnected);
         if (isLeftInsoleConnected && isRightInsoleConnected && (!isActivityStarted)){
             runOnUiThread(() -> {
-                buttonStartActivityUvex.setEnabled(true);
+                buttonStartNormalActivity.setEnabled(true);
             });
         }
     }
 
     private void disableStopActivityButton(){
-        buttonStopActivityUvex.setEnabled(false);
+        buttonStopNormalActivity.setEnabled(false);
     }
 
     private void enableStopActivityButton(){
-        buttonStartActivityUvex.setEnabled(true);
+        buttonStartNormalActivity.setEnabled(true);
     }
 
     @Override
@@ -726,6 +739,11 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
         db.close();
         myDBHelper.close();
 
+        //reset current flags in this activity
+        leftIndicationDataWellReceived=false;
+        rightIndicationDataWellReceived=false;
+        leftStopActivityCommandSentSuccessfully=false;
+        rightStopActivityCommandSentSuccessfully=false;
         startActivity(intent);
     }
 

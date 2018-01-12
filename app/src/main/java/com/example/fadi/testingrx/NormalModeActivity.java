@@ -83,11 +83,6 @@ public class NormalModeActivity extends AppCompatActivity implements Communicati
 
     boolean isActivityStarted;//this will be used to enable/disable the startActivity button.
 
-
-
-
-
-
     Subscription leftInsoleIndicationSubscription;
     Subscription rightInsoleIndicationSubscription;
 
