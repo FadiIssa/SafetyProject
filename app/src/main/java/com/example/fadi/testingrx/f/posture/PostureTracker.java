@@ -191,4 +191,8 @@ public class PostureTracker {
     public void updateRightBattery(int value){
         caller.notifyRightBattery(value);
     }
+
+    public void updateLeftFW(int value){caller.notifyLeftFW(value);}
+
+    public void updateRightFW(int value){caller.notifyRightFW(value);}
 }

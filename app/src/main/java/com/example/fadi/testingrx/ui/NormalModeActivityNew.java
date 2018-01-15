@@ -59,6 +59,9 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
     TextView textViewLeftMac;
     TextView textViewRightMac;
 
+    TextView textViewLeftFWVersion;
+    TextView textViewRightFWVersion;
+
     // safety normal activity starting and stopping, by normal I mean the one that does not need real time connection.
     Button buttonStartNormalActivity;
     Button buttonStopNormalActivity;
@@ -357,6 +360,20 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
     }
 
+    @Override
+    public void notifyLeftFW(int value) {
+        runOnUiThread(()->{
+            textViewLeftFWVersion.setText("V:"+value);
+        });
+    }
+
+    @Override
+    public void notifyRightFW(int value) {
+        runOnUiThread(()->{
+            textViewRightFWVersion.setText("V:"+value);
+        });
+    }
+
     private boolean areBothInsolesConnected(){
         return (isLeftInsoleConnected()&&isRightInsoleConnected());
     }
@@ -540,6 +557,9 @@ public class NormalModeActivityNew extends AppCompatActivity implements StatsCal
 
         textViewRightMac = (TextView) findViewById(R.id.textViewRightMac);
         textViewRightMac.setText(getIntent().getStringExtra(LauncherActivity.KEY_RIGHT_INSOLE_MAC));
+
+        textViewLeftFWVersion = (TextView) findViewById(R.id.textViewLeftFWVersion);
+        textViewRightFWVersion = (TextView) findViewById(R.id.textViewRightFWVersion);
 
         isActivityStarted=false;
 

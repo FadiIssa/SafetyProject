@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -33,6 +34,10 @@ public class RTConnectionManager {
 
     Observer<byte[]> myLeftBatteryReadObserver;
     Observer<byte[]> myRightBatteryReadObserver;
+
+    Observer<byte[]> myLeftFWReadObserver;
+    Observer<byte[]> myRightFWReadObserver;
+
 
     Observer<byte[]> myLeftBatteryNotifyObserver;
     Observer<byte[]> myRightBatteryNotifyObserver;
@@ -91,6 +96,9 @@ public class RTConnectionManager {
         myLeftBatteryReadObserver = ObserverPool.getNewLeftBatteryReaderObserver(mPostureTracker);
         myRightBatteryReadObserver = ObserverPool.getNewRightBatteryReaderObserver(mPostureTracker);
 
+        myLeftFWReadObserver = ObserverPool.getLeftFWReaderObserver(mPostureTracker);
+        myRightFWReadObserver = ObserverPool.getRightFWReaderObserver(mPostureTracker);
+
         myLeftBatteryNotifyObserver = ObserverPool.getNewLeftBatteryNotifyObserver(mPostureTracker);
         myRightBatteryNotifyObserver = ObserverPool.getNewRightBatteryNotifyObserver(mPostureTracker);
 
@@ -124,6 +132,11 @@ public class RTConnectionManager {
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myLeftBatteryReadObserver);
+
+                rxBleConnection.readCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_FIRMWARE))
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(myLeftFWReadObserver);
 
                 rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
                         .subscribeOn(Schedulers.newThread())
@@ -162,6 +175,12 @@ public class RTConnectionManager {
                 rxBleConnection.readCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(myRightBatteryReadObserver);
+
+                rxBleConnection.readCharacteristic(UUID.fromString(Insoles.CHARACTERISTIC_FIRMWARE))
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(myRightFWReadObserver);
+
 
                 rxBleConnection.setupNotification(UUID.fromString(Insoles.CHARACTERISTIC_BATTERY))
                         .flatMap(observable -> observable)

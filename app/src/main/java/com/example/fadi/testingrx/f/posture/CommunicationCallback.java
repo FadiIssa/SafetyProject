@@ -29,6 +29,15 @@ public interface CommunicationCallback {
     void notifyLeftBattery(int value);
     void notifyRightBattery(int value);
 
+    //it is meant to be called in normal mode activity, no somewhere else
+    default void notifyLeftFW(int value){
+        Log.e("error"," this is a default method, it is better that your class provide its own implementation.");
+    }
+
+    default void notifyRightFW(int value){
+        Log.e("error"," this is a default method, it is better that your class provide its own implementation.");
+    }
+
     default void notifyLatestSensorReadings(int lx,int ly, int lz, int rx, int ry, int rz){
         Log.e("error"," this is a default method, it is better that your class provide its own implementation.");
     };
