@@ -103,6 +103,48 @@ public class ObserverPool {
         };
     }
 
+    public static Observer<byte[]> getLeftFWReaderObserver(PostureTracker p){
+        return new Observer<byte[]>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG,"lefetFWReaderObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"lefetFWReaderObserver onError "+e.toString());
+            }
+
+            @Override
+            public void onNext(byte[] bytes) {
+                int leftFWBuildValue=bytes[4]&0xFF;
+                Log.d(TAG,"lefetFWReaderObserver onNext "+ leftFWBuildValue);
+                p.updateLeftFW(leftFWBuildValue);
+            }
+        };
+    }
+
+    public static Observer<byte[]> getRightFWReaderObserver(PostureTracker p){
+        return new Observer<byte[]>() {
+            @Override
+            public void onCompleted() {
+                Log.d(TAG,"rightFWReaderObserver onCompleted");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG,"rightFWReaderObserver onError "+e.toString());
+            }
+
+            @Override
+            public void onNext(byte[] bytes) {
+                int rightFWBuildValue=bytes[4]&0xFF;
+                Log.d(TAG,"rightFWReaderObserver onNext "+ rightFWBuildValue);
+                p.updateRightFW(rightFWBuildValue);
+            }
+        };
+    }
+
     public static Observer<byte[]> getNewLeftBatteryNotifyObserver(PostureTracker p){
         return new Observer<byte[]>() {
             @Override
