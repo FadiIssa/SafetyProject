@@ -55,7 +55,7 @@
 
 
             android:layout_marginTop="20dp"
-            android:src="@drawable/zt_shoes"
+            android:src="@drawable/magnum_shoes_small"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_pronation_supination"
