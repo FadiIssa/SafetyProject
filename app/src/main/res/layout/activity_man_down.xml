@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@android:style/Theme.Black"
-    android:background="@color/fWhite"
+    android:background="@color/fBlack"
     tools:context="com.example.fadi.testingrx.ui.ManDownActivity"
     >
 

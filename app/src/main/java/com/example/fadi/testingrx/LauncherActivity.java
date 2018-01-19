@@ -100,8 +100,8 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
 
         if (MyApplication.EltenMode) {
-            buttonRealTime.setBackground(getDrawable(R.drawable.elten_real_time));
-            buttonNormalMode.setBackground(getDrawable(R.drawable.elten_normal_mode));
+            //buttonRealTime.setBackground(getDrawable(R.drawable.elten_real_time));
+            //buttonNormalMode.setBackground(getDrawable(R.drawable.elten_normal_mode));
         } else {// it is Uvex
             //imageViewLogo.setImageDrawable(getDrawable(R.drawable.uvex_logo));
             buttonRealTime.setBackground(getDrawable(R.drawable.realtime_icon0));
