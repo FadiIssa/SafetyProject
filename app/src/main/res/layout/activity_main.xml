@@ -211,7 +211,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:text="LeftNotConnected"
-        android:textColor="@color/fBlack"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewRTLeftMac" />
 
@@ -232,7 +232,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="NAN"
-        android:textColor="@color/fBlack"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewRightConnectionStatus" />
 

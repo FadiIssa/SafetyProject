@@ -47,7 +47,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
 
     Button buttonRealTime;
     Button buttonNormalMode;//this mode is the one Karim suggested. to hide what is in real time and what is sent after an activity.
-    Button buttonAIMode;
+
     Button buttonScan;
 
     String latestDetectedLeftMac;
@@ -106,9 +106,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
         buttonRealTime = (Button) findViewById(R.id.buttonRT);
         buttonRealTime.setEnabled(false);
 
-        buttonAIMode = (Button) findViewById(R.id.buttonAIMode);
-        buttonAIMode.setEnabled(false);
-        buttonAIMode.setBackground(getDrawable(R.drawable.ic_ai_mode));
+
 
         buttonRealTime.setBackground(getDrawable(R.drawable.ic_realtime_mode));
         buttonNormalMode.setBackground(getDrawable(R.drawable.ic_normal_mode));
@@ -144,16 +142,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     finish();// for demo mode
                 });
 
-        RxView.clicks(buttonAIMode)
-                .subscribe(
-                        a->{
-                            Intent intent= new Intent (this,AiRealTimeActivity.class);
-                            intent.putExtra(KEY_LEFT_INSOLE_MAC,latestDetectedLeftMac);
-                            intent.putExtra(KEY_RIGHT_INSOLE_MAC,latestDetectedRightMac);
-                            startActivity(intent);
-                            finish();
-                        }
-                );
+
 
         // the user can make a scan if the previous scan timed out without finding any insoles for example.
         RxView.clicks(buttonScan)
@@ -161,7 +150,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
                     scan();
                     buttonRealTime.setEnabled(false);
                     buttonNormalMode.setEnabled(false);
-                    buttonAIMode.setEnabled(false);
+
                     buttonScan.setEnabled(false);
                 });
     }
@@ -249,7 +238,7 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
             textViewScanStatusRight.setText("detected successfully");
             buttonNormalMode.setEnabled(true);
             buttonRealTime.setEnabled(true);
-            buttonAIMode.setEnabled(true);
+
         });
     }
 
@@ -260,7 +249,6 @@ public class LauncherActivity extends AppCompatActivity implements ScanStatusCal
             buttonScan.setEnabled(true);
             buttonNormalMode.setEnabled(false);
             buttonRealTime.setEnabled(false);
-            buttonAIMode.setEnabled(false);
         });
     }
 

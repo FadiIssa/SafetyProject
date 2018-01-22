@@ -98,7 +98,7 @@
         app:layout_constraintBottom_toBottomOf="@id/progressBarMandown"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="32dp"
         android:text=""
         android:background="@android:color/transparent" >
