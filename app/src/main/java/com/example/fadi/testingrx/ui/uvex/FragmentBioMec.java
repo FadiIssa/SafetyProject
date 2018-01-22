@@ -34,10 +34,14 @@ public class FragmentBioMec extends Fragment {
 
         String leftAngleText=String.format("%d",leftAngle);
         if (leftAngle<-2){
-            leftAngleText = leftAngleText + " supination";
+            ((TextView) rootView.findViewById(R.id.textViewLeftAngleType)).setText("Supination");
+            //leftAngleText = leftAngleText + " supination";
         }
         else if (leftAngle>4){
-            leftAngleText = leftAngleText + " pronation";
+            //leftAngleText = leftAngleText + " pronation";
+            ((TextView) rootView.findViewById(R.id.textViewLeftAngleType)).setText("Pronation");
+        } else {
+            ((TextView) rootView.findViewById(R.id.textViewLeftAngleType)).setText("Universal");
         }
 
         ((TextView)rootView.findViewById(R.id.textViewAngleLeft)).setText(leftAngleText);
@@ -47,9 +51,13 @@ public class FragmentBioMec extends Fragment {
         String rightAngleText=String.format("%d",rightAngle);
 
         if (rightAngle<-2){
-            rightAngleText = rightAngleText + " supination";
+            //rightAngleText = rightAngleText + " supination";
+            ((TextView) rootView.findViewById(R.id.textViewRightAngleType)).setText("Supination");
         } else if (rightAngle>4){
-            rightAngleText= rightAngleText + " pronation";
+            //rightAngleText= rightAngleText + " pronation";
+            ((TextView) rootView.findViewById(R.id.textViewRightAngleType)).setText("Pronation");
+        } else {
+            ((TextView) rootView.findViewById(R.id.textViewRightAngleType)).setText("Universal");
         }
 
         ((TextView)rootView.findViewById(R.id.textViewAngleRight)).setText(rightAngleText);
