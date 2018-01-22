@@ -30,10 +30,28 @@ public class FragmentBioMec extends Fragment {
 
         Bundle mBundle=getArguments();
 
-        String leftAngleText=String.format("%d",mBundle.getInt(DataProcessing.ANGLE_LEFT,0));
+        int leftAngle= mBundle.getInt(DataProcessing.ANGLE_LEFT,0);
+
+        String leftAngleText=String.format("%d",leftAngle);
+        if (leftAngle<-2){
+            leftAngleText = leftAngleText + " supination";
+        }
+        else if (leftAngle>4){
+            leftAngleText = leftAngleText + " pronation";
+        }
+
         ((TextView)rootView.findViewById(R.id.textViewAngleLeft)).setText(leftAngleText);
 
-        String rightAngleText=String.format("%d",mBundle.getInt(DataProcessing.ANGLE_RIGHT,0));
+
+        int rightAngle = mBundle.getInt(DataProcessing.ANGLE_RIGHT,0);
+        String rightAngleText=String.format("%d",rightAngle);
+
+        if (rightAngle<-2){
+            rightAngleText = rightAngleText + " supination";
+        } else if (rightAngle>4){
+            rightAngleText= rightAngleText + " pronation";
+        }
+
         ((TextView)rootView.findViewById(R.id.textViewAngleRight)).setText(rightAngleText);
 
         return rootView;
