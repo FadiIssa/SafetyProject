@@ -365,9 +365,9 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
         }
 
         if (MyApplication.EltenMode) {
-            drawableUnknown = getDrawable(R.drawable.app_icon_dakota );
+            drawableUnknown = getDrawable(R.drawable.cat );
         }else {
-            drawableUnknown = getDrawable(R.drawable.app_icon_dakota);
+            drawableUnknown = getDrawable(R.drawable.cat);
         }
 
         textViewLeftConnectionStatus = (TextView) findViewById(R.id.textViewLeftConnectionStatus);
@@ -380,9 +380,9 @@ public class MainActivity extends AppCompatActivity implements CommunicationCall
 
         currentPostureImageView= (ImageView) findViewById(R.id.currentPostureImageView);
         if (MyApplication.EltenMode) {
-            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.app_icon_dakota));
+            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.cat));
         } else {
-            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.app_icon_dakota));
+            currentPostureImageView.setImageDrawable(getDrawable(R.drawable.cat));
         }
 
         kneelingImageView = (ImageView) findViewById(R.id.kneelingImageView);
