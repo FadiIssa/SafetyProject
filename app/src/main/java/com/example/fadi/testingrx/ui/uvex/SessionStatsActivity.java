@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.example.fadi.testingrx.FragmentHealthTips;
 import com.example.fadi.testingrx.R;
 import com.example.fadi.testingrx.data.DataProcessing;
 import com.example.fadi.testingrx.data.SessionContract;
@@ -137,6 +138,11 @@ public class SessionStatsActivity extends AppCompatActivity {
         if (tab != null) {
             tab.setIcon(R.drawable.icon_tab_slip);
         }
+
+        tab = ((TabLayout) findViewById(R.id.tab_layout)).getTabAt(6);
+        if (tab != null) {
+            tab.setIcon(R.drawable.icon_tab_healthtips);
+        }
     }
 
 
@@ -201,6 +207,16 @@ public class SessionStatsActivity extends AppCompatActivity {
                     bundle6.putInt(DataProcessing.SLIP,slip);
                     result6.setArguments(bundle6);
                     return result6;
+                case 6:
+                    Fragment result7 = new FragmentHealthTips();
+                    Bundle bundle7 = new Bundle();
+                    bundle7.putInt(DataProcessing.DURATION_CROUCHING,durationCrouching);
+                    bundle7.putInt(DataProcessing.DURATION_KNEELING,durationKneeling);
+                    bundle7.putInt(DataProcessing.DURATION_TIPTOES,durationTiptoes);
+                    bundle7.putInt(DataProcessing.DURATION_STATIC,durationStatic);
+                    bundle7.putInt(DataProcessing.VIBRATION_DURATION,vibrationDuration);
+                    result7.setArguments(bundle7);
+                    return result7;
                 default:
                     return new Fragment2();
 
@@ -210,7 +226,7 @@ public class SessionStatsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 6;
+            return 7;
         }
     }
 
