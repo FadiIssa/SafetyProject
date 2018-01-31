@@ -202,6 +202,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
         android:text="RightNotConnected"
+        android:textColor="@color/white"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewRTRightMac" />
 
